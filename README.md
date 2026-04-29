@@ -1,1 +1,2 @@
-# projeto-final-rocketlab-grupo-1
+# Stack OverGol
+Projeto final do rocket lab, grupo 1
