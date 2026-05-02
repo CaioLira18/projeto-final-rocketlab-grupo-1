@@ -1,0 +1,28 @@
+resources:
+  jobs:
+    Stack_OverGol:
+      name: Stack OverGol
+      schedule:
+        quartz_cron_expression: 0 0 0 * * ?
+        timezone_id: America/Fortaleza
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Stack OverGol/Landing-Bronze
+            source: WORKSPACE
+        - task_key: Bronze_to_Silver
+          depends_on:
+            - task_key: Landing_to_Bronze
+          notebook_task:
+            notebook_path: /Workspace/Stack OverGol/Bronze-Silver
+            source: WORKSPACE
+        - task_key: Silver_to_Gold
+          depends_on:
+            - task_key: Bronze_to_Silver
+          notebook_task:
+            notebook_path: /Workspace/Stack OverGol/Silver-Gold
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
