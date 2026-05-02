@@ -2,7 +2,8 @@
 
 ## 📊 Arquitetura e Fluxo de Dados
 A documentação completa e detalhada do fluxo de engenharia de dados (incluindo tratamento de colunas, modelagem e decisões técnicas) pode ser acessada no link abaixo:
-[🔗 Documentação Completa - Fluxo de Dados]([https://www.google.com](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing))   
+
+[🔗 Documentação Completa - Fluxo de Dados](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing)   
 
 Nosso pipeline de dados foi construído seguindo a Arquitetura Medalhão, garantindo governança, qualidade e alta performance no processamento analítico:  
 
