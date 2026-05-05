@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import users
 
 # Create database tables (SQLite)
 # In a real-world scenario, Alembic should be used for database migrations.
@@ -21,9 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Include routers
-app.include_router(users.router)
 
 @app.get("/")
 def read_root():

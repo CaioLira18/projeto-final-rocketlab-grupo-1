@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
 
-class User(Base):
-    __tablename__ = "users"
+# Crie seus modelos SQLAlchemy aqui
+# Exemplo:
+# class Item(Base):
+#     __tablename__ = "items"
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String, index=True)
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    # Add other fields as needed

@@ -1,14 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
-class UserBase(BaseModel):
-    username: str
-    email: EmailStr
+# Crie seus schemas Pydantic aqui para validação de dados
+# Exemplo:
+# class Item(BaseModel):
+#     name: str
+#     description: str | None = None
 
-class UserCreate(UserBase):
-    pass
-
-class UserResponse(UserBase):
-    id: int
-
-    class Config:
-        from_attributes = True
