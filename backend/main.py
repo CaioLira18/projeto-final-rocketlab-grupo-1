@@ -22,6 +22,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Registro dos routers --------------------------------------------
+
 app.include_router(clientes.router)
 app.include_router(produtos.router)
 
