@@ -35,3 +35,10 @@ class PedidoListItem(BaseModel):
     status_pedido: Optional[str]
 
     model_config = {"from_attributes": True}
+
+
+class DashboardKPIsOut(BaseModel):
+    totalRevenue: float
+    totalSales: int
+    totalCustomers: int
+    averageOrderValue: float
