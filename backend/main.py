@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
+from routers import clientes, pedidos
 
 # Create database tables (SQLite)
 # In a real-world scenario, Alembic should be used for database migrations.
@@ -28,3 +29,6 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+app.include_router(clientes.router)
+app.include_router(pedidos.router)

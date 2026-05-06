@@ -3,14 +3,14 @@ from database import Base
 
 
 class Cliente(Base):
-    __tablename__ = "clientes"
+    __tablename__ = "dim_cliente"
 
     id_cliente = Column(String, primary_key=True, index=True)
     nome_cliente = Column(String, index=True)
     sobrenome_cliente = Column(String, index=True)
     email_cliente = Column(String, index=True)
     telefone_cliente = Column(String, nullable=True)
-    ramal_cliente = Column(String, nullable=True)
+    ramal_cliente = Column(Integer, nullable=True)
     genero_cliente = Column(String, nullable=True)
     endereco_cliente = Column(String, nullable=True)
     cidade_cliente = Column(String, nullable=True)
@@ -20,7 +20,7 @@ class Cliente(Base):
     idade = Column(Integer, nullable=True)
 
 class Pedidos(Base):
-    __tablename__ = "pedidos"
+    __tablename__ = "fato_vendas"
 
     id_pedido = Column(String, primary_key=True, index=True)
     data_pedido = Column(Date)

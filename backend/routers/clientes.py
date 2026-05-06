@@ -5,7 +5,7 @@ from typing import Optional, List
 
 from database import get_db
 from models import Cliente
-from schemas import ClienteOut
+from schemas import Cliente as ClienteOut
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
