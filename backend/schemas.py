@@ -3,7 +3,7 @@ from typing import Optional, Union
 from datetime import date
 
 
-class Cliente(BaseModel):
+class ClienteResponse(BaseModel):
     id_cliente: str
     nome_cliente: Optional[str] = None
     sobrenome_cliente: Optional[str] = None
