@@ -5,12 +5,12 @@ from typing import Optional, List
 
 from database import get_db
 from models import Cliente
-from schemas import ClienteOut
+from schemas import Cliente
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 
-@router.get("/", response_model=List[ClienteOut])
+@router.get("/", response_model=List[Cliente])
 def listar_clientes(
     
     # Filtros: Filtrar por nome, sobrenome, email, cidade, estado, país, genero, ...
@@ -67,7 +67,7 @@ def listar_clientes(
 
 
 # Buscar um cliente especifico via Id
-@router.get("/{cliente_id}", response_model=ClienteOut)
+@router.get("/{cliente_id}", response_model=Cliente)
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
     cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
     if not cliente:
