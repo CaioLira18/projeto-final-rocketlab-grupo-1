@@ -1,10 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
-from routers import clientes, produtos, pedidos, dashboard
+from database.database import engine, Base
+from app.models.cliente import Cliente
+from app.models.produto import DimProduto
+from app.models.avaliacao import FatoAvaliacoes
+from app.models.suporte import FatoSuporte
+from app.models.pedido import Pedidos
+from app.models.clickstream import FatoClickstream
+from app.models.cliente_dispositivo import ClienteDispositivo
+from app.routes import clientes, produtos, pedidos, dashboard
 
-# Create database tables (SQLite)
-# In a real-world scenario, Alembic should be used for database migrations.
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -13,7 +19,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],
@@ -22,10 +28,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Registro dos routers --------------------------------------------
 
-app.include_router(clientes.router)
-app.include_router(produtos.router)
+
 
 
 @app.get("/")
@@ -37,6 +41,8 @@ def read_root():
 def health_check():
     return {"status": "ok"}
 
+
 app.include_router(clientes.router)
+app.include_router(produtos.router)
 app.include_router(pedidos.router)
 app.include_router(dashboard.router)

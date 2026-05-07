@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from typing import Optional, List
 
-from database import get_db
-from models import Cliente
-from schemas import ClienteResponse
+from database.database import get_db
+from app.models.cliente import Cliente
+from app.schemas.cliente import ClienteResponse
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/clientes", tags=["Clientes"])
 @router.get("/", response_model=List[ClienteResponse])
 def listar_clientes(
     
-    # Filtros: Filtrar por nome, sobrenome, email, cidade, estado, país, genero, ...
+
     nome: Optional[str] = Query(None, description="Filtrar por nome"),
     sobrenome: Optional[str] = Query(None, description="Filtrar por sobrenome"),
     email: Optional[str] = Query(None, description="Filtrar por email"),
@@ -31,7 +31,7 @@ def listar_clientes(
 ):
     query = db.query(Cliente)
 
-    # Busca geral (nome, sobrenome ou email)
+
     if busca:
         query = query.filter(
             or_(
@@ -41,7 +41,7 @@ def listar_clientes(
             )
         )
 
-    # Filtros específicos
+
     if nome:
         query = query.filter(Cliente.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:
@@ -66,7 +66,7 @@ def listar_clientes(
     return query.offset(skip).limit(limit).all()
 
 
-# Buscar um cliente especifico via Id
+
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
     cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()

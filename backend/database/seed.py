@@ -10,16 +10,16 @@ def popular_banco_via_csv():
     print("Iniciando processo de Seed...")
     
     tabelas_csvs = {
-        "dim_cliente": "seed_data/silver_clientes.csv",
-        "dim_produto": "seed_data/silver_catalogo_produtos.csv",
-        "fato_avaliacoes": "seed_data/silver_avaliacoes.csv",
-        "fato_suporte": "seed_data/silver_suporte_tickets.csv",
-        "fato_vendas": "seed_data/silver_pedidos.csv",
-        "fato_clickstream": "seed_data/silver_clickstream.csv",
-        "dim_cliente_dispositivo": "seed_data/silver_clientes_dispositivo.csv"
+        "dim_cliente": "data/silver_clientes.csv",
+        "dim_produto": "data/silver_catalogo_produtos.csv",
+        "fato_avaliacoes": "data/silver_avaliacoes.csv",
+        "fato_suporte": "data/silver_suporte_tickets.csv",
+        "fato_vendas": "data/silver_pedidos.csv",
+        "fato_clickstream": "data/silver_clickstream.csv",
+        "dim_cliente_dispositivo": "data/silver_clientes_dispositivo.csv"
     }
 
-    conn = sqlite3.connect("app.db")
+    conn = sqlite3.connect("database/app.db")
     
     for tabela, caminho_csv in tabelas_csvs.items():
         if not os.path.exists(caminho_csv):
