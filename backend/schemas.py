@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, Union
 from datetime import date
+from datetime import date, datetime
 from models import Cliente
 
 
@@ -21,7 +22,19 @@ class ClienteResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
-ClienteOut = Cliente
+class FatoSuporte(BaseModel):
+    ticket_id: str
+    id_cliente: Optional[str] = None
+    nome_cliente: Optional[str] = None
+    id_pedido: Optional[str] = None
+    data_pedido: Optional[date] = None
+    tipo_problema: Optional[str] = None
+    data_abertura: Optional[datetime] = None
+    data_resolucao: Optional[datetime] = None
+    tempo_resolucao_horas: Optional[int] = None
+    agente_suporte: Optional[str] = None
+
+    model_config = {"from_attributes": True}
 
 class ProdutoMetricas(BaseModel):
     id_produto: str
