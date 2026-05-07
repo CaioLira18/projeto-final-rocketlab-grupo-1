@@ -52,3 +52,4 @@ env/
 *.swo
 *~
 .DS_Store
+backend/db_stack_overgol

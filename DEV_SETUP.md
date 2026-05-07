@@ -67,8 +67,8 @@ Rode o servidor de desenvolvimento
 uvicorn main:app --reload
 ```
 
-A API estará rodando em: `http://localhost:8000`
-Você pode acessar a documentação auto-gerada do backend pelo Swagger em: `http://localhost:8000/docs`
+A API estará rodando em: `http://localhost:8080`
+Você pode acessar a documentação auto-gerada do backend pelo Swagger em: `http://localhost:8080/docs`
 
 ### 2. Inicializando o Frontend (React/Vite)
 

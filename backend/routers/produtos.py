@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from database import get_db
-from models import DimProduto, FatoAvaliacoes, FatoSuporte, FatoVendas
+from models import DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos
 from schemas import ProdutoMetricas
 
 # Iniciando o router para produtos
@@ -16,13 +16,13 @@ router = APIRouter(prefix="/produtos", tags=["Produtos"])
 def _build_subqueries():
     sq_vendas = (
         select(
-            FatoVendas.id_produto,
-            func.count(FatoVendas.id_pedido).label("total_pedidos"),
-            func.coalesce(func.sum(FatoVendas.quantidade_produto), 0).label("quantidade_vendida"),
-            func.coalesce(func.sum(FatoVendas.valor_pedido), 0.0).label("receita_total"),
-            func.avg(FatoVendas.valor_pedido).label("ticket_medio"),
+            Pedidos.id_produto,
+            func.count(Pedidos.id_pedido).label("total_pedidos"),
+            func.coalesce(func.sum(Pedidos.quantidade_produto), 0).label("quantidade_vendida"),
+            func.coalesce(func.sum(Pedidos.valor_pedido), 0.0).label("receita_total"),
+            func.avg(Pedidos.valor_pedido).label("ticket_medio"),
         )
-        .group_by(FatoVendas.id_produto)
+        .group_by(Pedidos.id_produto)
         .subquery()
     )
 
@@ -41,11 +41,11 @@ def _build_subqueries():
     # Tickets contados via fato_vendas para associar ao produto
     sq_suporte = (
         select(
-            FatoVendas.id_produto,
+            Pedidos.id_produto,
             func.count(func.distinct(FatoSuporte.ticket_id)).label("total_tickets"),
         )
-        .outerjoin(FatoSuporte, FatoVendas.id_pedido == FatoSuporte.id_pedido)
-        .group_by(FatoVendas.id_produto)
+        .outerjoin(FatoSuporte, Pedidos.id_pedido == FatoSuporte.id_pedido)
+        .group_by(Pedidos.id_produto)
         .subquery()
     )
 
