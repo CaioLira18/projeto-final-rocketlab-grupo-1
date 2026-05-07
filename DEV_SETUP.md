@@ -40,20 +40,15 @@ projeto-final-rocketlab-grupo-1/
 Navegue para o diretório de backend, ative o ambiente virtual e execute o servidor uvicorn:
 
 ```bash
-# 1. Acesse a pasta do backend
 cd backend
-
-# 2. Ative o ambiente virtual
-# Criar ambiente virtual
 python -m venv venv
 
-# Ativar ambiente (Linux/macOS)
+# Linux/macOS
 source venv/bin/activate
 
-# Ativar ambiente (Windows)
+# Windows
 venv\Scripts\activate
 
-# 3. Instale as dependências
 pip install -r requirements.txt
 ```
 
@@ -62,9 +57,23 @@ Crie o arquivo `.env` a partir do exemplo:
 cp .env.example .env
 ```
 
-Rode o servidor de desenvolvimento
+**4. Configuração do Banco de Dados (Alembic + Seed)**
+
+Para que a API funcione, você precisa criar o banco de dados e popular com as tabelas geradas pela Engenharia de Dados (CSVs da camada Silver).
+Garanta que os 7 arquivos CSVs (`silver_clientes.csv`, etc) estejam na pasta `backend/seed_data/`. Em seguida, execute:
+
+```bash
+# Aplique a migração para criar as tabelas no SQLite
+alembic upgrade head
+
+# Rode o script de seed para popular o banco com os dados dos CSVs (Pandas)
+python seed.py
 ```
-uvicorn main:app --reload
+
+**5. Rode o servidor de desenvolvimento**
+
+```bash
+uvicorn main:app --reload --port 8080
 ```
 
 A API estará rodando em: `http://localhost:8080`
@@ -75,13 +84,8 @@ Você pode acessar a documentação auto-gerada do backend pelo Swagger em: `htt
 Em um terminal secundário, navegue para o diretório frontend e inicie o Vite:
 
 ```bash
-# 1. Acesse a pasta do frontend
 cd frontend
-
-# 2. Instale as dependências do projeto
 npm install
-
-# 3. Rode o servidor de desenvolvimento Vite
 npm run dev
 ```
 O frontend estará rodando e sincronizado (HMR) localmente. Normalmente disponível em: `http://localhost:5173`.
