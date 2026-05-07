@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Union
 from datetime import date
 
 from .pedidos_schemas import PedidoListItem
@@ -11,7 +11,7 @@ class ClienteResponse(BaseModel):
     sobrenome_cliente: Optional[str] = None
     email_cliente: Optional[str] = None
     telefone_cliente: Optional[str] = None
-    ramal_cliente: Optional[str] = None
+    ramal_cliente: Optional[Union[str, int]] = None
     genero_cliente: Optional[str] = None
     endereco_cliente: Optional[str] = None
     cidade_cliente: Optional[str] = None

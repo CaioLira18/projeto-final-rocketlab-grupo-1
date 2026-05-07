@@ -9,7 +9,6 @@ from schemas import ClienteResponse, ClienteHistoricoResponse, PedidoListItem, T
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
-
 @router.get("/", response_model=List[ClienteResponse])
 def listar_clientes(
 
