@@ -1,17 +1,37 @@
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Column, Integer, String, Float, Date, select
+from sqlalchemy.orm import column_property
 from database import Base
+from .cliente_models import Cliente
+from .dimProduto_models import DimProduto
 
 class Pedidos(Base):
-    __tablename__ = "pedidos"
+    __tablename__ = "fato_vendas"
 
     id_pedido = Column(String, primary_key=True, index=True)
     data_pedido = Column(Date)
     id_cliente = Column(String, index=True)
-    nome_cliente = Column(String)
     id_produto = Column(String, index=True)
-    nome_produto = Column(String)
-    categoria_produto = Column(String)
     quantidade_produto = Column(Integer)
     valor_pedido = Column(Float)
     metodo_pagamento = Column(String)
     status_pedido = Column(String)
+
+    # Subqueries to dynamically fetch client/product name and category
+    nome_cliente = column_property(
+        select(Cliente.nome_cliente)
+        .where(Cliente.id_cliente == id_cliente)
+        .correlate_except(Cliente)
+        .scalar_subquery()
+    )
+    nome_produto = column_property(
+        select(DimProduto.nome_produto)
+        .where(DimProduto.id_produto == id_produto)
+        .correlate_except(DimProduto)
+        .scalar_subquery()
+    )
+    categoria_produto = column_property(
+        select(DimProduto.categoria_produto)
+        .where(DimProduto.id_produto == id_produto)
+        .correlate_except(DimProduto)
+        .scalar_subquery()
+    )

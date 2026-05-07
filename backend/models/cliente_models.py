@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Column, Integer, String, Float, Date, func
+from sqlalchemy.orm import column_property
 from database import Base
 
 
@@ -17,4 +18,12 @@ class Cliente(Base):
     estado_cliente = Column(String, nullable=True)
     pais_cliente = Column(String, nullable=True)
     origem_cliente = Column(String, nullable=True)
-    idade = Column(Integer, nullable=True)
+    data_nascimento_cliente = Column(String, nullable=True)
+    
+    # Calculate age dynamically from birthdate
+    idade = column_property(
+        func.cast(
+            func.strftime('%Y', 'now') - func.strftime('%Y', data_nascimento_cliente),
+            Integer
+        )
+    )

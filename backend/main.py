@@ -26,6 +26,8 @@ app.add_middleware(
 
 app.include_router(clientes.router)
 app.include_router(produtos.router)
+app.include_router(pedidos.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/")
@@ -37,6 +39,3 @@ def read_root():
 def health_check():
     return {"status": "ok"}
 
-app.include_router(clientes.router)
-app.include_router(pedidos.router)
-app.include_router(dashboard.router)
