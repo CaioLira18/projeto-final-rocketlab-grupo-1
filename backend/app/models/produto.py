@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import Boolean, Column, Float, Integer, String
 from database.database import Base
 
@@ -13,3 +14,14 @@ class DimProduto(Base):
     estoque_produto = Column(Integer, nullable=True)
     produto_ativo = Column(Boolean, nullable=True)
     data_cadastro_produto = Column(String, nullable=True)
+
+    @property
+    def faixa_preco(self) -> Optional[str]:
+        if self.preco_produto is None:
+            return None
+        if self.preco_produto < 50:
+            return 'baixo'
+        elif self.preco_produto < 200:
+            return 'medio'
+        else:
+            return 'alto'

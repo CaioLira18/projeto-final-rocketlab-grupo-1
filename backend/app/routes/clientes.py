@@ -1,19 +1,16 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
 from typing import Optional, List
 
 from database.database import get_db
-from app.models.cliente import Cliente
 from app.schemas.cliente import ClienteResponse
+from app.services.cliente_service import ClienteService
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 
 @router.get("/", response_model=List[ClienteResponse])
 def listar_clientes(
-    
-
     nome: Optional[str] = Query(None, description="Filtrar por nome"),
     sobrenome: Optional[str] = Query(None, description="Filtrar por sobrenome"),
     email: Optional[str] = Query(None, description="Filtrar por email"),
@@ -29,47 +26,27 @@ def listar_clientes(
     limit: int = Query(50, ge=1, le=500, description="Limite de registros (paginação)"),
     db: Session = Depends(get_db),
 ):
-    query = db.query(Cliente)
-
-
-    if busca:
-        query = query.filter(
-            or_(
-                Cliente.nome_cliente.ilike(f"%{busca}%"),
-                Cliente.sobrenome_cliente.ilike(f"%{busca}%"),
-                Cliente.email_cliente.ilike(f"%{busca}%"),
-            )
-        )
-
-
-    if nome:
-        query = query.filter(Cliente.nome_cliente.ilike(f"%{nome}%"))
-    if sobrenome:
-        query = query.filter(Cliente.sobrenome_cliente.ilike(f"%{sobrenome}%"))
-    if email:
-        query = query.filter(Cliente.email_cliente.ilike(f"%{email}%"))
-    if cidade:
-        query = query.filter(Cliente.cidade_cliente.ilike(f"%{cidade}%"))
-    if estado:
-        query = query.filter(Cliente.estado_cliente.ilike(f"%{estado}%"))
-    if pais:
-        query = query.filter(Cliente.pais_cliente.ilike(f"%{pais}%"))
-    if genero:
-        query = query.filter(Cliente.genero_cliente == genero)
-    if origem:
-        query = query.filter(Cliente.origem_cliente == origem)
-    if idade_min is not None:
-        query = query.filter(Cliente.idade >= idade_min)
-    if idade_max is not None:
-        query = query.filter(Cliente.idade <= idade_max)
-
-    return query.offset(skip).limit(limit).all()
-
+    return ClienteService.listar_clientes(
+        db=db,
+        nome=nome,
+        sobrenome=sobrenome,
+        email=email,
+        cidade=cidade,
+        estado=estado,
+        pais=pais,
+        genero=genero,
+        origem=origem,
+        idade_min=idade_min,
+        idade_max=idade_max,
+        busca=busca,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
+    cliente = ClienteService.buscar_cliente(db, cliente_id)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
