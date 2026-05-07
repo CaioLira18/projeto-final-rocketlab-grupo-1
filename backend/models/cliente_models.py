@@ -3,9 +3,9 @@ from database import Base
 
 
 class Cliente(Base):
-    __tablename__ = "clientes"
+    __tablename__ = "dim_cliente"
 
-    id_cliente = Column(String, primary_key=True, index=True)
+    id_cliente = Column(String, primary_key=True)
     nome_cliente = Column(String, index=True)
     sobrenome_cliente = Column(String, index=True)
     email_cliente = Column(String, index=True)

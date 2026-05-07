@@ -29,3 +29,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+print("DATABASE:", DATABASE_URL)
+print("PWD:", os.getcwd())
