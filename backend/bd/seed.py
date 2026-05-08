@@ -11,7 +11,7 @@ BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND_DIR)
 
 from bd.database import SessionLocal, engine, Base
-from app.models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos
+from app.models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos, VendasPeriodoGold, Cliente360Gold
 
 def parse_date_obj(val):
     if pd.isna(val) or val is None or val == "":
@@ -19,6 +19,22 @@ def parse_date_obj(val):
     try:
         date_str = str(val).strip().split()[0]
         return datetime.strptime(date_str, "%Y-%m-%d").date()
+    except Exception:
+        return None
+
+def parse_datetime_obj(val):
+    if pd.isna(val) or val is None or val == "":
+        return None
+    try:
+        val_str = str(val).strip()
+        if "T" in val_str:
+            val_str = val_str.replace("T", " ")
+        if "." in val_str:
+            val_str = val_str.split(".")[0]
+        if " " in val_str:
+            return datetime.strptime(val_str, "%Y-%m-%d %H:%M:%S")
+        else:
+            return datetime.strptime(val_str, "%Y-%m-%d")
     except Exception:
         return None
 
@@ -135,8 +151,8 @@ def seed_database():
                 "id_cliente": row.get("id_cliente"),
                 "id_pedido": row.get("id_pedido"),
                 "tipo_problema": row.get("tipo_problema"),
-                "data_abertura": row.get("data_abertura"),
-                "data_resolucao": row.get("data_resolucao"),
+                "data_abertura": parse_datetime_obj(row.get("data_abertura")),
+                "data_resolucao": parse_datetime_obj(row.get("data_resolucao")),
                 "tempo_resolucao_horas": float(row.get("tempo_resolucao_horas")) if pd.notna(row.get("tempo_resolucao_horas")) else None,
                 "agente_suporte": row.get("agente_suporte")
             })
@@ -150,6 +166,8 @@ def seed_database():
         db.query(Pedidos).delete()
         db.query(DimProduto).delete()
         db.query(Cliente).delete()
+        db.query(VendasPeriodoGold).delete()
+        db.query(Cliente360Gold).delete()
         db.commit()
         print("Limpeza concluída com sucesso.")
 
@@ -176,6 +194,44 @@ def seed_database():
                 records.append(mapped_record)
             
             bulk_insert_in_chunks(db, model, records, batch_size=15000)
+
+        # População das Tabelas da Camada Gold
+        print("\n--- INICIANDO POPULAÇÃO DA CAMADA GOLD ---")
+        gold_mappings = [
+            {
+                "file": os.path.join(BACKEND_DIR, "data/gold/dm_vendas_periodo.csv"),
+                "table": "dm_vendas_periodo",
+                "parse_dates": ["data_pedido"]
+            },
+            {
+                "file": os.path.join(BACKEND_DIR, "data/gold/dm_cliente_360.csv"),
+                "table": "dm_cliente_360",
+                "parse_dates": []
+            }
+        ]
+
+        for g_map in gold_mappings:
+            filepath = g_map["file"]
+            tablename = g_map["table"]
+            parse_dates = g_map["parse_dates"]
+
+            if not os.path.exists(filepath):
+                print(f"Aviso: Arquivo Gold '{filepath}' não encontrado. Pulando...")
+                continue
+
+            print(f"Carregando dados Gold de '{filepath}'...")
+            start_gold = time.time()
+            df_gold = pd.read_csv(filepath, encoding="utf-8-sig")
+            df_gold.columns = [col.replace("\ufeff", "").strip() for col in df_gold.columns]
+            
+            # Converte as colunas de data apropriadas para datetime se necessário
+            for date_col in parse_dates:
+                if date_col in df_gold.columns:
+                    df_gold[date_col] = pd.to_datetime(df_gold[date_col]).dt.date
+
+            print(f"Inserindo {len(df_gold)} registros na tabela Gold '{tablename}' via to_sql...")
+            df_gold.to_sql(tablename, engine, if_exists="append", index=False, chunksize=20000)
+            print(f"Tabela Gold '{tablename}' populada com sucesso em {time.time() - start_gold:.2f} segundos!")
 
         # Criação do usuário administrador padrão
         print("\nCriando usuário administrador padrão para testes...")
