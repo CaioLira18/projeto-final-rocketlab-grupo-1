@@ -67,7 +67,7 @@ def seed_database():
     
     csv_mappings = [
         {
-            "file": os.path.join(BACKEND_DIR, "data/silver_clientes.csv"),
+            "file": os.path.join(BACKEND_DIR, "data/silver/silver_clientes.csv"),
             "model": Cliente,
             "mapper": lambda row: clean_nan_fields({
                 "id_cliente": row.get("id_cliente"),
@@ -86,7 +86,7 @@ def seed_database():
             })
         },
         {
-            "file": os.path.join(BACKEND_DIR, "data/silver_catalogo_produtos.csv"),
+            "file": os.path.join(BACKEND_DIR, "data/silver/silver_catalogo_produtos.csv"),
             "model": DimProduto,
             "mapper": lambda row: clean_nan_fields({
                 "id_produto": row.get("id_produto"),
@@ -100,7 +100,7 @@ def seed_database():
             })
         },
         {
-            "file": os.path.join(BACKEND_DIR, "data/silver_pedidos.csv"),
+            "file": os.path.join(BACKEND_DIR, "data/silver/silver_pedidos.csv"),
             "model": Pedidos,
             "mapper": lambda row: clean_nan_fields({
                 "id_pedido": row.get("id_pedido"),
@@ -114,7 +114,7 @@ def seed_database():
             })
         },
         {
-            "file": os.path.join(BACKEND_DIR, "data/silver_avaliacoes.csv"),
+            "file": os.path.join(BACKEND_DIR, "data/silver/silver_avaliacoes.csv"),
             "model": FatoAvaliacoes,
             "mapper": lambda row: clean_nan_fields({
                 "id_avaliacao": row.get("id_avaliacao"),
@@ -128,7 +128,7 @@ def seed_database():
             })
         },
         {
-            "file": os.path.join(BACKEND_DIR, "data/silver_suporte_tickets.csv"),
+            "file": os.path.join(BACKEND_DIR, "data/silver/silver_suporte_tickets.csv"),
             "model": FatoSuporte,
             "mapper": lambda row: clean_nan_fields({
                 "ticket_id": row.get("ticket_id"),
