@@ -2,14 +2,21 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from datetime import date, datetime
 
-from database import get_db
-from models import DimProduto, FatoSuporte, Pedidos
-from schemas import SuporteMetricasProduto, SuporteTicketItem
+from bd.database import get_db
+from app.models import DimProduto, FatoSuporte, Pedidos
+from app.schemas.suporte import SuporteMetricasProduto, SuporteTicketItem
+from app.routes.auth import get_current_user
+
 
 
 # Iniciando o router para suporte
-router = APIRouter(prefix="/suporte", tags=["Suporte"])
+router = APIRouter(
+    prefix="/suporte",
+    tags=["Suporte"],
+    dependencies=[Depends(get_current_user)]
+)
 
 # Funções privadas para queries diretas ao invés de subqueries complexas, já que o foco é listar tickets e métricas específicas de suporte.
 # Coluna de status baseada na data de resolução do ticket, pois não consta na golden schema, mas é essencial para as métricas de suporte.
@@ -68,8 +75,8 @@ def listar_tickets(
     tipo_problema: Optional[str] = Query(None, description="Filtrar por tipo de problema"),
     agente_suporte: Optional[str] = Query(None, description="Filtrar por agente de suporte"),
     status: Optional[str] = Query(None, description="Status do ticket: aberto ou resolvido"),
-    data_inicio: Optional[str] = Query(None, description="Data de abertura mínima (YYYY-MM-DD)"),
-    data_fim: Optional[str] = Query(None, description="Data de abertura máxima (YYYY-MM-DD)"),
+    data_inicio: Optional[datetime] = Query(None, description="Data de abertura mínima (YYYY-MM-DD)"),
+    data_fim: Optional[datetime] = Query(None, description="Data de abertura máxima (YYYY-MM-DD)"),
     skip: int = Query(0, ge=0, description="Registros para pular (paginação)"),
     limit: int = Query(50, ge=1, le=500, description="Limite de registros por página"),
     db: Session = Depends(get_db),

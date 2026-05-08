@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date, datetime
 
 class SuporteTicketItem(BaseModel):
     ticket_id: str # Obrigatório
@@ -9,10 +10,10 @@ class SuporteTicketItem(BaseModel):
     id_produto: Optional[str] = None
     nome_produto: Optional[str] = None
     categoria_produto: Optional[str] = None
-    data_pedido: Optional[str] = None
+    data_pedido: Optional[date] = None
     tipo_problema: Optional[str] = None
-    data_abertura: Optional[str] = None
-    data_resolucao: Optional[str] = None
+    data_abertura: Optional[datetime] = None
+    data_resolucao: Optional[datetime] = None
     tempo_resolucao_horas: Optional[float] = None # Na gold ta exportando como int, mas faz mais sentido como float para calcular a média de tempo de resolução
     agente_suporte: Optional[str] = None
     status: str = "aberto"
