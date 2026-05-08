@@ -1,11 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
-from routers import clientes, produtos, pedidos, dashboard
-
-# Create database tables (SQLite)
-# In a real-world scenario, Alembic should be used for database migrations.
-Base.metadata.create_all(bind=engine)
+from app.routes import cliente_router, produto_router, pedido_router, dashboard_router, auth_router
 
 app = FastAPI(
     title="RocketLab API",
@@ -13,7 +8,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],
@@ -22,10 +16,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Registro dos routers --------------------------------------------
+# Registra o router de autenticação (público) primeiro
+app.include_router(auth_router)
 
-app.include_router(clientes.router)
-app.include_router(produtos.router)
+# Registra os routers de dados protegidos
+app.include_router(cliente_router)
+app.include_router(produto_router)
+app.include_router(pedido_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")
@@ -36,7 +34,3 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-app.include_router(clientes.router)
-app.include_router(pedidos.router)
-app.include_router(dashboard.router)
