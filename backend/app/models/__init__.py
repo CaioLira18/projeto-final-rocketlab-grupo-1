@@ -4,3 +4,8 @@ from .pedido import Pedidos
 from .avaliacao import FatoAvaliacoes
 from .suporte import FatoSuporte
 from .usuario import Usuario
+from .vendas_periodo import VendasPeriodo
+from .cliente_360 import Cliente360
+from .cliente_gold import ClienteGold
+from .produto_gold import ProdutoGold
+from .produto_360 import Produto360
