@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, Date, Boolean, select
+from sqlalchemy import Column, String, Float, Boolean, select
 from sqlalchemy.orm import column_property
-from database import Base
-from .cliente_models import Cliente
-from .dimProduto_models import DimProduto
+from bd.database import Base
+from .cliente import Cliente
+from .produto import DimProduto
+
 
 class FatoAvaliacoes(Base):
     __tablename__ = "fato_avaliacoes"
@@ -16,7 +17,6 @@ class FatoAvaliacoes(Base):
     recomenda_produto = Column(Boolean, nullable=True)
     data_avaliacao = Column(String, nullable=True)
 
-    # Subqueries to dynamically fetch client/product name
     nome_cliente = column_property(
         select(Cliente.nome_cliente)
         .where(Cliente.id_cliente == id_cliente)

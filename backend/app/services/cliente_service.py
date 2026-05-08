@@ -1,30 +1,14 @@
-from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from typing import Optional, List
+from app.models import Cliente, Pedidos, FatoSuporte
+from fastapi import HTTPException
 
-from database import get_db
-from models import Cliente, Pedidos, FatoSuporte
-from schemas import ClienteResponse, ClienteHistoricoResponse, PedidoListItem, TicketListItem
 
-router = APIRouter(prefix="/clientes", tags=["Clientes"])
-
-@router.get("/", response_model=List[ClienteResponse])
-def listar_clientes(
-    nome: Optional[str] = Query(None, description="Filtrar por nome"),
-    sobrenome: Optional[str] = Query(None, description="Filtrar por sobrenome"),
-    email: Optional[str] = Query(None, description="Filtrar por email"),
-    cidade: Optional[str] = Query(None, description="Filtrar por cidade"),
-    estado: Optional[str] = Query(None, description="Filtrar por estado"),
-    pais: Optional[str] = Query(None, description="Filtrar por país"),
-    genero: Optional[str] = Query(None, description="Filtrar por gênero (M/F)"),
-    origem: Optional[str] = Query(None, description="Filtrar por origem (Web/App/Indicação)"),
-    idade_min: Optional[int] = Query(None, description="Idade mínima"),
-    idade_max: Optional[int] = Query(None, description="Idade máxima"),
-    busca: Optional[str] = Query(None, description="Busca geral: nome, sobrenome ou email"),
-    skip: int = Query(0, ge=0, description="Registros para pular (paginação)"),
-    limit: int = Query(50, ge=1, le=500, description="Limite de registros (paginação)"),
-    db: Session = Depends(get_db),
+def list_clientes(
+    db: Session,
+    nome=None, sobrenome=None, email=None, cidade=None, estado=None, pais=None,
+    genero=None, origem=None, idade_min=None, idade_max=None, busca=None,
+    skip=0, limit=50
 ):
     query = db.query(Cliente)
 
@@ -61,19 +45,15 @@ def listar_clientes(
     return query.offset(skip).limit(limit).all()
 
 
-@router.get("/{cliente_id}", response_model=ClienteResponse)
-def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
+def get_cliente_by_id(db: Session, cliente_id: str):
     cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
 
 
-@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
-def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
-    if not cliente:
-        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+def get_cliente_historico(db: Session, cliente_id: str):
+    cliente = get_cliente_by_id(db, cliente_id)
 
     total_pedidos = db.query(func.count(Pedidos.id_pedido)).filter(
         Pedidos.id_cliente == cliente_id).scalar() or 0
@@ -100,12 +80,12 @@ def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
         .all()
     )
 
-    return ClienteHistoricoResponse(
-        cliente=cliente,
-        total_pedidos=int(total_pedidos),
-        valor_total=float(valor_total),
-        total_tickets=int(total_tickets),
-        tickets_abertos=int(tickets_abertos),
-        pedidos=pedidos,
-        tickets=tickets,
-    )
+    return {
+        "cliente": cliente,
+        "total_pedidos": int(total_pedidos),
+        "valor_total": float(valor_total),
+        "total_tickets": int(total_tickets),
+        "tickets_abertos": int(tickets_abertos),
+        "pedidos": pedidos,
+        "tickets": tickets,
+    }

@@ -23,5 +23,3 @@ def get_db():
         db.close()
 
 print("DATABASE:", DATABASE_URL)
-print("PWD:", os.getcwd())
-

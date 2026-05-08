@@ -6,28 +6,25 @@ import numpy as np
 import pandas as pd
 from sqlalchemy.orm import Session
 
-# Adiciona o diretório atual ao sys.path para imports locais
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Adiciona o diretório raiz do backend ao sys.path para imports absolutos
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, BACKEND_DIR)
 
-from database import SessionLocal, engine, Base
-from models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos
+from bd.database import SessionLocal, engine, Base
+from app.models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos
 
 def parse_date_obj(val):
-    """Converte string YYYY-MM-DD para objeto datetime.date para colunas do tipo Date do SQLAlchemy."""
     if pd.isna(val) or val is None or val == "":
         return None
     try:
-        # Pega apenas a parte da data caso venha com timestamp
         date_str = str(val).strip().split()[0]
         return datetime.strptime(date_str, "%Y-%m-%d").date()
     except Exception:
         return None
 
 def clean_nan_fields(record: dict) -> dict:
-    """Substitui valores NaN do pandas/numpy por None para persistência limpa no SQLite."""
     cleaned = {}
     for k, v in record.items():
-        # Remove BOM se presente na chave
         clean_key = k.replace("\ufeff", "").strip()
         if pd.isna(v) or (isinstance(v, float) and np.isnan(v)):
             cleaned[clean_key] = None
@@ -36,7 +33,6 @@ def clean_nan_fields(record: dict) -> dict:
     return cleaned
 
 def calculate_faixa_preco(price):
-    """Categoriza produtos dinamicamente em faixa de preço (baixo/medio/alto)."""
     if price is None or pd.isna(price):
         return None
     try:
@@ -51,7 +47,6 @@ def calculate_faixa_preco(price):
         return None
 
 def bulk_insert_in_chunks(db: Session, Model, records: list, batch_size=10000):
-    """Realiza inserções em massa fracionadas em blocos para performance e estabilidade."""
     total = len(records)
     print(f"Inserindo {total} registros na tabela '{Model.__tablename__}' em blocos de {batch_size}...")
     
@@ -68,14 +63,11 @@ def seed_database():
     db = SessionLocal()
     print("Conectado ao banco de dados SQLite...")
     
-    # Certifica que as tabelas existem (Alembic gerencia, mas é uma segurança extra)
     Base.metadata.create_all(bind=engine)
     
-    # Ordem de população: Dimensões primeiro (para integridade), depois Fatos.
     csv_mappings = [
-        # 1. Dimensão Clientes
         {
-            "file": "data/silver_clientes.csv",
+            "file": os.path.join(BACKEND_DIR, "data/silver_clientes.csv"),
             "model": Cliente,
             "mapper": lambda row: clean_nan_fields({
                 "id_cliente": row.get("id_cliente"),
@@ -93,9 +85,8 @@ def seed_database():
                 "data_nascimento_cliente": row.get("data_nascimento_cliente")
             })
         },
-        # 2. Dimensão Produtos
         {
-            "file": "data/silver_catalogo_produtos.csv",
+            "file": os.path.join(BACKEND_DIR, "data/silver_catalogo_produtos.csv"),
             "model": DimProduto,
             "mapper": lambda row: clean_nan_fields({
                 "id_produto": row.get("id_produto"),
@@ -108,9 +99,8 @@ def seed_database():
                 "faixa_preco": calculate_faixa_preco(row.get("preco_produto"))
             })
         },
-        # 3. Fato Vendas (Pedidos)
         {
-            "file": "data/silver_pedidos.csv",
+            "file": os.path.join(BACKEND_DIR, "data/silver_pedidos.csv"),
             "model": Pedidos,
             "mapper": lambda row: clean_nan_fields({
                 "id_pedido": row.get("id_pedido"),
@@ -123,9 +113,8 @@ def seed_database():
                 "status_pedido": row.get("status_pedido")
             })
         },
-        # 4. Fato Avaliações
         {
-            "file": "data/silver_avaliacoes.csv",
+            "file": os.path.join(BACKEND_DIR, "data/silver_avaliacoes.csv"),
             "model": FatoAvaliacoes,
             "mapper": lambda row: clean_nan_fields({
                 "id_avaliacao": row.get("id_avaliacao"),
@@ -138,9 +127,8 @@ def seed_database():
                 "data_avaliacao": row.get("data_avaliacao")
             })
         },
-        # 5. Fato Suporte
         {
-            "file": "data/silver_suporte_tickets.csv",
+            "file": os.path.join(BACKEND_DIR, "data/silver_suporte_tickets.csv"),
             "model": FatoSuporte,
             "mapper": lambda row: clean_nan_fields({
                 "ticket_id": row.get("ticket_id"),
@@ -156,7 +144,6 @@ def seed_database():
     ]
 
     try:
-        # Limpar registros anteriores para garantir idempotência
         print("\nLimpando dados anteriores das tabelas para evitar duplicidade...")
         db.query(FatoSuporte).delete()
         db.query(FatoAvaliacoes).delete()
@@ -166,7 +153,6 @@ def seed_database():
         db.commit()
         print("Limpeza concluída com sucesso.")
 
-        # Inicia o seed
         global_start = time.time()
         for mapping in csv_mappings:
             filepath = mapping["file"]
@@ -178,21 +164,17 @@ def seed_database():
                 continue
                 
             print(f"\nCarregando dados de '{filepath}'...")
-            # Lendo com utf-8-sig para ignorar automaticamente o caractere BOM (\ufeff)
             df = pd.read_csv(filepath, encoding="utf-8-sig")
             
-            # Tratando colunas para remover espaços e BOM nos nomes
             df.columns = [col.replace("\ufeff", "").strip() for col in df.columns]
             
             print(f"Mapeando {len(df)} linhas para a entidade '{model.__name__}'...")
-            # Converte as linhas do dataframe em dicionários mapeados usando a função mapper
             records = []
             for _, row in df.iterrows():
                 row_dict = row.to_dict()
                 mapped_record = mapper(row_dict)
                 records.append(mapped_record)
             
-            # Executa a inserção em blocos
             bulk_insert_in_chunks(db, model, records, batch_size=15000)
 
         elapsed_total = time.time() - global_start

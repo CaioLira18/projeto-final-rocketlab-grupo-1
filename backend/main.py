@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
-from routers import clientes, produtos, pedidos, dashboard
+from app.routes import cliente_router, produto_router, pedido_router, dashboard_router
 
 app = FastAPI(
     title="RocketLab API",
@@ -17,10 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(clientes.router)
-app.include_router(produtos.router)
-app.include_router(pedidos.router)
-app.include_router(dashboard.router)
+app.include_router(cliente_router)
+app.include_router(produto_router)
+app.include_router(pedido_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")

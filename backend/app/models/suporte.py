@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, Date, select
+from sqlalchemy import Column, String, Float, select
 from sqlalchemy.orm import column_property
-from database import Base
-from .cliente_models import Cliente
-from .pedidos_models import Pedidos
+from bd.database import Base
+from .cliente import Cliente
+from .pedido import Pedidos
+
 
 class FatoSuporte(Base):
     __tablename__ = "fato_suporte"
@@ -16,7 +17,6 @@ class FatoSuporte(Base):
     tempo_resolucao_horas = Column(Float, nullable=True)
     agente_suporte = Column(String, nullable=True)
 
-    # Subqueries to dynamically fetch client name and order date
     nome_cliente = column_property(
         select(Cliente.nome_cliente)
         .where(Cliente.id_cliente == id_cliente)

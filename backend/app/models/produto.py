@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, Date, Boolean
-from database import Base
+from sqlalchemy import Column, Integer, String, Float, Boolean
+from bd.database import Base
 
 
 class DimProduto(Base):

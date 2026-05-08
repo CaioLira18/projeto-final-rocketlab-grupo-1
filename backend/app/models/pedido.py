@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, Date, select
 from sqlalchemy.orm import column_property
-from database import Base
-from .cliente_models import Cliente
-from .dimProduto_models import DimProduto
+from bd.database import Base
+from .cliente import Cliente
+from .produto import DimProduto
+
 
 class Pedidos(Base):
     __tablename__ = "fato_vendas"
@@ -16,7 +17,6 @@ class Pedidos(Base):
     metodo_pagamento = Column(String)
     status_pedido = Column(String)
 
-    # Subqueries to dynamically fetch client/product name and category
     nome_cliente = column_property(
         select(Cliente.nome_cliente)
         .where(Cliente.id_cliente == id_cliente)

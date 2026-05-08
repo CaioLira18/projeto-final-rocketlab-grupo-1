@@ -70,7 +70,7 @@ Com o ambiente ativado e as dependências instaladas, crie a estrutura do banco 
 alembic upgrade head
 
 # Executa o script de seed para popular todas as tabelas (Dimensões e Fatos)
-python seed.py
+python bd/seed.py
 ```
 
 #### 🚀 5. Inicializando o Servidor
