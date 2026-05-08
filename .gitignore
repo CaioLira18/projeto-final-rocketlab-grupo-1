@@ -53,4 +53,5 @@ env/
 *~
 .DS_Store
 backend/db_stack_overgol
+ai-agent/stack_overgol
 *.log
