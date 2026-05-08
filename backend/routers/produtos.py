@@ -7,12 +7,8 @@ from database import get_db
 from models import DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos
 from schemas import ProdutoMetricas
 
-# Iniciando o router para produtos
 router = APIRouter(prefix="/produtos", tags=["Produtos"])
 
-# Definição de funções privadas para subqueries
-
-# Agregar dados de vendas, avaliações e suporte, agrupa por produto.
 def _build_subqueries():
     sq_vendas = (
         select(
@@ -38,7 +34,6 @@ def _build_subqueries():
         .subquery()
     )
 
-    # Tickets contados via fato_vendas para associar ao produto
     sq_suporte = (
         select(
             Pedidos.id_produto,
@@ -51,7 +46,7 @@ def _build_subqueries():
 
     return sq_vendas, sq_avaliacoes, sq_suporte
 
-# Converte o resultado da query em um schema de resposta
+
 def _row_to_schema(r) -> ProdutoMetricas:
     return ProdutoMetricas(
         id_produto=r.id_produto,
@@ -74,7 +69,6 @@ def _row_to_schema(r) -> ProdutoMetricas:
     )
 
 
-# Rota (Definição do endpoint) para listar produtos com métricas agregadas e filtros
 @router.get("/metricas", response_model=List[ProdutoMetricas]) 
 def listar_metricas_produtos(
     categoria: Optional[str] = Query(None, description="Filtrar por categoria do produto"),
@@ -112,7 +106,6 @@ def listar_metricas_produtos(
         .outerjoin(sq_suporte, DimProduto.id_produto == sq_suporte.c.id_produto)
     )
 
-    # Verificação de filtros
     if busca:
         query = query.filter(DimProduto.nome_produto.ilike(f"%{busca}%"))
     if categoria:
@@ -125,7 +118,6 @@ def listar_metricas_produtos(
     return [_row_to_schema(r) for r in query.offset(skip).limit(limit).all()]
 
 
-# Rota para buscar métricas de um produto específico por ID
 @router.get("/metricas/{produto_id}", response_model=ProdutoMetricas)
 def buscar_metricas_produto(produto_id: str, db: Session = Depends(get_db)):
     sq_vendas, sq_avaliacoes, sq_suporte = _build_subqueries()
@@ -157,7 +149,6 @@ def buscar_metricas_produto(produto_id: str, db: Session = Depends(get_db)):
         .first()
     )
 
-    # Se o produto não for encontrado, retorna 404
     if not resultado:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 

@@ -37,7 +37,7 @@ projeto-final-rocketlab-grupo-1/
 
 ### 1. Inicializando o Backend (FastAPI)
 
-Navegue para o diretório de backend, ative o ambiente virtual e execute o servidor uvicorn:
+Navegue para o diretório de backend, ative o ambiente virtual, crie as tabelas com o Alembic, popule-as com o seed e execute o servidor uvicorn:
 
 ```bash
 # 1. Acesse a pasta do backend
@@ -62,13 +62,26 @@ Crie o arquivo `.env` a partir do exemplo:
 cp .env.example .env
 ```
 
-Rode o servidor de desenvolvimento
+#### 🗄️ 4. Banco de Dados e Migrações (Alembic)
+Com o ambiente ativado e as dependências instaladas, crie a estrutura do banco e popule os dados a partir dos arquivos CSV locais na pasta `data/`:
+
+```bash
+# Executa as migrações do Alembic para estruturar o banco de dados (SQLite)
+alembic upgrade head
+
+# Executa o script de seed para popular todas as tabelas (Dimensões e Fatos)
+python seed.py
 ```
+
+#### 🚀 5. Inicializando o Servidor
+Rode o servidor de desenvolvimento:
+```bash
 uvicorn main:app --reload
 ```
 
-A API estará rodando em: `http://localhost:8080`
-Você pode acessar a documentação auto-gerada do backend pelo Swagger em: `http://localhost:8080/docs`
+A API estará rodando em: `http://localhost:8000` (ou na porta configurada, por padrão `8000` ou `8080` dependendo das suas variáveis locais).
+Você pode acessar a documentação auto-gerada do backend pelo Swagger em: `http://localhost:8000/docs`
+
 
 ### 2. Inicializando o Frontend (React/Vite)
 

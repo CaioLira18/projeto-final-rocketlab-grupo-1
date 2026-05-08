@@ -11,31 +11,23 @@ router = APIRouter(prefix="/clientes", tags=["Clientes"])
 
 @router.get("/", response_model=List[ClienteResponse])
 def listar_clientes(
-
-    # Filtros: Filtrar por nome, sobrenome, email, cidade, estado, país, genero, ...
     nome: Optional[str] = Query(None, description="Filtrar por nome"),
-    sobrenome: Optional[str] = Query(
-        None, description="Filtrar por sobrenome"),
+    sobrenome: Optional[str] = Query(None, description="Filtrar por sobrenome"),
     email: Optional[str] = Query(None, description="Filtrar por email"),
     cidade: Optional[str] = Query(None, description="Filtrar por cidade"),
     estado: Optional[str] = Query(None, description="Filtrar por estado"),
     pais: Optional[str] = Query(None, description="Filtrar por país"),
-    genero: Optional[str] = Query(
-        None, description="Filtrar por gênero (M/F)"),
-    origem: Optional[str] = Query(
-        None, description="Filtrar por origem (Web/App/Indicação)"),
+    genero: Optional[str] = Query(None, description="Filtrar por gênero (M/F)"),
+    origem: Optional[str] = Query(None, description="Filtrar por origem (Web/App/Indicação)"),
     idade_min: Optional[int] = Query(None, description="Idade mínima"),
     idade_max: Optional[int] = Query(None, description="Idade máxima"),
-    busca: Optional[str] = Query(
-        None, description="Busca geral: nome, sobrenome ou email"),
+    busca: Optional[str] = Query(None, description="Busca geral: nome, sobrenome ou email"),
     skip: int = Query(0, ge=0, description="Registros para pular (paginação)"),
-    limit: int = Query(
-        50, ge=1, le=500, description="Limite de registros (paginação)"),
+    limit: int = Query(50, ge=1, le=500, description="Limite de registros (paginação)"),
     db: Session = Depends(get_db),
 ):
     query = db.query(Cliente)
 
-    # Busca geral (nome, sobrenome ou email)
     if busca:
         query = query.filter(
             or_(
@@ -45,7 +37,6 @@ def listar_clientes(
             )
         )
 
-    # Filtros específicos
     if nome:
         query = query.filter(Cliente.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:
@@ -70,11 +61,9 @@ def listar_clientes(
     return query.offset(skip).limit(limit).all()
 
 
-# Buscar um cliente especifico via Id
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(
-        Cliente.id_cliente == cliente_id).first()
+    cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
     return cliente
@@ -82,8 +71,7 @@ def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
 
 @router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
 def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    cliente = db.query(Cliente).filter(
-        Cliente.id_cliente == cliente_id).first()
+    cliente = db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente não encontrado")
 
