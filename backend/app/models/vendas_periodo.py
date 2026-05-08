@@ -1,11 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float, Date
-from bd.database import Base
+from bd.database import BaseGold
 
-class VendasPeriodoGold(Base):
+class VendasPeriodo(BaseGold):
     __tablename__ = "dm_vendas_periodo"
 
-    # SQLite require a primary key. Since the source is aggregated facts, 
-    # we can create an auto-incrementing id as the primary key.
     id = Column(Integer, primary_key=True, autoincrement=True)
     data_pedido = Column(Date, index=True)
     ano_pedido = Column(Integer)

@@ -6,12 +6,11 @@ import numpy as np
 import pandas as pd
 from sqlalchemy.orm import Session
 
-# Adiciona o diretório raiz do backend ao sys.path para imports absolutos
 BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND_DIR)
 
-from bd.database import SessionLocal, engine, Base
-from app.models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos, VendasPeriodoGold, Cliente360Gold
+from bd.database import SessionLocal, engine_silver, engine_gold, Base, BaseGold
+from app.models import Cliente, DimProduto, FatoAvaliacoes, FatoSuporte, Pedidos, VendasPeriodo, Cliente360, ClienteGold, ProdutoGold, Produto360
 
 def parse_date_obj(val):
     if pd.isna(val) or val is None or val == "":
@@ -76,10 +75,13 @@ def bulk_insert_in_chunks(db: Session, Model, records: list, batch_size=10000):
     print(f"Inserção na tabela '{Model.__tablename__}' concluída em {elapsed:.2f} segundos!")
 
 def seed_database():
+    from bd.database import SessionGold
     db = SessionLocal()
-    print("Conectado ao banco de dados SQLite...")
+    db_gold = SessionGold()
+    print("Conectado aos bancos de dados SQLite (Silver e Gold)...")
     
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine_silver)
+    BaseGold.metadata.create_all(bind=engine_gold)
     
     csv_mappings = [
         {
@@ -166,9 +168,14 @@ def seed_database():
         db.query(Pedidos).delete()
         db.query(DimProduto).delete()
         db.query(Cliente).delete()
-        db.query(VendasPeriodoGold).delete()
-        db.query(Cliente360Gold).delete()
         db.commit()
+
+        db_gold.query(VendasPeriodo).delete()
+        db_gold.query(Cliente360).delete()
+        db_gold.query(ClienteGold).delete()
+        db_gold.query(ProdutoGold).delete()
+        db_gold.query(Produto360).delete()
+        db_gold.commit()
         print("Limpeza concluída com sucesso.")
 
         global_start = time.time()
@@ -195,7 +202,6 @@ def seed_database():
             
             bulk_insert_in_chunks(db, model, records, batch_size=15000)
 
-        # População das Tabelas da Camada Gold
         print("\n--- INICIANDO POPULAÇÃO DA CAMADA GOLD ---")
         gold_mappings = [
             {
@@ -206,6 +212,21 @@ def seed_database():
             {
                 "file": os.path.join(BACKEND_DIR, "data/gold/dm_cliente_360.csv"),
                 "table": "dm_cliente_360",
+                "parse_dates": []
+            },
+            {
+                "file": os.path.join(BACKEND_DIR, "data/gold/dim_cliente.csv"),
+                "table": "dim_cliente",
+                "parse_dates": []
+            },
+            {
+                "file": os.path.join(BACKEND_DIR, "data/gold/dim_produto.csv"),
+                "table": "dim_produto",
+                "parse_dates": []
+            },
+            {
+                "file": os.path.join(BACKEND_DIR, "data/gold/dm_produto_360.csv"),
+                "table": "dm_produto_360",
                 "parse_dates": []
             }
         ]
@@ -224,21 +245,18 @@ def seed_database():
             df_gold = pd.read_csv(filepath, encoding="utf-8-sig")
             df_gold.columns = [col.replace("\ufeff", "").strip() for col in df_gold.columns]
             
-            # Converte as colunas de data apropriadas para datetime se necessário
             for date_col in parse_dates:
                 if date_col in df_gold.columns:
                     df_gold[date_col] = pd.to_datetime(df_gold[date_col]).dt.date
 
             print(f"Inserindo {len(df_gold)} registros na tabela Gold '{tablename}' via to_sql...")
-            df_gold.to_sql(tablename, engine, if_exists="append", index=False, chunksize=20000)
+            df_gold.to_sql(tablename, engine_gold, if_exists="append", index=False, chunksize=20000)
             print(f"Tabela Gold '{tablename}' populada com sucesso em {time.time() - start_gold:.2f} segundos!")
 
-        # Criação do usuário administrador padrão
         print("\nCriando usuário administrador padrão para testes...")
         from app.models.usuario import Usuario
         from app.services.auth_service import get_password_hash
 
-        # Limpa usuários anteriores para evitar duplicidade
         db.query(Usuario).delete()
         db.commit()
 
@@ -261,6 +279,7 @@ def seed_database():
         db.rollback()
     finally:
         db.close()
+        db_gold.close()
 
 if __name__ == "__main__":
     seed_database()

@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, Date
-from bd.database import Base
+from sqlalchemy import Column, Integer, String, Float, Boolean
+from bd.database import BaseGold
 
-class Cliente360Gold(Base):
+class Cliente360(BaseGold):
     __tablename__ = "dm_cliente_360"
 
     id_cliente = Column(String, primary_key=True, index=True)
