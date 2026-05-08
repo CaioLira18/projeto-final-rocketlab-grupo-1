@@ -6,8 +6,13 @@ from datetime import date
 from bd.database import get_db
 from app.schemas import PedidoListItem
 from app.services import list_pedidos
+from app.routes.auth import get_current_user
 
-router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
+router = APIRouter(
+    prefix="/pedidos",
+    tags=["Pedidos"],
+    dependencies=[Depends(get_current_user)]
+)
 
 
 @router.get("/", response_model=List[PedidoListItem], summary="Listagem de pedidos")

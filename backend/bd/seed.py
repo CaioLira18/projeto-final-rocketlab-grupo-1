@@ -177,6 +177,26 @@ def seed_database():
             
             bulk_insert_in_chunks(db, model, records, batch_size=15000)
 
+        # Criação do usuário administrador padrão
+        print("\nCriando usuário administrador padrão para testes...")
+        from app.models.usuario import Usuario
+        from app.services.auth_service import get_password_hash
+
+        # Limpa usuários anteriores para evitar duplicidade
+        db.query(Usuario).delete()
+        db.commit()
+
+        default_admin = Usuario(
+            username="admin",
+            hashed_password=get_password_hash("admin123"),
+            is_active=True
+        )
+        db.add(default_admin)
+        db.commit()
+        print("👤 Usuário administrador criado com sucesso!")
+        print("   👉 Username: admin")
+        print("   👉 Senha: admin123")
+
         elapsed_total = time.time() - global_start
         print(f"\n🎉 Sucesso! Banco de dados populado com sucesso em {elapsed_total:.2f} segundos!")
 

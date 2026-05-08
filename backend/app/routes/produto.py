@@ -6,8 +6,13 @@ from bd.database import get_db
 from app.models import DimProduto
 from app.schemas import ProdutoMetricas
 from app.services import build_product_metric_subqueries, map_row_to_product_metric_schema
+from app.routes.auth import get_current_user
 
-router = APIRouter(prefix="/produtos", tags=["Produtos"])
+router = APIRouter(
+    prefix="/produtos",
+    tags=["Produtos"],
+    dependencies=[Depends(get_current_user)]
+)
 
 
 @router.get("/metricas", response_model=List[ProdutoMetricas]) 

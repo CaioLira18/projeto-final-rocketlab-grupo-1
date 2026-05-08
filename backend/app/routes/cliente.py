@@ -5,8 +5,13 @@ from typing import Optional, List
 from bd.database import get_db
 from app.schemas import ClienteResponse, ClienteHistoricoResponse
 from app.services import list_clientes, get_cliente_by_id, get_cliente_historico
+from app.routes.auth import get_current_user
 
-router = APIRouter(prefix="/clientes", tags=["Clientes"])
+router = APIRouter(
+    prefix="/clientes",
+    tags=["Clientes"],
+    dependencies=[Depends(get_current_user)]
+)
 
 
 @router.get("/", response_model=List[ClienteResponse])
