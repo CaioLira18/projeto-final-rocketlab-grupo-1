@@ -6,6 +6,7 @@ app = FastAPI(
     title="RocketLab API",
     description="Backend for the final project",
     version="1.0.0",
+    swagger_ui_parameters={"tryItOutEnabled": True},
 )
 
 app.add_middleware(
