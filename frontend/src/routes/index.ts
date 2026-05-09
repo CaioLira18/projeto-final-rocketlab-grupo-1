@@ -1,2 +1,0 @@
-/* Rotas: AppRouter */
-export {}
