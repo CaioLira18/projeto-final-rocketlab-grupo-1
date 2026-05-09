@@ -1,0 +1,2 @@
+/* Páginas de suporte */
+export {}
