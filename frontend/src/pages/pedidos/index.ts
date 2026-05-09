@@ -1,0 +1,2 @@
+/* Páginas de pedidos */
+export {}
