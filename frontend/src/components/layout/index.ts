@@ -1,2 +1,2 @@
 /* Componentes estruturais de layout, headers, footers, etc. */
-export {}
+export { NavBar } from "./NavBar";
