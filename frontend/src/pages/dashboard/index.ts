@@ -1,4 +1,2 @@
-/* Página principal com KPIs e gráficos agregados
- * DashboardPage
- */
+/* Dashboard */
 export {}

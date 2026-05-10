@@ -1,2 +1,3 @@
 /* Componentes atômicos de UI botões, inputs, cards, tables, modais, etc. */
-export {}
+export { Button } from './Button'
+export type { ButtonVariant, ButtonSize, ButtonIntent } from './Button'
