@@ -11,10 +11,14 @@ from alembic import context
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 # Importa o Base do banco de dados e os modelos para registrar o metadata
-from bd.database import Base
+from bd.database import Base, DATABASE_URL_SILVER
 import app.models  # Certifica de importar os modelos para registrar as tabelas
 
 config = context.config
+
+# Sobrescreve dinamicamente a URL do banco com o configurado na variável de ambiente (.env)
+if DATABASE_URL_SILVER:
+    config.set_main_option("sqlalchemy.url", DATABASE_URL_SILVER)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

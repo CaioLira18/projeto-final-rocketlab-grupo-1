@@ -1,5 +1,106 @@
-from pydantic import BaseModel, Field
-from typing import Optional
+import re
+from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Any
+
+# ==============================================================================
+# FUNÇÕES DE HIGIENIZAÇÃO (PADRÃO CAMADA SILVER DO DATABRICKS)
+# ==============================================================================
+
+def clean_nome_produto(v: Any) -> Optional[str]:
+    if v is None:
+        return None
+    val_str = str(v).strip()
+    if val_str == "":
+        raise ValueError("O nome do produto não pode ser vazio")
+    return val_str
+
+def clean_categoria_produto(v: Any) -> str:
+    if v is None:
+        return "Outros"
+    # Trim e lower
+    cat = str(v).strip().lower()
+    # Remove números e o caractere @
+    cat = re.sub(r"[0-9@]", "", cat)
+    # Mapeamento oficial da camada Silver do Databricks
+    if cat in ["eletronicos", "eletronico", "elet", "electronico", "electronics"]:
+        return "Eletrônicos"
+    elif cat in ["vestuario", "vestu", "vest", "vestuarios", "moda", "roupa", "roupas"]:
+        return "Vestuário"
+    elif cat in ["casa", "cas", "casa e jardim", "lar"]:
+        return "Casa"
+    elif cat in ["esportes", "esporte", "esport", "esp", "sport", "sports"]:
+        return "Esportes"
+    elif cat in ["beleza", "bel", "belz", "cosmeticos", "cosméticos"]:
+        return "Beleza"
+    elif cat in ["automotivo", "autom", "aut", "automotiv", "auto"]:
+        return "Automotivo"
+    elif cat in ["brinquedo", "brinquedos", "brin", "brinq", "toys"]:
+        return "Brinquedos"
+    elif cat in ["moveis", "mov", "mveis", "móveis", "furniture"]:
+        return "Móveis"
+    else:
+        return "Outros"
+
+def clean_preco_produto(v: Any) -> Optional[float]:
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        val_float = float(v)
+    else:
+        val_str = str(v).strip()
+        if val_str.lower() in ["null", "none", ""]:
+            return None
+        # Limpa R$, espaços e converte vírgula para ponto
+        val_str = re.sub(r"[R$\s]", "", val_str)
+        val_str = val_str.replace(",", ".")
+        try:
+            val_float = float(val_str)
+        except ValueError:
+            raise ValueError("Preço do produto inválido")
+            
+    if val_float <= 0:
+        raise ValueError("O preço do produto deve ser maior que zero")
+    return val_float
+
+def clean_estoque_produto(v: Any) -> int:
+    if v is None:
+        return 0
+    if isinstance(v, int):
+        val_int = v
+    elif isinstance(v, float):
+        val_int = int(v)
+    else:
+        val_str = str(v).strip()
+        if val_str.lower() in ["null", "none", ""]:
+            return 0
+        try:
+            val_int = int(float(val_str))
+        except ValueError:
+            return 0
+            
+    if val_int < 0:
+        raise ValueError("A quantidade em estoque não pode ser negativa")
+    return val_int
+
+def clean_produto_ativo(v: Any) -> Optional[bool]:
+    if v is None:
+        return None
+    if isinstance(v, bool):
+        return v
+    val_str = str(v).strip().lower()
+    if val_str in ["s", "sim", "yes", "1", "true"]:
+        return True
+    elif val_str in ["n", "nao", "não", "no", "0", "false"]:
+        return False
+    return None
+
+def clean_fornecedor_produto(v: Any) -> Optional[str]:
+    if v is None:
+        return None
+    val_str = str(v).strip()
+    if val_str.lower() in ["null", "none", ""]:
+        return None
+    return val_str
 
 
 class ProdutoCreate(BaseModel):
@@ -11,6 +112,36 @@ class ProdutoCreate(BaseModel):
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(True, description="Indica se o produto está ativo")
 
+    @field_validator("nome_produto", mode="before")
+    @classmethod
+    def val_nome_produto(cls, v):
+        return clean_nome_produto(v)
+
+    @field_validator("categoria_produto", mode="before")
+    @classmethod
+    def val_categoria_produto(cls, v):
+        return clean_categoria_produto(v)
+
+    @field_validator("preco_produto", mode="before")
+    @classmethod
+    def val_preco_produto(cls, v):
+        return clean_preco_produto(v)
+
+    @field_validator("estoque_produto", mode="before")
+    @classmethod
+    def val_estoque_produto(cls, v):
+        return clean_estoque_produto(v)
+
+    @field_validator("produto_ativo", mode="before")
+    @classmethod
+    def val_produto_ativo(cls, v):
+        return clean_produto_ativo(v)
+
+    @field_validator("fornecedor_produto", mode="before")
+    @classmethod
+    def val_fornecedor_produto(cls, v):
+        return clean_fornecedor_produto(v)
+
 
 class ProdutoUpdate(BaseModel):
     nome_produto: Optional[str] = Field(None, description="Nome do produto")
@@ -19,6 +150,49 @@ class ProdutoUpdate(BaseModel):
     fornecedor_produto: Optional[str] = Field(None, description="Fornecedor do produto")
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(None, description="Indica se o produto está ativo")
+
+    @field_validator("nome_produto", mode="before")
+    @classmethod
+    def val_nome_produto(cls, v):
+        if v is None:
+            return None
+        return clean_nome_produto(v)
+
+    @field_validator("categoria_produto", mode="before")
+    @classmethod
+    def val_categoria_produto(cls, v):
+        if v is None:
+            return None
+        return clean_categoria_produto(v)
+
+    @field_validator("preco_produto", mode="before")
+    @classmethod
+    def val_preco_produto(cls, v):
+        if v is None:
+            return None
+        return clean_preco_produto(v)
+
+    @field_validator("estoque_produto", mode="before")
+    @classmethod
+    def val_estoque_produto(cls, v):
+        if v is None:
+            return None
+        return clean_estoque_produto(v)
+
+    @field_validator("produto_ativo", mode="before")
+    @classmethod
+    def val_produto_ativo(cls, v):
+        if v is None:
+            return None
+        return clean_produto_ativo(v)
+
+    @field_validator("fornecedor_produto", mode="before")
+    @classmethod
+    def val_fornecedor_produto(cls, v):
+        if v is None:
+            return None
+        return clean_fornecedor_produto(v)
+
 
 
 class ProdutoResponse(BaseModel):
