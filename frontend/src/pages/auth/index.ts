@@ -1,2 +1,3 @@
 /* Páginas de autenticação, login, registro, recovery, etc. */
-export {}
+export { Login } from './Login'
+
