@@ -23,7 +23,6 @@ export function NavBar() {
 
   return (
     <aside className="w-64 bg-primary text-white flex flex-col justify-between border-r border-primary-400 h-screen sticky top-0 select-none">
-      {/* Header com Logo */}
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
           <div className="bg-secondary p-2 rounded-lg text-white">
@@ -37,7 +36,6 @@ export function NavBar() {
           </div>
         </div>
 
-        {/* Links de Navegação */}
         <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon
@@ -62,7 +60,6 @@ export function NavBar() {
         </nav>
       </div>
 
-      {/* Footer com Perfil e Logout */}
       <div className="p-6 border-t border-primary-400">
         <div className="flex items-center gap-2.5 mb-4 overflow-hidden">
           <div className="h-9 w-9 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-body-2-bold shrink-0">

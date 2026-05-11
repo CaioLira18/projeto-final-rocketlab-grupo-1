@@ -10,7 +10,6 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, leftIcon, labelAction, className, type = "text", id, ...props }, ref) => {
-    // Gera um ID baseado na label caso não seja fornecido (ajuda na acessibilidade)
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-")
 
     return (

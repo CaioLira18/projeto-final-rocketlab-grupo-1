@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { apiFetch } from "@/services"
 
 interface Usuario {
@@ -30,7 +30,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await apiFetch<Usuario>("/auth/me")
       setUser(data)
     } catch (err) {
-      // Se houver falha de autenticação (ex: expirado), remove o token local
       localStorage.removeItem("token")
       setUser(null)
     } finally {
