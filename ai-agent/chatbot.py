@@ -171,7 +171,8 @@ REGRAS DE RESPOSTA:
 - Percentuais com 1 casa decimal
 - Se pergunta for vaga, peça clarificação: "Você quer de qual período? Qual região?"
 - Respostas concisas mas completas
-- Para seguimentos: use o contexto anterior quando fazer follow-ups"""
+- Para seguimentos: use o contexto anterior quando fazer follow-ups
+- Se a pergunta for sobre algo que não está no banco de dados informe que não tem acesso a essa informação, mas ofereça ajuda com os dados disponíveis."""
     
     messages = [{"role": "system", "content": system_prompt}]
     
