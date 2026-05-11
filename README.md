@@ -22,7 +22,8 @@ Nosso pipeline de dados foi construído seguindo a Arquitetura Medalhão, garant
 <br>
 <br>
 🚀 Entrega e Orquestração: A etapa final exporta os dados modelados para um banco SQLite local, entregando altíssima portabilidade e experiência zero-setup (serverless) para testes e consumo por ferramentas de BI. Tudo isso é orquestrado por uma DAG robusta com dependências seguras que roda diariamente à meia-noite.
-<img width="1919" height="909" alt="Job Stack OverGol" src="https://github.com/user-attachments/assets/87f1fe1b-8da2-44a4-a029-119aab9a1e5c" />
+<img width="1333" height="667" alt="Captura de tela 2026-05-11 091912" src="https://github.com/user-attachments/assets/80ff4968-543e-48e5-9ef0-49a4f0c583ef" />
+
 
 ## Links Úteis
 [🔗 Documentação Completa - Fluxo de Dados](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing)   
