@@ -1,2 +1,2 @@
-/* Páginas de pedidos */
-export {}
+export { Pedidos } from "./Pedidos"
+export { default } from "./Pedidos"

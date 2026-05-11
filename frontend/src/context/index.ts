@@ -1,2 +1,3 @@
 /* React Contexts, autenticação, etc. */
-export {}
+export { AuthProvider, useAuth } from './AuthContext'
+

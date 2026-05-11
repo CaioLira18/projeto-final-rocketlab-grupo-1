@@ -1,2 +1,2 @@
-/* Páginas de clientes */
-export {}
+export { Clientes } from "./Clientes"
+export { default } from "./Clientes"

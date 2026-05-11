@@ -1,2 +1,2 @@
-/* Páginas de suporte */
-export {}
+export { Suporte } from "./Suporte"
+export { default } from "./Suporte"
