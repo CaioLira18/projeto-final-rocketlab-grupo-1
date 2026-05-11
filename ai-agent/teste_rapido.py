@@ -26,7 +26,8 @@ except Exception as e:
 print("✓ Teste 2: Conexão com banco de dados...")
 try:
     import sqlite3
-    conn = sqlite3.connect('stack_overgol')
+    DB_PATH = r'..\backend\bd\app_gold.db'
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
     tables = cursor.fetchall()
@@ -42,7 +43,7 @@ try:
         print()
 except Exception as e:
     print(f"  ❌ ERRO: {e}\n")
-    print("  📌 Dica: Certifique-se que 'stack_overgol' está no mesmo diretório\n")
+    print(f"  📌 Dica: Certifique-se que o banco existe em: {DB_PATH}\n")
 
 # Teste 3: Ferramentas básicas
 print("✓ Teste 3: Executando ferramentas básicas...")
@@ -162,7 +163,7 @@ print("""
    - Execute: echo API_KEY=sua_chave > .env
 
 3. Se faltou banco de dados:
-   - Certifique-se que 'stack_overgol' está no diretório ai-agent
+   - Certifique-se que 'app_gold.db' está em: backend\bd\
    - Ou atualize DB_PATH em tools.py
 
 4. Se houve outros erros:

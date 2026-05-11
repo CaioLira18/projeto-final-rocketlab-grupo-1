@@ -1,6 +1,7 @@
 import sqlite3
+import os
 
-DB_PATH = 'stack_overgol'
+DB_PATH = r'..\backend\bd\app_gold.db'
 
 def execute_query(query, params=()):
     """Executa query no banco de dados SQLite e retorna resultados como dicts"""
@@ -30,7 +31,7 @@ def get_saude_financeira_geral():
             COUNT(CASE WHEN status_pedido = 'Cancelado' THEN 1 END) AS pedidos_cancelados,
             ROUND(COUNT(CASE WHEN status_pedido = 'Entregue' THEN 1 END) * 100.0 / COUNT(*), 2) AS taxa_entrega_percentual,
             ROUND(COUNT(CASE WHEN status_pedido = 'Cancelado' THEN 1 END) * 100.0 / COUNT(*), 2) AS taxa_cancelamento_percentual
-        FROM fato_vendas
+        FROM dm_vendas_periodo
         """
         res = execute_query(query)
         if res and isinstance(res, list):
@@ -55,7 +56,7 @@ def get_ltv_por_cliente():
             ROUND(
                 (julianday('now') - julianday(MIN(data_pedido))) / 365.25, 1
             ) AS anos_como_cliente
-        FROM fato_vendas
+        FROM dm_vendas_periodo
         GROUP BY id_cliente, nome_cliente
         ORDER BY ltv DESC
         LIMIT 50
@@ -87,7 +88,7 @@ def get_ticket_medio_por_periodo(tipo_periodo='mes'):
             ROUND(AVG(valor_pedido), 2) AS ticket_medio,
             ROUND(SUM(valor_pedido), 2) AS receita_total,
             COUNT(DISTINCT id_cliente) AS clientes_unicos
-        FROM fato_vendas
+        FROM dm_vendas_periodo
         GROUP BY {periodo_expr}
         ORDER BY periodo DESC
         LIMIT 12
@@ -316,7 +317,7 @@ def get_receita_por_categoria():
             ROUND(SUM(fv.valor_pedido), 2) AS receita_total,
             ROUND(AVG(fv.valor_pedido), 2) AS ticket_medio,
             ROUND(COUNT(CASE WHEN fv.status_pedido = 'Entregue' THEN 1 END) * 100.0 / COUNT(*), 2) AS taxa_entrega
-        FROM fato_vendas fv
+        FROM dm_vendas_periodo fv
         GROUP BY fv.categoria_produto
         ORDER BY receita_total DESC
         """
@@ -334,8 +335,8 @@ def get_metodos_pagamento_populares():
             COUNT(id_pedido) AS total_pedidos,
             ROUND(SUM(valor_pedido), 2) AS receita_total,
             ROUND(AVG(valor_pedido), 2) AS ticket_medio,
-            ROUND(COUNT(id_pedido) * 100.0 / (SELECT COUNT(*) FROM fato_vendas), 2) AS percentual_pedidos
-        FROM fato_vendas
+            ROUND(COUNT(id_pedido) * 100.0 / (SELECT COUNT(*) FROM dm_vendas_periodo), 2) AS percentual_pedidos
+        FROM dm_vendas_periodo
         WHERE metodo_pagamento IS NOT NULL
         GROUP BY metodo_pagamento
         ORDER BY total_pedidos DESC
@@ -353,8 +354,8 @@ def get_status_pedidos_distribuicao():
             status_pedido,
             COUNT(id_pedido) AS total_pedidos,
             ROUND(SUM(valor_pedido), 2) AS receita,
-            ROUND(COUNT(id_pedido) * 100.0 / (SELECT COUNT(*) FROM fato_vendas), 2) AS percentual
-        FROM fato_vendas
+            ROUND(COUNT(id_pedido) * 100.0 / (SELECT COUNT(*) FROM dm_vendas_periodo), 2) AS percentual
+        FROM dm_vendas_periodo
         GROUP BY status_pedido
         ORDER BY total_pedidos DESC
         """
@@ -373,8 +374,8 @@ def get_vendas_por_estado():
             COUNT(DISTINCT fv.id_cliente) AS clientes_unicos,
             ROUND(SUM(fv.valor_pedido), 2) AS receita_total,
             ROUND(AVG(fv.valor_pedido), 2) AS ticket_medio,
-            ROUND(SUM(fv.valor_pedido) * 100.0 / (SELECT SUM(valor_pedido) FROM fato_vendas), 2) AS percentual_receita
-        FROM fato_vendas fv
+            ROUND(SUM(fv.valor_pedido) * 100.0 / (SELECT SUM(valor_pedido) FROM dm_vendas_periodo), 2) AS percentual_receita
+        FROM dm_vendas_periodo fv
         JOIN dim_cliente c ON fv.id_cliente = c.id_cliente
         WHERE c.estado_cliente IS NOT NULL
         GROUP BY c.estado_cliente
@@ -508,7 +509,7 @@ def get_produtos_mais_vendidos(limite=20):
             ROUND(SUM(valor_pedido), 2) AS receita_total,
             ROUND(AVG(valor_pedido), 2) AS preco_medio,
             COUNT(DISTINCT id_cliente) AS clientes_unicos
-        FROM fato_vendas
+        FROM dm_vendas_periodo
         GROUP BY nome_produto, categoria_produto
         ORDER BY total_vendas DESC
         LIMIT ?
@@ -527,7 +528,7 @@ def get_produtos_menos_vendidos(limite=10):
             categoria_produto,
             COUNT(id_pedido) AS total_vendas,
             ROUND(SUM(valor_pedido), 2) AS receita_total
-        FROM fato_vendas
+        FROM dm_vendas_periodo
         GROUP BY nome_produto, categoria_produto
         ORDER BY total_vendas ASC
         LIMIT ?
@@ -549,8 +550,8 @@ def comparar_periodos(tipo_periodo='mes'):
             COUNT(DISTINCT id_cliente) AS clientes_unicos,
             ROUND(SUM(valor_pedido), 2) AS receita,
             ROUND(AVG(valor_pedido), 2) AS ticket_medio,
-            ROUND(SUM(valor_pedido) * 100.0 / (SELECT SUM(valor_pedido) FROM fato_vendas), 2) AS percentual_receita_total
-        FROM fato_vendas
+            ROUND(SUM(valor_pedido) * 100.0 / (SELECT SUM(valor_pedido) FROM dm_vendas_periodo), 2) AS percentual_receita_total
+        FROM dm_vendas_periodo
         GROUP BY periodo
         ORDER BY periodo DESC
         LIMIT 12
