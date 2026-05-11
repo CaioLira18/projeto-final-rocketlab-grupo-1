@@ -312,6 +312,7 @@ def seed_database():
 
         default_admin = Usuario(
             username="admin",
+            email="admin@stackovergol.com",
             hashed_password=get_password_hash("admin123"),
             is_active=True
         )
@@ -319,6 +320,7 @@ def seed_database():
         db.commit()
         print("👤 Usuário administrador criado com sucesso!")
         print("   👉 Username: admin")
+        print("   👉 Email: admin@stackovergol.com")
         print("   👉 Senha: admin123")
 
         elapsed_total = time.time() - global_start
