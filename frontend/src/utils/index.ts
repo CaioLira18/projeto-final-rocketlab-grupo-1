@@ -1,2 +1,2 @@
 /* Utilitários puros, formatações, etc. */
-export {}
+export { cn } from './cn'
