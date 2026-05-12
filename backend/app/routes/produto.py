@@ -2,12 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from bd.database import get_db
-from app.models import DimProduto
+from bd.database import get_db, get_db_gold
+from app.models import DimProduto, Produto360
 from app.schemas import ProdutoMetricas, ProdutoCreate, ProdutoUpdate, ProdutoResponse
 from app.services import (
-    build_product_metric_subqueries,
-    map_row_to_product_metric_schema,
     create_produto,
     update_produto,
     delete_produto,
@@ -30,33 +28,10 @@ def listar_metricas_produtos(
     skip: int = Query(0, ge=0, description="Registros para pular (paginação)"),
     limit: int = Query(50, ge=1, le=10000, description="Limite de registros por página"),
     db: Session = Depends(get_db),
+    db_gold: Session = Depends(get_db_gold),
 ):
-    sq_vendas, sq_avaliacoes, sq_suporte = build_product_metric_subqueries()
-
-    query = (
-        db.query(
-            DimProduto.id_produto,
-            DimProduto.nome_produto,
-            DimProduto.categoria_produto,
-            DimProduto.preco_produto,
-            DimProduto.faixa_preco,
-            DimProduto.estoque_produto,
-            DimProduto.produto_ativo,
-            DimProduto.fornecedor_produto,
-            sq_vendas.c.total_pedidos,
-            sq_vendas.c.quantidade_vendida,
-            sq_vendas.c.receita_total,
-            sq_vendas.c.ticket_medio,
-            sq_avaliacoes.c.total_avaliacoes,
-            sq_avaliacoes.c.nota_media,
-            sq_avaliacoes.c.nps_medio,
-            sq_avaliacoes.c.taxa_recomendacao,
-            sq_suporte.c.total_tickets,
-        )
-        .outerjoin(sq_vendas, DimProduto.id_produto == sq_vendas.c.id_produto)
-        .outerjoin(sq_avaliacoes, DimProduto.id_produto == sq_avaliacoes.c.id_produto)
-        .outerjoin(sq_suporte, DimProduto.id_produto == sq_suporte.c.id_produto)
-    )
+    # bsca os dados em tempo real da camada Silver (Garante CRUD instantâneo para novo, edit e delete!)
+    query = db.query(DimProduto)
 
     if busca:
         query = query.filter(DimProduto.nome_produto.ilike(f"%{busca}%"))
@@ -67,44 +42,91 @@ def listar_metricas_produtos(
     if produto_ativo is not None:
         query = query.filter(DimProduto.produto_ativo == produto_ativo)
 
-    return [map_row_to_product_metric_schema(r) for r in query.offset(skip).limit(limit).all()]
+    produtos_silver = query.offset(skip).limit(limit).all()
+    if not produtos_silver:
+        return []
+
+    # busca as metricas na camada Gold
+    ids_produtos = [p.id_produto for p in produtos_silver]
+    metrics_gold = db_gold.query(Produto360).filter(Produto360.id_produto.in_(ids_produtos)).all()
+    metrics_map = {m.id_produto: m for m in metrics_gold}
+
+    # mesclagem de memoria pra tentar fazer a consulta mais rapida
+    result = []
+    for p in produtos_silver:
+        m = metrics_map.get(p.id_produto)
+        
+        taxa_rec = None
+        if m and m.taxa_recomendacao_produto is not None:
+            # logica de que sefor decimal (ex: <= 1.0), converte para percentual (0.78 -> 78.0) - averiguar
+            taxa_rec = m.taxa_recomendacao_produto * 100 if m.taxa_recomendacao_produto <= 1.0 else m.taxa_recomendacao_produto
+            taxa_rec = round(taxa_rec, 2)
+
+        result.append(ProdutoMetricas(
+            id_produto=p.id_produto,
+            nome_produto=p.nome_produto,
+            categoria_produto=p.categoria_produto,
+            preco_produto=p.preco_produto,
+            faixa_preco=p.faixa_preco,
+            estoque_produto=p.estoque_produto,
+            produto_ativo=p.produto_ativo,
+            fornecedor_produto=p.fornecedor_produto,
+            
+            total_pedidos=m.total_pedidos if m else 0,
+            quantidade_vendida=m.quantidade_vendida if m else 0,
+            receita_total=m.receita_total_produto if m else 0.0,
+            ticket_medio=round(m.ticket_medio_produto, 2) if m and m.ticket_medio_produto is not None else None,
+            
+            total_avaliacoes=m.total_avaliacoes if m else 0,
+            nota_media=round(m.nota_media_produto, 2) if m and m.nota_media_produto is not None else None,
+            nps_medio=round(m.nps_medio_produto, 2) if m and m.nps_medio_produto is not None else None,
+            taxa_recomendacao=taxa_rec,
+            
+            total_tickets=m.total_tickets_produto if m else 0
+        ))
+
+    return result
 
 
 @router.get("/metricas/{produto_id}", response_model=ProdutoMetricas)
-def buscar_metricas_produto(produto_id: str, db: Session = Depends(get_db)):
-    sq_vendas, sq_avaliacoes, sq_suporte = build_product_metric_subqueries()
-
-    resultado = (
-        db.query(
-            DimProduto.id_produto,
-            DimProduto.nome_produto,
-            DimProduto.categoria_produto,
-            DimProduto.preco_produto,
-            DimProduto.faixa_preco,
-            DimProduto.estoque_produto,
-            DimProduto.produto_ativo,
-            DimProduto.fornecedor_produto,
-            sq_vendas.c.total_pedidos,
-            sq_vendas.c.quantidade_vendida,
-            sq_vendas.c.receita_total,
-            sq_vendas.c.ticket_medio,
-            sq_avaliacoes.c.total_avaliacoes,
-            sq_avaliacoes.c.nota_media,
-            sq_avaliacoes.c.nps_medio,
-            sq_avaliacoes.c.taxa_recomendacao,
-            sq_suporte.c.total_tickets,
-        )
-        .outerjoin(sq_vendas, DimProduto.id_produto == sq_vendas.c.id_produto)
-        .outerjoin(sq_avaliacoes, DimProduto.id_produto == sq_avaliacoes.c.id_produto)
-        .outerjoin(sq_suporte, DimProduto.id_produto == sq_suporte.c.id_produto)
-        .filter(DimProduto.id_produto == produto_id)
-        .first()
-    )
-
-    if not resultado:
+def buscar_metricas_produto(
+    produto_id: str, 
+    db: Session = Depends(get_db),
+    db_gold: Session = Depends(get_db_gold)
+):
+    p = db.query(DimProduto).filter(DimProduto.id_produto == produto_id).first()
+    if not p:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
-    return map_row_to_product_metric_schema(resultado)
+    m = db_gold.query(Produto360).filter(Produto360.id_produto == produto_id).first()
+
+    taxa_rec = None
+    if m and m.taxa_recomendacao_produto is not None:
+        taxa_rec = m.taxa_recomendacao_produto * 100 if m.taxa_recomendacao_produto <= 1.0 else m.taxa_recomendacao_produto
+        taxa_rec = round(taxa_rec, 2)
+
+    return ProdutoMetricas(
+        id_produto=p.id_produto,
+        nome_produto=p.nome_produto,
+        categoria_produto=p.categoria_produto,
+        preco_produto=p.preco_produto,
+        faixa_preco=p.faixa_preco,
+        estoque_produto=p.estoque_produto,
+        produto_ativo=p.produto_ativo,
+        fornecedor_produto=p.fornecedor_produto,
+        
+        total_pedidos=m.total_pedidos if m else 0,
+        quantidade_vendida=m.quantidade_vendida if m else 0,
+        receita_total=m.receita_total_produto if m else 0.0,
+        ticket_medio=round(m.ticket_medio_produto, 2) if m and m.ticket_medio_produto is not None else None,
+        
+        total_avaliacoes=m.total_avaliacoes if m else 0,
+        nota_media=round(m.nota_media_produto, 2) if m and m.nota_media_produto is not None else None,
+        nps_medio=round(m.nps_medio_produto, 2) if m and m.nps_medio_produto is not None else None,
+        taxa_recomendacao=taxa_rec,
+        
+        total_tickets=m.total_tickets_produto if m else 0
+    )
 
 
 @router.get("/", response_model=List[ProdutoResponse], summary="Listagem básica de produtos")
