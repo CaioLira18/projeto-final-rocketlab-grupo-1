@@ -28,7 +28,7 @@ def listar_metricas_produtos(
     produto_ativo: Optional[bool] = Query(None, description="Filtrar produtos ativos (true) ou inativos (false)"),
     busca: Optional[str] = Query(None, description="Busca por nome do produto"),
     skip: int = Query(0, ge=0, description="Registros para pular (paginação)"),
-    limit: int = Query(50, ge=1, le=500, description="Limite de registros por página"),
+    limit: int = Query(50, ge=1, le=10000, description="Limite de registros por página"),
     db: Session = Depends(get_db),
 ):
     sq_vendas, sq_avaliacoes, sq_suporte = build_product_metric_subqueries()
@@ -113,7 +113,7 @@ def listar_produtos(
     categoria: Optional[str] = Query(None, description="Filtrar por categoria"),
     produto_ativo: Optional[bool] = Query(None, description="Filtrar por status ativo/inativo"),
     skip: int = Query(0, ge=0, description="Pular N registros"),
-    limit: int = Query(50, ge=1, le=500, description="Limite de registros"),
+    limit: int = Query(50, ge=1, le=10000, description="Limite de registros"),
     db: Session = Depends(get_db),
 ):
     query = db.query(DimProduto)

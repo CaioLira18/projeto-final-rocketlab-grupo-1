@@ -48,11 +48,34 @@ export interface Cliente360 {
 
 /* Produto */
 export interface Produto {
-  id: number
-  nome: string
-  categoria: string
-  preco: number
-  estoque: number
+  id_produto: string
+  nome_produto?: string
+  categoria_produto?: string
+  preco_produto?: number
+  fornecedor_produto?: string
+  estoque_produto?: number
+  produto_ativo?: boolean
+  faixa_preco?: string
+}
+
+export interface ProdutoMetricas {
+  id_produto: string
+  nome_produto?: string
+  categoria_produto?: string
+  preco_produto?: number
+  faixa_preco?: string
+  estoque_produto?: number
+  produto_ativo?: boolean
+  fornecedor_produto?: string
+  total_pedidos: number
+  quantidade_vendida: number
+  receita_total: number
+  ticket_medio?: number
+  total_avaliacoes: number
+  nota_media?: number
+  nps_medio?: number
+  taxa_recomendacao?: number
+  total_tickets: number
 }
 
 /* Pedido */
