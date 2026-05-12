@@ -1,3 +1,13 @@
+# ----------ARQUIVO OBSOLETO----------
+# Este arquivo não é mais utilizado pelo agente de IA.
+
+# SUBSTITUÍDO POR: backend/app/services/chat_service.py
+
+# POR QUE FOI SUBSTITUÍDO:
+# A abordagem anterior usava 22 funções com SQL fixo e pré-escrito.
+# O novo agente usa text-to-SQL: o Gemini gera o SQL dinamicamente a partir da pergunta do usuário, sem precisar de funções pré-definidas.
+# Isso torna o agente capaz de responder qualquer pergunta sobre os dados, não apenas as situações previstas antecipadamente.
+
 import sqlite3
 import os
 

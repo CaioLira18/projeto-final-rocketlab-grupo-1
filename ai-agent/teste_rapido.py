@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# ----------ARQUIVO OBSOLETO----------
+# Este script de testes não é mais utilizado.
+
+# SUBSTITUÍDO POR: Testes manuais via: python ai-agent/chatbot.py
+
+# POR QUE FOI SUBSTITUÍDO:
+# Este script validava o chatbot antigo (tools.py + OpenRouter + GPT-4o-mini).
+# Com a migração para PydanticAI + Gemini, toda a estrutura mudou e os imports deste arquivo (tools, chatbot antigo, OpenRouter) não existem mais.
 """
 Script de teste rápido para validar o chatbot
 Executa testes básicos sem need de API Key
