@@ -15,6 +15,8 @@ import {
 import { apiFetch } from "@/services"
 import type { ProdutoMetricas } from "@/types"
 import { ProductCardKPI } from "./components/ProductCardKPI"
+import { ProductFormModal } from "./components/ProductFormModal"
+import { ProductDeleteModal } from "./components/ProductDeleteModal"
 import { Button } from "@/components/ui"
 
 export function Produtos() {
@@ -22,8 +24,18 @@ export function Produtos() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
+
+  // Estado para controle de paginação
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  // Estados para Modal de Cadastro / Edição
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [selectedProductForForm, setSelectedProductForForm] = useState<ProdutoMetricas | null>(null)
+
+  // Estados para Modal de Exclusão
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [selectedProductForDelete, setSelectedProductForDelete] = useState<ProdutoMetricas | null>(null)
 
   const loadProdutos = async () => {
     setIsLoading(true)
@@ -196,11 +208,14 @@ export function Produtos() {
 
             <Button
               size="lg"
-              className="flex items-center gap-2 bg-primary hover:bg-primary-400 text-white shadow-sm self-start md:self-auto"
-              onClick={() => alert("Funcionalidade de cadastro de produto em desenvolvimento.")}
+              intent="primary"
+              leftIcon={<Plus className="h-5 w-5" />}
+              onClick={() => {
+                setSelectedProductForForm(null)
+                setIsFormOpen(true)
+              }}
             >
-              <Plus className="h-5 w-5" />
-              <span>Novo produto</span>
+              Novo produto
             </Button>
           </div>
 
@@ -251,14 +266,20 @@ export function Produtos() {
                           <td className="px-6 py-4.5 text-right">
                             <div className="flex items-center justify-end gap-2">
                               <button
-                                onClick={() => alert(`Edição do produto ${prod.id_produto} em desenvolvimento.`)}
+                                onClick={() => {
+                                  setSelectedProductForForm(prod)
+                                  setIsFormOpen(true)
+                                }}
                                 className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200"
                                 title="Editar Produto"
                               >
                                 <Pencil className="h-4.5 w-4.5" />
                               </button>
                               <button
-                                onClick={() => alert(`Exclusão do produto ${prod.id_produto} em desenvolvimento.`)}
+                                onClick={() => {
+                                  setSelectedProductForDelete(prod)
+                                  setIsDeleteOpen(true)
+                                }}
                                 className="p-1.5 rounded-lg text-gray-400 hover:text-error hover:bg-error-50 transition-all duration-200"
                                 title="Excluir Produto"
                               >
@@ -333,6 +354,21 @@ export function Produtos() {
           </div>
         </>
       )}
+
+      {/* MODAIS DE INTERAÇÃO (CREATE / UPDATE / DELETE) */}
+      <ProductFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSaveSuccess={loadProdutos}
+        product={selectedProductForForm}
+      />
+
+      <ProductDeleteModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onDeleteSuccess={loadProdutos}
+        product={selectedProductForDelete}
+      />
     </div>
   )
 }
