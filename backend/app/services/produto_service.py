@@ -41,7 +41,7 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
         else:
             id_val = "PROD-0001"
             
-    # verificando se ja exsite o produto
+    # verificando se ja existe o produto
     existing_prod = db.query(DimProduto).filter(DimProduto.id_produto == id_val).first()
     if existing_prod:
         raise HTTPException(status_code=400, detail="ID de produto já cadastrado")
@@ -59,6 +59,80 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
     db.add(db_prod)
     db.commit()
     db.refresh(db_prod)
+
+    # --- SINCRONIZAÇÃO EM TEMPO REAL COM A CAMADA GOLD ---
+    from bd.database import SessionGold
+    from app.models import ProdutoGold, Produto360
+    from datetime import datetime
+
+    db_gold = SessionGold()
+    try:
+        faixa = get_faixa_preco(db_prod.preco_produto)
+        status_estoque = "Critico"
+        if db_prod.estoque_produto is not None:
+            if db_prod.estoque_produto > 50:
+                status_estoque = "Excelente"
+            elif db_prod.estoque_produto > 15:
+                status_estoque = "Alerta"
+
+        # 1. Salva na dim_produto da Gold (ProdutoGold)
+        gold_prod = ProdutoGold(
+            id_produto=db_prod.id_produto,
+            nome_produto=db_prod.nome_produto,
+            categoria_produto=db_prod.categoria_produto,
+            preco_produto=db_prod.preco_produto,
+            fornecedor_produto=db_prod.fornecedor_produto,
+            peso_kg_produto=1.0,
+            estoque_produto=db_prod.estoque_produto,
+            produto_ativo=db_prod.produto_ativo,
+            data_cadastro_produto=datetime.now().strftime("%Y-%m-%d"),
+            faixa_preco_produto=faixa,
+            status_estoque_produto=status_estoque
+        )
+        db_gold.add(gold_prod)
+
+        # 2. Salva na dm_produto_360 da Gold (Produto360) com métricas iniciais vazias
+        gold_360 = Produto360(
+            id_produto=db_prod.id_produto,
+            nome_produto=db_prod.nome_produto,
+            categoria_produto=db_prod.categoria_produto,
+            preco_produto=db_prod.preco_produto,
+            fornecedor_produto=db_prod.fornecedor_produto,
+            peso_kg_produto=1.0,
+            estoque_produto=db_prod.estoque_produto,
+            produto_ativo=db_prod.produto_ativo,
+            data_cadastro_produto=datetime.now().strftime("%Y-%m-%d"),
+            faixa_preco_produto=faixa,
+            status_estoque_produto=status_estoque,
+            total_pedidos=0,
+            quantidade_vendida=0,
+            receita_total_produto=0.0,
+            ticket_medio_produto=0.0,
+            pedidos_entregues=0,
+            pedidos_cancelados=0,
+            pedidos_reembolsados=0,
+            total_avaliacoes=0,
+            nota_media_produto=None,
+            nps_medio_produto=None,
+            taxa_recomendacao_produto=None,
+            total_tickets_produto=0,
+            tempo_medio_resolucao_produto=None,
+            total_eventos_produto=0,
+            total_sessoes_produto=0,
+            total_pageviews_produto=0,
+            total_add_carrinho_produto=0,
+            total_eventos_compra_produto=0,
+            status_comercial_produto="Novo",
+            produto_com_alto_volume_suporte=False
+        )
+        db_gold.add(gold_360)
+        db_gold.commit()
+    except Exception as e:
+        db_gold.rollback()
+        print(f"⚠️ Erro ao sincronizar criação do produto na camada Gold: {e}")
+    finally:
+        db_gold.close()
+
     return db_prod
 
 
@@ -76,6 +150,52 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
 
     db.commit()
     db.refresh(db_prod)
+
+    # --- SINCRONIZAÇÃO EM TEMPO REAL COM A CAMADA GOLD ---
+    from bd.database import SessionGold
+    from app.models import ProdutoGold, Produto360
+
+    db_gold = SessionGold()
+    try:
+        faixa = get_faixa_preco(db_prod.preco_produto)
+        status_estoque = "Critico"
+        if db_prod.estoque_produto is not None:
+            if db_prod.estoque_produto > 50:
+                status_estoque = "Excelente"
+            elif db_prod.estoque_produto > 15:
+                status_estoque = "Alerta"
+
+        # 1. Atualiza dim_produto na Gold
+        gold_prod = db_gold.query(ProdutoGold).filter(ProdutoGold.id_produto == produto_id).first()
+        if gold_prod:
+            gold_prod.nome_produto = db_prod.nome_produto
+            gold_prod.categoria_produto = db_prod.categoria_produto
+            gold_prod.preco_produto = db_prod.preco_produto
+            gold_prod.fornecedor_produto = db_prod.fornecedor_produto
+            gold_prod.estoque_produto = db_prod.estoque_produto
+            gold_prod.produto_ativo = db_prod.produto_ativo
+            gold_prod.faixa_preco_produto = faixa
+            gold_prod.status_estoque_produto = status_estoque
+
+        # 2. Atualiza dm_produto_360 na Gold
+        gold_360 = db_gold.query(Produto360).filter(Produto360.id_produto == produto_id).first()
+        if gold_360:
+            gold_360.nome_produto = db_prod.nome_produto
+            gold_360.categoria_produto = db_prod.categoria_produto
+            gold_360.preco_produto = db_prod.preco_produto
+            gold_360.fornecedor_produto = db_prod.fornecedor_produto
+            gold_360.estoque_produto = db_prod.estoque_produto
+            gold_360.produto_ativo = db_prod.produto_ativo
+            gold_360.faixa_preco_produto = faixa
+            gold_360.status_estoque_produto = status_estoque
+
+        db_gold.commit()
+    except Exception as e:
+        db_gold.rollback()
+        print(f"⚠️ Erro ao sincronizar atualizações do produto na camada Gold: {e}")
+    finally:
+        db_gold.close()
+
     return db_prod
 
 
@@ -84,8 +204,39 @@ def delete_produto(db: Session, produto_id: str) -> bool:
     if not db_prod:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     
+    # Regra de Integridade de Negócios: Não permite deletar produtos ativos
+    if db_prod.produto_ativo:
+        raise HTTPException(
+            status_code=400,
+            detail="Não é possível excluir um produto que está ativo. Por favor, desative-o antes de prosseguir com a exclusão."
+        )
+    
     db.delete(db_prod)
     db.commit()
+
+    # --- SINCRONIZAÇÃO EM TEMPO REAL COM A CAMADA GOLD ---
+    from bd.database import SessionGold
+    from app.models import ProdutoGold, Produto360
+
+    db_gold = SessionGold()
+    try:
+        # 1. Remove da dim_produto da Gold
+        gold_prod = db_gold.query(ProdutoGold).filter(ProdutoGold.id_produto == produto_id).first()
+        if gold_prod:
+            db_gold.delete(gold_prod)
+
+        # 2. Remove da dm_produto_360 da Gold
+        gold_360 = db_gold.query(Produto360).filter(Produto360.id_produto == produto_id).first()
+        if gold_360:
+            db_gold.delete(gold_360)
+
+        db_gold.commit()
+    except Exception as e:
+        db_gold.rollback()
+        print(f"⚠️ Erro ao sincronizar remoção do produto na camada Gold: {e}")
+    finally:
+        db_gold.close()
+
     return True
 
 

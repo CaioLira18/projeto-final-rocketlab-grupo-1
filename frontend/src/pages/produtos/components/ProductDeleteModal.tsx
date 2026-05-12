@@ -35,7 +35,7 @@ export function ProductDeleteModal({
       onClose()
     } catch (err: any) {
       console.error(err)
-      setError("Não foi possível excluir este produto. Ele pode estar vinculado a pedidos ativos.")
+      setError(err.message || "Não foi possível excluir este produto. Ele pode estar de alguma forma vinculado a pedidos ativos.")
     } finally {
       setIsSubmitting(false)
     }
