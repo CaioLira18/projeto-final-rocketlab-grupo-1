@@ -75,6 +75,8 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
             elif db_prod.estoque_produto > 15:
                 status_estoque = "Alerta"
 
+        peso_val = prod_in.peso_kg_produto if prod_in.peso_kg_produto is not None else 1.0
+
         # 1. Salva na dim_produto da Gold (ProdutoGold)
         gold_prod = ProdutoGold(
             id_produto=db_prod.id_produto,
@@ -82,7 +84,7 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
             categoria_produto=db_prod.categoria_produto,
             preco_produto=db_prod.preco_produto,
             fornecedor_produto=db_prod.fornecedor_produto,
-            peso_kg_produto=1.0,
+            peso_kg_produto=peso_val,
             estoque_produto=db_prod.estoque_produto,
             produto_ativo=db_prod.produto_ativo,
             data_cadastro_produto=datetime.now().strftime("%Y-%m-%d"),
@@ -98,7 +100,7 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
             categoria_produto=db_prod.categoria_produto,
             preco_produto=db_prod.preco_produto,
             fornecedor_produto=db_prod.fornecedor_produto,
-            peso_kg_produto=1.0,
+            peso_kg_produto=peso_val,
             estoque_produto=db_prod.estoque_produto,
             produto_ativo=db_prod.produto_ativo,
             data_cadastro_produto=datetime.now().strftime("%Y-%m-%d"),
@@ -142,8 +144,11 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
     update_data = prod_in.model_dump(exclude_unset=True)
+    peso_val_update = update_data.pop("peso_kg_produto", None)
+
     for field, value in update_data.items():
-        setattr(db_prod, field, value)
+        if hasattr(db_prod, field):
+            setattr(db_prod, field, value)
 
     if "preco_produto" in update_data:
         db_prod.faixa_preco = get_faixa_preco(db_prod.preco_produto)
@@ -176,6 +181,8 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
             gold_prod.produto_ativo = db_prod.produto_ativo
             gold_prod.faixa_preco_produto = faixa
             gold_prod.status_estoque_produto = status_estoque
+            if peso_val_update is not None:
+                gold_prod.peso_kg_produto = peso_val_update
 
         # 2. Atualiza dm_produto_360 na Gold
         gold_360 = db_gold.query(Produto360).filter(Produto360.id_produto == produto_id).first()
@@ -188,6 +195,8 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
             gold_360.produto_ativo = db_prod.produto_ativo
             gold_360.faixa_preco_produto = faixa
             gold_360.status_estoque_produto = status_estoque
+            if peso_val_update is not None:
+                gold_360.peso_kg_produto = peso_val_update
 
         db_gold.commit()
     except Exception as e:

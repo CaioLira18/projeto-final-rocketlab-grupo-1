@@ -111,6 +111,19 @@ class ProdutoCreate(BaseModel):
     fornecedor_produto: Optional[str] = Field(None, description="Fornecedor do produto")
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(True, description="Indica se o produto está ativo")
+    peso_kg_produto: Optional[float] = Field(None, description="Peso do produto em kg")
+
+    @field_validator("id_produto", mode="before")
+    @classmethod
+    def val_id_produto(cls, v):
+        if v is None:
+            return None
+        val_str = str(v).strip().upper()
+        if val_str == "":
+            return None
+        if not re.match(r"^(PROD|PRD)-\d{4}$", val_str):
+            raise ValueError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX ou PRD-XXXX (onde X é dígito de 0 a 9). Ex: PRD-0020")
+        return val_str
 
     @field_validator("nome_produto", mode="before")
     @classmethod
@@ -150,6 +163,7 @@ class ProdutoUpdate(BaseModel):
     fornecedor_produto: Optional[str] = Field(None, description="Fornecedor do produto")
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(None, description="Indica se o produto está ativo")
+    peso_kg_produto: Optional[float] = Field(None, description="Peso do produto em kg")
 
     @field_validator("nome_produto", mode="before")
     @classmethod

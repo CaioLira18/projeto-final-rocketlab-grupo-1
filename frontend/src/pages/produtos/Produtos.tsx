@@ -246,6 +246,7 @@ function KPICardsSection({ totalActive, totalSold, avgRating }: { totalActive: n
         icon={Star}
         iconBg="bg-warning-50"
         iconColor="text-warning"
+        iconProps={{ fill: "currentColor" }}
       />
     </div>
   )
@@ -329,7 +330,7 @@ function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTabl
                     <Star className="h-4 w-4 fill-warning text-warning shrink-0" />
                   </span>
                 ) : (
-                  <span className="text-gray-300 font-medium">-</span>
+                  <span className="text-gray-400 font-semibold bg-gray-100 px-2 py-0.5 rounded-md text-caption">N/A</span>
                 )}
               </td>
               <td className="px-6 py-4.5 text-right">

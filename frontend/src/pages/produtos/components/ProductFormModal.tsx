@@ -36,6 +36,7 @@ export function ProductFormModal({
   const [preco, setPreco] = useState(0)
   const [estoque, setEstoque] = useState(0)
   const [fornecedor, setFornecedor] = useState("")
+  const [peso, setPeso] = useState(1.0)
   const [ativo, setAtivo] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -50,6 +51,7 @@ export function ProductFormModal({
         setPreco(product.preco_produto || 0)
         setEstoque(product.estoque_produto || 0)
         setFornecedor(product.fornecedor_produto || "")
+        setPeso(product.peso_kg_produto || 1.0)
         setAtivo(product.produto_ativo !== false)
       } else {
         setSku("")
@@ -58,6 +60,7 @@ export function ProductFormModal({
         setPreco(0)
         setEstoque(0)
         setFornecedor("")
+        setPeso(1.0)
         setAtivo(true)
       }
     }
@@ -71,12 +74,23 @@ export function ProductFormModal({
       setError("O nome do produto é obrigatório.")
       return
     }
+    if (!isEdit && sku.trim()) {
+      const skuPattern = /^(PROD|PRD)-\d{4}$/i
+      if (!skuPattern.test(sku.trim())) {
+        setError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX ou PRD-XXXX (ex: PRD-0020).")
+        return
+      }
+    }
     if (preco <= 0) {
       setError("O preço do produto deve ser maior que zero.")
       return
     }
     if (estoque < 0) {
       setError("A quantidade em estoque não pode ser negativa.")
+      return
+    }
+    if (peso <= 0) {
+      setError("O peso do produto deve ser maior que zero.")
       return
     }
     if (!fornecedor.trim()) {
@@ -95,7 +109,8 @@ export function ProductFormModal({
         preco_produto: preco,
         fornecedor_produto: fornecedor.trim(),
         estoque_produto: estoque,
-        produto_ativo: ativo
+        produto_ativo: ativo,
+        peso_kg_produto: peso
       }
 
       if (!isEdit && sku.trim()) {
@@ -120,11 +135,7 @@ export function ProductFormModal({
       onClose()
     } catch (err: any) {
       console.error(err)
-      setError(
-        isEdit
-          ? "Erro ao editar o produto. Verifique as informações e a conexão."
-          : "Erro ao cadastrar o produto. Esse SKU de produto já pode estar em uso."
-      )
+      setError(err.message || (isEdit ? "Erro ao editar o produto." : "Erro ao cadastrar o produto."))
     } finally {
       setIsSubmitting(false)
     }
@@ -161,7 +172,7 @@ export function ProductFormModal({
             {/* SKU (Código identificador) */}
             <Input
               label="Código SKU"
-              placeholder={isEdit ? "" : "Ex: PRD-0020 (Opcional)"}
+              placeholder={isEdit ? "" : "Ex: PRD-0020"}
               value={sku}
               onChange={(e) => setSku(e.target.value)}
               disabled={isSubmitting || isEdit} // O SKU é a PK, nunca editável no PUT
@@ -205,15 +216,30 @@ export function ProductFormModal({
             required
           />
 
-          {/* Fornecedor */}
-          <Input
-            label="Fornecedor"
-            placeholder="Ex: GoPro Inc."
-            value={fornecedor}
-            onChange={(e) => setFornecedor(e.target.value)}
-            disabled={isSubmitting}
-            required
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Fornecedor */}
+            <Input
+              label="Fornecedor"
+              placeholder="Ex: GoPro Inc."
+              value={fornecedor}
+              onChange={(e) => setFornecedor(e.target.value)}
+              disabled={isSubmitting}
+              required
+            />
+
+            {/* Peso (kg) */}
+            <Input
+              label="Peso (kg)"
+              type="number"
+              min="0.01"
+              step="0.01"
+              placeholder="Ex: 0.5"
+              value={peso || ""}
+              onChange={(e) => setPeso(parseFloat(e.target.value) || 0)}
+              disabled={isSubmitting}
+              required
+            />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             {/* Preço */}

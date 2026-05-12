@@ -6,6 +6,7 @@ interface ProductCardKPIProps {
   icon: React.ComponentType<{ className?: string }>
   iconBg?: string
   iconColor?: string
+  iconProps?: Record<string, any>
 }
 
 export function ProductCardKPI({
@@ -13,7 +14,8 @@ export function ProductCardKPI({
   value,
   icon: Icon,
   iconBg = "bg-primary-50",
-  iconColor = "text-primary"
+  iconColor = "text-primary",
+  iconProps = {}
 }: ProductCardKPIProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-200 hover:shadow-md">
@@ -26,7 +28,7 @@ export function ProductCardKPI({
         </h2>
       </div>
       <div className={`p-3 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center shrink-0`}>
-        <Icon className="h-6 w-6" />
+        <Icon className="h-6 w-6" {...iconProps} />
       </div>
     </div>
   )
