@@ -75,9 +75,9 @@ export function ProductFormModal({
       return
     }
     if (!isEdit && sku.trim()) {
-      const skuPattern = /^(PROD|PRD)-\d{4}$/i
+      const skuPattern = /^PROD-\d{4}$/i
       if (!skuPattern.test(sku.trim())) {
-        setError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX ou PRD-XXXX (ex: PRD-0020).")
+        setError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX (ex: PROD-0020).")
         return
       }
     }
@@ -172,7 +172,7 @@ export function ProductFormModal({
             {/* SKU (Código identificador) */}
             <Input
               label="Código SKU"
-              placeholder={isEdit ? "" : "Ex: PRD-0020"}
+              placeholder={isEdit ? "" : "Ex: PROD-0020"}
               value={sku}
               onChange={(e) => setSku(e.target.value)}
               disabled={isSubmitting || isEdit} // O SKU é a PK, nunca editável no PUT

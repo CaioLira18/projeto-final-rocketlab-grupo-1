@@ -121,8 +121,8 @@ class ProdutoCreate(BaseModel):
         val_str = str(v).strip().upper()
         if val_str == "":
             return None
-        if not re.match(r"^(PROD|PRD)-\d{4}$", val_str):
-            raise ValueError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX ou PRD-XXXX (onde X é dígito de 0 a 9). Ex: PRD-0020")
+        if not re.match(r"^PROD-\d{4}$", val_str):
+            raise ValueError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX (onde X é um dígito de 0 a 9). Ex: PROD-0020")
         return val_str
 
     @field_validator("nome_produto", mode="before")
