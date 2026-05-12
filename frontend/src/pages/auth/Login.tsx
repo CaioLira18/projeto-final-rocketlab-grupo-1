@@ -20,6 +20,11 @@ export function Login() {
       setError("O e-mail é obrigatório")
       return
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email.trim())) {
+      setError("E-mail inválido. Por favor, insira um formato de e-mail válido (exemplo: usuario@dominio.com).")
+      return
+    }
     if (!password) {
       setError("A senha é obrigatória")
       return
@@ -41,7 +46,7 @@ export function Login() {
       
       <div className="w-full md:w-1/2 bg-[#0B1120] text-white p-8 md:p-10 flex flex-col justify-between min-h-[340px] md:min-h-screen">
         <div className="text-subtitle-1 font-heading font-bold tracking-wide">
-          V-Commerce
+          Stack OverGol
         </div>
 
         <div className="max-w-[480px] my-auto space-y-4">
@@ -55,7 +60,7 @@ export function Login() {
         </div>
 
         <div className="text-caption text-gray-500">
-          © 2026 V-Commerce
+          © 2026 Stack OverGol
         </div>
       </div>
 
@@ -81,7 +86,7 @@ export function Login() {
             <Input
               label="E-mail"
               type="text"
-              placeholder="ana.souza@v-commerce.com"
+              placeholder="ana.souza@stackovergol.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
@@ -110,8 +115,7 @@ export function Login() {
 
             <Button
               type="submit"
-              intent="action"
-              size="md"
+              size="lg"
               className="w-full mt-2 font-semibold shadow-sm transition-transform active:scale-[0.99]"
               disabled={isSubmitting}
             >

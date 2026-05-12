@@ -7,6 +7,7 @@ import { Suporte } from "@/pages/suporte"
 import { Clientes } from "@/pages/clientes"
 import { Login } from "@/pages/auth"
 import { AuthProvider, useAuth } from "@/context"
+import ButtonsShowcase from "@/pages/dev/ButtonsShowcase"
 
 function ProtectedRoute() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/botoes-teste",
+    element: <ButtonsShowcase />,
   },
   {
     element: <ProtectedRoute />,

@@ -15,7 +15,7 @@ interface AuthContextType {
   user: Usuario | null
   isAuthenticated: boolean
   isLoading: boolean
-  login: (username: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<void>
   logout: () => void
 }
 
@@ -46,16 +46,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
       const data = await apiFetch<LoginResponse>("/auth/login", {
         method: "POST",
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       })
       localStorage.setItem("token", data.access_token)
       await fetchProfile()
     } catch (err) {
-      throw new Error("Usuário ou senha incorretos")
+      throw new Error("E-mail ou senha incorretos")
     }
   }
 

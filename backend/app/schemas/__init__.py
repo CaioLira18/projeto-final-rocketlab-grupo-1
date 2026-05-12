@@ -2,5 +2,5 @@ from .cliente import ClienteResponse, ClienteOut, TicketListItem, ClienteHistori
 from .pedido import PedidoListItem
 from .dashboard import DashboardKPIsOut
 from .produto import ProdutoMetricas, ProdutoCreate, ProdutoUpdate, ProdutoResponse
-from .usuario import UsuarioBase, UsuarioCreate, UsuarioResponse, TokenResponse
+from .usuario import UsuarioBase, UsuarioCreate, UsuarioResponse, TokenResponse, UsuarioLogin
 

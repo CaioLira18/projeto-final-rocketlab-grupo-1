@@ -48,11 +48,52 @@ export interface Cliente360 {
 
 /* Produto */
 export interface Produto {
-  id: number
-  nome: string
-  categoria: string
-  preco: number
-  estoque: number
+  id_produto: string
+  nome_produto?: string
+  categoria_produto?: string
+  preco_produto?: number
+  fornecedor_produto?: string
+  estoque_produto?: number
+  produto_ativo?: boolean
+  faixa_preco?: string
+}
+
+export interface ProdutoMetricas {
+  id_produto: string
+  nome_produto?: string
+  categoria_produto?: string
+  preco_produto?: number
+  faixa_preco?: string
+  estoque_produto?: number
+  produto_ativo?: boolean
+  fornecedor_produto?: string
+  total_pedidos: number
+  quantidade_vendida: number
+  receita_total: number
+  ticket_medio?: number
+  total_avaliacoes: number
+  nota_media?: number
+  nps_medio?: number
+  taxa_recomendacao?: number
+  total_tickets: number
+
+  // Campos Analíticos Avançados da Camada Gold
+  peso_kg_produto?: number
+  status_estoque_produto?: string
+  data_cadastro_produto?: string
+  data_primeira_venda?: string
+  data_ultima_venda?: string
+  pedidos_entregues?: number
+  pedidos_cancelados?: number
+  pedidos_reembolsados?: number
+  tempo_medio_resolucao_produto?: number
+  total_eventos_produto?: number
+  total_sessoes_produto?: number
+  total_pageviews_produto?: number
+  total_add_carrinho_produto?: number
+  total_eventos_compra_produto?: number
+  status_comercial_produto?: string
+  produto_com_alto_volume_suporte?: boolean
 }
 
 /* Pedido */

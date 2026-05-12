@@ -8,6 +8,7 @@ from .auth_service import (
     verify_password,
     create_access_token,
     get_user_by_username,
+    get_user_by_email,
     authenticate_user,
     create_user,
     SECRET_KEY,
