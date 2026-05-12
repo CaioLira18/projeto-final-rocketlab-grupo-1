@@ -215,6 +215,7 @@ class ProdutoMetricas(BaseModel):
     preco_produto: Optional[float] = None
     faixa_preco: Optional[str] = None
     estoque_produto: Optional[int] = None
+    produto_active: Optional[bool] = None  # vou remover, mas to colocando aq pra fins de teste
     produto_ativo: Optional[bool] = None
     fornecedor_produto: Optional[str] = None
     
@@ -229,6 +230,24 @@ class ProdutoMetricas(BaseModel):
     taxa_recomendacao: Optional[float] = None
     
     total_tickets: int = 0
+
+    # Campos Analíticos Avançados da Camada Gold
+    peso_kg_produto: Optional[float] = None
+    status_estoque_produto: Optional[str] = None
+    data_cadastro_produto: Optional[str] = None
+    data_primeira_venda: Optional[str] = None
+    data_ultima_venda: Optional[str] = None
+    pedidos_entregues: Optional[int] = None
+    pedidos_cancelados: Optional[int] = None
+    pedidos_reembolsados: Optional[int] = None
+    tempo_medio_resolucao_produto: Optional[float] = None
+    total_eventos_produto: Optional[int] = None
+    total_sessoes_produto: Optional[int] = None
+    total_pageviews_produto: Optional[int] = None
+    total_add_carrinho_produto: Optional[int] = None
+    total_eventos_compra_produto: Optional[int] = None
+    status_comercial_produto: Optional[str] = None
+    produto_com_alto_volume_suporte: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 

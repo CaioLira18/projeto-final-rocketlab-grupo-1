@@ -76,6 +76,24 @@ export interface ProdutoMetricas {
   nps_medio?: number
   taxa_recomendacao?: number
   total_tickets: number
+
+  // Campos Analíticos Avançados da Camada Gold
+  peso_kg_produto?: number
+  status_estoque_produto?: string
+  data_cadastro_produto?: string
+  data_primeira_venda?: string
+  data_ultima_venda?: string
+  pedidos_entregues?: number
+  pedidos_cancelados?: number
+  pedidos_reembolsados?: number
+  tempo_medio_resolucao_produto?: number
+  total_eventos_produto?: number
+  total_sessoes_produto?: number
+  total_pageviews_produto?: number
+  total_add_carrinho_produto?: number
+  total_eventos_compra_produto?: number
+  status_comercial_produto?: string
+  produto_com_alto_volume_suporte?: boolean
 }
 
 /* Pedido */

@@ -82,7 +82,25 @@ def listar_metricas_produtos(
             nps_medio=round(m.nps_medio_produto, 2) if m and m.nps_medio_produto is not None else None,
             taxa_recomendacao=taxa_rec,
             
-            total_tickets=m.total_tickets_produto if m else 0
+            total_tickets=m.total_tickets_produto if m else 0,
+
+            # Novos campos da Gold
+            peso_kg_produto=m.peso_kg_produto if m else None,
+            status_estoque_produto=m.status_estoque_produto if m else None,
+            data_cadastro_produto=m.data_cadastro_produto if m else None,
+            data_primeira_venda=m.data_primeira_venda if m else None,
+            data_ultima_venda=m.data_ultima_venda if m else None,
+            pedidos_entregues=m.pedidos_entregues if m else 0,
+            pedidos_cancelados=m.pedidos_cancelados if m else 0,
+            pedidos_reembolsados=m.pedidos_reembolsados if m else 0,
+            tempo_medio_resolucao_produto=round(m.tempo_medio_resolucao_produto, 2) if m and m.tempo_medio_resolucao_produto is not None else None,
+            total_eventos_produto=m.total_eventos_produto if m else 0,
+            total_sessoes_produto=m.total_sessoes_produto if m else 0,
+            total_pageviews_produto=m.total_pageviews_produto if m else 0,
+            total_add_carrinho_produto=m.total_add_carrinho_produto if m else 0,
+            total_eventos_compra_produto=m.total_eventos_compra_produto if m else 0,
+            status_comercial_produto=m.status_comercial_produto if m else "Novo",
+            produto_com_alto_volume_suporte=m.produto_com_alto_volume_suporte if m else False,
         ))
 
     return result
@@ -125,7 +143,25 @@ def buscar_metricas_produto(
         nps_medio=round(m.nps_medio_produto, 2) if m and m.nps_medio_produto is not None else None,
         taxa_recomendacao=taxa_rec,
         
-        total_tickets=m.total_tickets_produto if m else 0
+        total_tickets=m.total_tickets_produto if m else 0,
+
+        # Novos campos da Gold
+        peso_kg_produto=m.peso_kg_produto if m else None,
+        status_estoque_produto=m.status_estoque_produto if m else None,
+        data_cadastro_produto=m.data_cadastro_produto if m else None,
+        data_primeira_venda=m.data_primeira_venda if m else None,
+        data_ultima_venda=m.data_ultima_venda if m else None,
+        pedidos_entregues=m.pedidos_entregues if m else 0,
+        pedidos_cancelados=m.pedidos_cancelados if m else 0,
+        pedidos_reembolsados=m.pedidos_reembolsados if m else 0,
+        tempo_medio_resolucao_produto=round(m.tempo_medio_resolucao_produto, 2) if m and m.tempo_medio_resolucao_produto is not None else None,
+        total_eventos_produto=m.total_eventos_produto if m else 0,
+        total_sessoes_produto=m.total_sessoes_produto if m else 0,
+        total_pageviews_produto=m.total_pageviews_produto if m else 0,
+        total_add_carrinho_produto=m.total_add_carrinho_produto if m else 0,
+        total_eventos_compra_produto=m.total_eventos_compra_produto if m else 0,
+        status_comercial_produto=m.status_comercial_produto if m else "Novo",
+        produto_com_alto_volume_suporte=m.produto_com_alto_volume_suporte if m else False,
     )
 
 
