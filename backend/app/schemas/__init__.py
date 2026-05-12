@@ -1,3 +1,4 @@
+from .agente import ChatRequest, ChatResponse, SuggestionsResponse
 from .cliente import ClienteResponse, ClienteOut, TicketListItem, ClienteHistoricoResponse
 from .pedido import PedidoListItem
 from .dashboard import DashboardKPIsOut
