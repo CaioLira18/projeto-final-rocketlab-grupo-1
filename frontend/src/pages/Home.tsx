@@ -184,7 +184,7 @@ export const Home = () => {
         {/* KPI 1: Receita Total */}
         <div className="bg-gradient-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
           <div className="space-y-2">
-            <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Receita Total (Gold)</span>
+            <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Receita Total</span>
             <h2 className="text-h2 text-primary font-bold">{formatCurrency(data?.totalRevenue)}</h2>
             <div className="flex items-center gap-1 text-[10px] text-success font-semibold">
               <TrendingUp className="h-3 w-3" />
