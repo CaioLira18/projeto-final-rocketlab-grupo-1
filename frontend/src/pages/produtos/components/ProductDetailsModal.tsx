@@ -447,82 +447,49 @@ function WebBehaviorTab({ product }: { product: ProdutoMetricas }) {
         </div>
       </div>
 
-      {/* Conversão do Funil de Vendas with Dropoff Math */}
-      <div className="border border-gray-100 rounded-2xl p-5 bg-gray-50/40">
-        <h3 className="text-caption font-bold text-gray-700 uppercase tracking-wider mb-4">Funil de Conversão do Produto</h3>
-        
-        <div className="space-y-4">
-          {/* Step 1: Pageviews */}
-          <div className="relative">
-            <div className="flex justify-between text-caption text-gray-500 mb-1.5">
-              <span className="font-semibold text-gray-600">1. Visualização do Produto (Pageviews)</span>
-              <span className="font-bold text-gray-800">{formatNumber(product.total_pageviews_produto)} <span className="font-normal text-gray-400">(100%)</span></span>
-            </div>
-            <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-              <div className="bg-primary h-full rounded-full" style={{ width: "100%" }} />
-            </div>
+      {/* Taxas de Conversão (Informativo) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-full">
+          <span className="text-caption text-gray-400 font-medium">Taxa de Adição ao Carrinho</span>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-h3 font-bold text-gray-800">
+              {product.total_pageviews_produto && product.total_pageviews_produto > 0 
+                ? ((product.total_add_carrinho_produto || 0) / product.total_pageviews_produto * 100).toFixed(1) + "%" 
+                : "0%"}
+            </span>
           </div>
+          <span className="text-caption text-gray-400 mt-2 bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-100">
+            <strong>{product.total_add_carrinho_produto || 0}</strong> adicionaram de <strong>{product.total_pageviews_produto}</strong> visitas
+          </span>
+        </div>
 
-          {/* Dropoff Rate Indicator Badge 1 */}
-          {product.total_pageviews_produto && product.total_pageviews_produto > 0 ? (
-            <div className="flex justify-center -my-1">
-              <div className="bg-warning-50 text-warning-500 border border-warning-100 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
-                <span>Taxa de Interação: {((product.total_add_carrinho_produto || 0) / product.total_pageviews_produto * 100).toFixed(1)}%</span>
-              </div>
-            </div>
-          ) : null}
-
-          {/* Step 2: Add to Cart */}
-          <div>
-            <div className="flex justify-between text-caption text-gray-500 mb-1.5">
-              <span className="font-semibold text-gray-600">2. Adições ao Carrinho</span>
-              <span className="font-bold text-gray-800">{formatNumber(product.total_add_carrinho_produto)}</span>
-            </div>
-            <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-              <div 
-                className="bg-warning h-full rounded-full transition-all duration-500" 
-                style={{ 
-                  width: `${product.total_pageviews_produto && product.total_pageviews_produto > 0 
-                    ? Math.min(100, ((product.total_add_carrinho_produto || 0) / product.total_pageviews_produto * 100)) 
-                    : 0}%` 
-                }} 
-              />
-            </div>
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-full">
+          <span className="text-caption text-gray-400 font-medium">Conversão de Compra (Checkout)</span>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-h3 font-bold text-success">
+              {product.total_add_carrinho_produto && product.total_add_carrinho_produto > 0 
+                ? ((product.total_eventos_compra_produto || 0) / product.total_add_carrinho_produto * 100).toFixed(1) + "%" 
+                : "0%"}
+            </span>
           </div>
+          <span className="text-caption text-gray-400 mt-2 bg-gray-50 px-2.5 py-1.5 rounded-lg border border-gray-100">
+            <strong>{product.total_eventos_compra_produto || 0}</strong> compraram de <strong>{product.total_add_carrinho_produto}</strong> adições
+          </span>
+        </div>
 
-          {/* Dropoff Rate Indicator Badge 2 */}
-          {product.total_add_carrinho_produto && product.total_add_carrinho_produto > 0 ? (
-            <div className="flex justify-center -my-1">
-              <div className="bg-success-50 text-success-500 border border-success-100 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-sm">
-                <span>Checkout Finalizado: {((product.total_eventos_compra_produto || 0) / product.total_add_carrinho_produto * 100).toFixed(1)}%</span>
-              </div>
-            </div>
-          ) : null}
-
-          {/* Step 3: Purchase (Events) */}
-          <div>
-            <div className="flex justify-between text-caption text-gray-500 mb-1.5">
-              <span className="font-semibold text-gray-600">3. Conversão de Compra</span>
-              <span className="font-bold text-gray-800">
-                {formatNumber(product.total_eventos_compra_produto)} 
-                {product.total_pageviews_produto && product.total_pageviews_produto > 0 ? (
-                  <span className="text-caption font-semibold text-success ml-1.5">
-                    ({((product.total_eventos_compra_produto || 0) / product.total_pageviews_produto * 100).toFixed(1)}% total)
-                  </span>
-                ) : null}
-              </span>
-            </div>
-            <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
-              <div 
-                className="bg-success h-full rounded-full transition-all duration-500" 
-                style={{ 
-                  width: `${product.total_pageviews_produto && product.total_pageviews_produto > 0 
-                    ? Math.min(100, ((product.total_eventos_compra_produto || 0) / product.total_pageviews_produto * 100)) 
-                    : 0}%` 
-                }} 
-              />
-            </div>
+        <div className="bg-primary-50/30 p-4 rounded-xl border border-primary-100/50 shadow-sm flex flex-col justify-between h-full sm:col-span-2">
+          <span className="text-caption text-primary-600 font-medium">Taxa de Conversão Global do Produto</span>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-h2 font-extrabold text-primary-500">
+              {product.total_pageviews_produto && product.total_pageviews_produto > 0 
+                ? ((product.total_eventos_compra_produto || 0) / product.total_pageviews_produto * 100).toFixed(1) + "%" 
+                : "0%"}
+            </span>
+            <span className="text-caption text-primary-400 font-medium">do tráfego total</span>
           </div>
+          <span className="text-caption text-primary-500 mt-2">
+            Total de <strong>{product.total_eventos_compra_produto || 0}</strong> compras efetuadas.
+          </span>
         </div>
       </div>
     </div>

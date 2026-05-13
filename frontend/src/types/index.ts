@@ -19,11 +19,45 @@ export interface User {
 }
 
 /* Dashboard */
+export interface MonthlySales {
+  mes_referencia: string
+  receita: number
+  pedidos: number
+}
+
+export interface CategorySales {
+  categoria: string
+  receita: number
+  pedidos: number
+}
+
+export interface StateSales {
+  estado: string
+  receita: number
+  clientes: number
+}
+
+export interface PaymentMethodSales {
+  metodo: string
+  receita: number
+  pedidos: number
+}
+
+export interface CustomerSegment {
+  faixa: string
+  quantidade: number
+}
+
 export interface DashboardKPIs {
-  total_vendas: number
-  total_clientes: number
-  ticket_medio: number
-  total_pedidos: number
+  totalRevenue: number
+  totalSales: number
+  totalCustomers: number
+  averageOrderValue: number
+  monthlySales: MonthlySales[]
+  categorySales: CategorySales[]
+  stateSales: StateSales[]
+  paymentSales: PaymentMethodSales[]
+  customerSegments: CustomerSegment[]
 }
 
 /* Cliente */
