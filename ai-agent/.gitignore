@@ -1,0 +1,7 @@
+# Não commitar a chave da API do Gemini
+.env
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
