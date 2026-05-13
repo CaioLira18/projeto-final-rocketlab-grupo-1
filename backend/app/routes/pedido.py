@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import func, case
 from typing import Optional, List
 from datetime import date
 
 from bd.database import get_db
+from app.models import Pedidos, Cliente
 from app.schemas import PedidoListItem
 from app.services import list_pedidos
 from app.routes.auth import get_current_user
@@ -14,10 +16,51 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
+@router.get("/count", summary="Contagem de pedidos por status")
+def contar_pedidos(
+    nome_cliente: Optional[str] = Query(None),
+    nome_produto: Optional[str] = Query(None),
+    status: Optional[str] = Query(None),
+    data_inicio: Optional[date] = Query(None),
+    data_fim: Optional[date] = Query(None),
+    categoria_produto: Optional[str] = Query(None),
+    id_pedido: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    query = db.query(
+        func.count(Pedidos.id_pedido).label("total"),
+        func.sum(case((Pedidos.status_pedido == "Aprovado",    1), else_=0)).label("aprovados"),
+        func.sum(case((Pedidos.status_pedido == "Recusado",    1), else_=0)).label("recusados"),
+        func.sum(case((Pedidos.status_pedido == "Reembolsado", 1), else_=0)).label("reembolsados"),
+    )
+
+    if nome_cliente:
+        query = query.filter(Pedidos.nome_cliente.ilike(f"%{nome_cliente}%"))
+    if nome_produto:
+        query = query.filter(Pedidos.nome_produto.ilike(f"%{nome_produto}%"))
+    if status:
+        query = query.filter(Pedidos.status_pedido == status)
+    if data_inicio:
+        query = query.filter(Pedidos.data_pedido >= data_inicio)
+    if data_fim:
+        query = query.filter(Pedidos.data_pedido <= data_fim)
+    if categoria_produto:
+        query = query.filter(Pedidos.categoria_produto == categoria_produto)
+    if id_pedido:
+        query = query.filter(Pedidos.id_pedido.ilike(f"%{id_pedido}%"))
+
+    result = query.one()
+    return {
+        "total":        result.total        or 0,
+        "aprovados":    result.aprovados    or 0,
+        "recusados":    result.recusados    or 0,
+        "reembolsados": result.reembolsados or 0,
+    }
+
 
 @router.get("/", response_model=List[PedidoListItem], summary="Listagem de pedidos")
 def listar_pedidos(
-    id_pedido: Optional[str] = Query(None, description="Busca por ID do produto"),
+    id_pedido: Optional[str] = Query(None, description="Busca por ID do pedido"),
     id_cliente: Optional[str] = Query(None, description="Filtrar pedidos de um cliente"),
     id_produto: Optional[str] = Query(None, description="Filtrar pedidos de um produto"),
     data_inicio: Optional[date] = Query(None, description="Data inicial do pedido"),
@@ -36,7 +79,7 @@ def listar_pedidos(
                                                description="Campo para ordenação"),
     order_dir: str = Query("desc", enum=["asc", "desc"], description="Direção da ordenação"),
     skip: int = Query(0, ge=0, description="Registros para pular"),
-    limite: int = Query(50, ge=1, le=500, description="Limite de registros"),
+    limite: int = Query(50, ge=1, le=9999999, description="Limite de registros"),
     db: Session = Depends(get_db)
 ):
     return list_pedidos(

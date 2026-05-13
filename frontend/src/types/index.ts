@@ -57,13 +57,18 @@ export interface Produto {
 
 /* Pedido */
 export interface Pedido {
-  id: number
-  cliente_id: number
-  produto_id: number
-  quantidade: number
-  valor_total: number
-  data_pedido: string
-  status: string
+  id_pedido: string
+  data_pedido: string | null
+  id_cliente: string | null
+  nome_cliente: string | null
+  id_produto: string | null
+  nome_produto: string | null
+  categoria_produto: string | null
+  quantidade_produto: number | null
+  valor_pedido: number | null
+  metodo_pagamento: string | null
+  status_pedido: string | null
+  data_prevista_entrega: string | null
 }
 
 /* Suporte */
