@@ -1,3 +1,4 @@
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
 from app.models import Cliente, Pedidos, FatoSuporte
@@ -6,9 +7,19 @@ from fastapi import HTTPException
 
 def list_clientes(
     db: Session,
-    nome=None, sobrenome=None, email=None, cidade=None, estado=None, pais=None,
-    genero=None, origem=None, idade_min=None, idade_max=None, busca=None,
-    skip=0, limit=50
+    nome: Optional[str] = None,
+    sobrenome: Optional[str] = None,
+    email: Optional[str] = None,
+    cidade: Optional[str] = None,
+    estado: Optional[List[str]] = None,
+    pais: Optional[str] = None,
+    genero: Optional[List[str]] = None,
+    origem: Optional[List[str]] = None,
+    idade_min: Optional[int] = None,
+    idade_max: Optional[int] = None,
+    busca: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 50,
 ):
     query = db.query(Cliente)
 
@@ -29,14 +40,16 @@ def list_clientes(
         query = query.filter(Cliente.email_cliente.ilike(f"%{email}%"))
     if cidade:
         query = query.filter(Cliente.cidade_cliente.ilike(f"%{cidade}%"))
-    if estado:
-        query = query.filter(Cliente.estado_cliente.ilike(f"%{estado}%"))
     if pais:
         query = query.filter(Cliente.pais_cliente.ilike(f"%{pais}%"))
+
+    if estado:
+        query = query.filter(Cliente.estado_cliente.in_(estado))
     if genero:
-        query = query.filter(Cliente.genero_cliente == genero)
+        query = query.filter(Cliente.genero_cliente.in_(genero))
     if origem:
-        query = query.filter(Cliente.origem_cliente == origem)
+        query = query.filter(Cliente.origem_cliente.in_(origem))
+
     if idade_min is not None:
         query = query.filter(Cliente.idade >= idade_min)
     if idade_max is not None:
@@ -63,8 +76,10 @@ def get_cliente_historico(db: Session, cliente_id: str):
         FatoSuporte.id_cliente == cliente_id).scalar() or 0
     tickets_abertos = db.query(func.count(FatoSuporte.ticket_id)).filter(
         FatoSuporte.id_cliente == cliente_id,
-        or_(FatoSuporte.data_resolucao == None,
-            FatoSuporte.data_resolucao == ""),
+        or_(
+            FatoSuporte.data_resolucao == None,
+            FatoSuporte.data_resolucao == "",
+        ),
     ).scalar() or 0
 
     pedidos = (
