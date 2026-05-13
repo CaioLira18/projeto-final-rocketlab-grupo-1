@@ -18,6 +18,8 @@ class ClienteResponse(BaseModel):
     pais_cliente: Optional[str] = None
     origem_cliente: Optional[str] = None
     idade: Optional[int] = None
+    data_nascimento_cliente: Optional[str] = None
+    data_cadastro_cliente: Optional[str] = None
 
     model_config = {"from_attributes": True}
 

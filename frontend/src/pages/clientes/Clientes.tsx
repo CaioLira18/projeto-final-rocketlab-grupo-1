@@ -23,7 +23,11 @@ interface Cliente {
   sobrenome_cliente: string
   email_cliente: string
   telefone_cliente: string
+  ramal_cliente?: string | number | null
   genero_cliente: string
+  data_nascimento_cliente?: string | null
+  data_cadastro_cliente?: string | null
+  endereco_cliente?: string | null
   cidade_cliente: string
   estado_cliente: string
   pais_cliente: string
@@ -42,6 +46,9 @@ const ESTADOS_OPCOES = [
 ]
 
 const GENEROS_OPCOES = ["Masculino", "Feminino", "Não Informado"]
+
+const ORIGENS_OPCOES = ["Web", "App", "Indicação"]
+
 
 // ── helpers ────────────────────────────────────────────────────────────────
 const formatNumber = (value: number) =>
@@ -225,6 +232,7 @@ function MultiSelect({ opcoes, selecionados, onChange, placeholder, buscavel = f
                 })
               )}
             </div>
+
             {selecionados.length > 0 && (
               <div className="border-t border-gray-100 px-4 py-2 bg-gray-50">
                 <button
@@ -243,12 +251,63 @@ function MultiSelect({ opcoes, selecionados, onChange, placeholder, buscavel = f
   )
 }
 
+// ── RangeIdade: dois inputs numéricos inline ───────────────────────────────
+interface RangeIdadeProps {
+  min: string
+  max: string
+  onMinChange: (v: string) => void
+  onMaxChange: (v: string) => void
+}
+
+function RangeIdade({ min, max, onMinChange, onMaxChange }: RangeIdadeProps) {
+  const ativo = min !== "" || max !== ""
+  return (
+    <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-sm transition-all duration-200
+      ${ativo ? "border-primary-200 bg-primary-50/30" : "border-gray-200 bg-white"}`}
+    >
+      <input
+        type="number"
+        min={0}
+        max={120}
+        placeholder="De"
+        value={min}
+        onChange={(e) => onMinChange(e.target.value)}
+        className="w-14 bg-transparent text-center focus:outline-none placeholder-gray-400 text-gray-700 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+      <span className="text-gray-300 text-xs font-medium">—</span>
+      <input
+        type="number"
+        min={0}
+        max={120}
+        placeholder="Até"
+        value={max}
+        onChange={(e) => onMaxChange(e.target.value)}
+        className="w-14 bg-transparent text-center focus:outline-none placeholder-gray-400 text-gray-700 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+      {ativo && (
+        <button
+          onClick={() => { onMinChange(""); onMaxChange("") }}
+          className="text-gray-300 hover:text-error transition-colors ml-0.5"
+          title="Limpar"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </div>
+  )
+}
+
 // ── componente principal ───────────────────────────────────────────────────
 export function Clientes() {
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
+
+  // Ramal
+  const [ramal, setRamal] = useState("")
+  const [ramalDebounced, setRamalDebounced] = useState("")
+  const [semRamal, setSemRamal] = useState(false)
 
   const [busca, setBusca] = useState("")
   const [buscaDebounced, setBuscaDebounced] = useState("")
@@ -261,6 +320,17 @@ export function Clientes() {
   const [cidades, setCidades] = useState<string[]>([])
   const [estados, setEstados] = useState<string[]>([])
   const [generos, setGeneros] = useState<string[]>([])
+  const [origens, setOrigens] = useState<string[]>([])
+
+  // filtro de texto livre: país
+  const [pais, setPais] = useState("")
+  const [paisDebounced, setPaisDebounced] = useState("")
+
+  // filtro de faixa de idade
+  const [idadeMin, setIdadeMin] = useState("")
+  const [idadeMax, setIdadeMax] = useState("")
+  const [idadeMinDebounced, setIdadeMinDebounced] = useState("")
+  const [idadeMaxDebounced, setIdadeMaxDebounced] = useState("")
 
   // lista de cidades disponíveis (dinâmica)
   const [cidadesDisponiveis, setCidadesDisponiveis] = useState<string[]>([])
@@ -269,16 +339,36 @@ export function Clientes() {
 
   const modoIdExato = buscaIdDebounced.trim().length > 0
 
-  // debounces
+  // ── debounces ──────────────────────────────────────────────────────────
   useEffect(() => {
     const t = setTimeout(() => setBuscaDebounced(busca), 400)
     return () => clearTimeout(t)
   }, [busca])
 
   useEffect(() => {
+    const t = setTimeout(() => setRamalDebounced(ramal), 400)
+    return () => clearTimeout(t)
+  }, [ramal])
+
+  useEffect(() => {
     const t = setTimeout(() => setBuscaIdDebounced(buscaId), 500)
     return () => clearTimeout(t)
   }, [buscaId])
+
+  useEffect(() => {
+    const t = setTimeout(() => setPaisDebounced(pais), 400)
+    return () => clearTimeout(t)
+  }, [pais])
+
+  useEffect(() => {
+    const t = setTimeout(() => setIdadeMinDebounced(idadeMin), 400)
+    return () => clearTimeout(t)
+  }, [idadeMin])
+
+  useEffect(() => {
+    const t = setTimeout(() => setIdadeMaxDebounced(idadeMax), 400)
+    return () => clearTimeout(t)
+  }, [idadeMax])
 
   // ── fetch por ID exato → GET /clientes/{id} ────────────────────────────
   const fetchPorId = useCallback(async () => {
@@ -309,6 +399,30 @@ export function Clientes() {
     }
   }, [buscaIdDebounced])
 
+  // ── helper: monta URLSearchParams com todos os filtros ─────────────────
+  // FIX: semRamal adicionado nas dependências do useCallback
+  const buildParams = useCallback((extra: Record<string, string> = {}) => {
+    const params = new URLSearchParams()
+    if (buscaDebounced) params.set("busca", buscaDebounced)
+    cidades.forEach((c) => params.append("cidade", c))
+    estados.forEach((e) => params.append("estado", e))
+    generos.forEach((g) => params.append("genero", g))
+    origens.forEach((o) => params.append("origem", o))
+    if (paisDebounced) params.set("pais", paisDebounced)
+    if (idadeMinDebounced !== "") params.set("idade_min", idadeMinDebounced)
+    if (idadeMaxDebounced !== "") params.set("idade_max", idadeMaxDebounced)
+    // FIX: removida a linha solta `if (ramalDebounced) params.set("ramal", ramalDebounced)`
+    // que conflitava com o bloco abaixo e causava envio simultâneo de ramal + sem_ramal
+    if (semRamal) {
+      params.set("sem_ramal", "true")
+    } else if (ramalDebounced) {
+      params.set("ramal", ramalDebounced)
+    }
+    Object.entries(extra).forEach(([k, v]) => params.set(k, v))
+    return params
+  }, [buscaDebounced, cidades, estados, generos, origens, paisDebounced, idadeMinDebounced, idadeMaxDebounced, ramalDebounced, semRamal])
+  // FIX: ↑ semRamal incluído nas dependências para o useCallback recriar buildParams quando o checkbox muda
+
   // ── fetch normal com filtros ───────────────────────────────────────────
   const fetchClientes = useCallback(async () => {
     setLoading(true)
@@ -317,13 +431,11 @@ export function Clientes() {
       const token = localStorage.getItem("token")
       if (!token) throw new Error("Token não encontrado. Faça login novamente.")
 
-      const params = new URLSearchParams()
-      if (buscaDebounced) params.set("busca", buscaDebounced)
-      cidades.forEach((c) => params.append("cidade", c))
-      estados.forEach((e) => params.append("estado", e))
-      generos.forEach((g) => params.append("genero", g))
-      params.set("skip", String((pagina - 1) * PER_PAGE))
-      params.set("limit", String(PER_PAGE))
+      const params = buildParams({
+        skip: String((pagina - 1) * PER_PAGE),
+        limit: String(PER_PAGE),
+      })
+
 
       const res = await fetch(`${API_BASE}/clientes/?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -333,6 +445,7 @@ export function Clientes() {
       if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`)
 
       const data = await res.json()
+      console.log("Dados recebidos do banco:", data);
       const lista: Cliente[] = Array.isArray(data) ? data : data.clientes ?? data.items ?? []
       const tot: number = Array.isArray(data) ? data.length : data.total ?? data.count ?? lista.length
 
@@ -345,7 +458,7 @@ export function Clientes() {
     } finally {
       setLoading(false)
     }
-  }, [buscaDebounced, cidades, estados, generos, pagina])
+  }, [buildParams, pagina])
 
   // ── fetch para popular cidades disponíveis (sem filtro de cidade) ──────
   const fetchCidadesDisponiveis = useCallback(async () => {
@@ -353,11 +466,7 @@ export function Clientes() {
       const token = localStorage.getItem("token")
       if (!token) return
 
-      const params = new URLSearchParams()
-      if (buscaDebounced) params.set("busca", buscaDebounced)
-      estados.forEach((e) => params.append("estado", e))
-      generos.forEach((g) => params.append("genero", g))
-      params.set("limit", "500")
+      const params = buildParams({ limit: "500" })
 
       const res = await fetch(`${API_BASE}/clientes/?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -371,12 +480,12 @@ export function Clientes() {
     } catch {
       // silencioso
     }
-  }, [buscaDebounced, estados, generos])
+  }, [buildParams])
 
   // popula cidades ao mudar filtros relevantes
   useEffect(() => {
     if (!modoIdExato) fetchCidadesDisponiveis()
-  }, [buscaDebounced, estados, generos, modoIdExato, fetchCidadesDisponiveis])
+  }, [modoIdExato, fetchCidadesDisponiveis])
 
   // fetch principal
   useEffect(() => {
@@ -384,8 +493,10 @@ export function Clientes() {
     else fetchClientes()
   }, [modoIdExato, fetchPorId, fetchClientes])
 
-  // reseta página ao mudar filtros
-  useEffect(() => { setPagina(1) }, [buscaDebounced, buscaIdDebounced, cidades, estados, generos])
+  // FIX: semRamal adicionado no useEffect de reset de página
+  useEffect(() => {
+    setPagina(1)
+  }, [buscaDebounced, buscaIdDebounced, cidades, estados, generos, origens, paisDebounced, idadeMinDebounced, idadeMaxDebounced, semRamal])
 
   const toggleGenero = (g: string) =>
     setGeneros((prev) => prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g])
@@ -394,8 +505,14 @@ export function Clientes() {
     setEstados([])
     setGeneros([])
     setCidades([])
+    setOrigens([])
+    setPais("")
+    setIdadeMin("")
+    setIdadeMax("")
     setBusca("")
     setBuscaId("")
+    setRamal("")
+    setSemRamal(false)
     setPagina(1)
   }
 
@@ -422,7 +539,20 @@ export function Clientes() {
   }
 
   const totalPaginas = Math.max(1, Math.ceil(total / PER_PAGE))
-  const filtrosAtivos = estados.length + generos.length + cidades.length + (buscaId ? 1 : 0)
+
+  // conta filtros ativos (para o botão "Limpar todos")
+  const idadeAtiva = idadeMin !== "" || idadeMax !== ""
+  const filtrosAtivos =
+    estados.length +
+    generos.length +
+    cidades.length +
+    origens.length +
+    (pais ? 1 : 0) +
+    (ramal ? 1 : 0) +
+    (semRamal ? 1 : 0) +
+    (idadeAtiva ? 1 : 0) +
+    (buscaId ? 1 : 0)
+
   const primeiroItem = total === 0 ? 0 : (pagina - 1) * PER_PAGE + 1
   const ultimoItem = Math.min(pagina * PER_PAGE, total)
 
@@ -533,8 +663,8 @@ export function Clientes() {
               </div>
             </div>
 
-            {/* Linha 3: gênero + estado */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            {/* Linha 3: gênero + estado + cidade */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-caption font-medium text-gray-400 w-14 shrink-0">Gênero:</span>
                 {GENEROS_OPCOES.map((g) => (
@@ -569,6 +699,106 @@ export function Clientes() {
                   onChange={(novos) => { setCidades(novos); setPagina(1) }}
                   placeholder="Todas as cidades"
                   buscavel
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-caption font-medium text-gray-400 shrink-0">Ramal:</span>
+                <div className="relative flex items-center gap-2">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Ex: 3019"
+                      value={ramal}
+                      disabled={semRamal}
+                      onChange={(e) => { setRamal(e.target.value); setPagina(1) }}
+                      className={`pl-3 pr-7 py-2 rounded-lg border text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200 w-28
+                        ${semRamal ? "opacity-40 cursor-not-allowed bg-gray-50" : ""}
+                        ${ramal && !semRamal ? "border-primary-200 bg-primary-50/20 text-primary font-medium" : "border-gray-200 bg-white"}`}
+                    />
+                    {ramal && !semRamal && (
+                      <button
+                        onClick={() => { setRamal(""); setPagina(1) }}
+                        className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={semRamal}
+                      onChange={(e) => {
+                        setSemRamal(e.target.checked)
+                        if (e.target.checked) setRamal("")
+                        setPagina(1)
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm font-medium text-gray-600 group-hover:text-primary transition-colors">
+                      Sem ramal
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Linha 4: origem + país + faixa de idade */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
+              {/* Origem */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-caption font-medium text-gray-400 w-14 shrink-0">Origem:</span>
+                {ORIGENS_OPCOES.map((o) => (
+                  <FilterChip
+                    key={o}
+                    label={o}
+                    active={origens.includes(o)}
+                    onClick={() => {
+                      setOrigens((prev) =>
+                        prev.includes(o) ? prev.filter((x) => x !== o) : [...prev, o]
+                      )
+                      setPagina(1)
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1 shrink-0" />
+
+              {/* País */}
+              <div className="flex items-center gap-2">
+                <span className="text-caption font-medium text-gray-400 shrink-0">País:</span>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Ex: Brasil"
+                    value={pais}
+                    onChange={(e) => { setPais(e.target.value); setPagina(1) }}
+                    className={`pl-3 pr-7 py-2 rounded-lg border text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200 w-36
+                      ${pais ? "border-primary-200 bg-primary-50/20 text-primary font-medium" : "border-gray-200 bg-white"}`}
+                  />
+                  {pais && (
+                    <button
+                      onClick={() => { setPais(""); setPagina(1) }}
+                      className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1 shrink-0" />
+
+              {/* Faixa de idade */}
+              <div className="flex items-center gap-2">
+                <span className="text-caption font-medium text-gray-400 shrink-0">Idade:</span>
+                <RangeIdade
+                  min={idadeMin}
+                  max={idadeMax}
+                  onMinChange={(v) => { setIdadeMin(v); setPagina(1) }}
+                  onMaxChange={(v) => { setIdadeMax(v); setPagina(1) }}
                 />
               </div>
             </div>
@@ -609,7 +839,7 @@ export function Clientes() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-100">
-                        {["ID do Cliente", "Nome", "E-mail", "Telefone", "Gênero", "Cidade", "Estado"].map((col) => (
+                        {["ID do Cliente", "Nome", "E-mail", "Telefone", "Ramal", "Gênero", "Idade", "Dt. Nascimento", "Dt. Cadastro", "Endereço", "Cidade", "Estado", "País", "Origem"].map((col) => (
                           <th
                             key={col}
                             className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap"
@@ -633,14 +863,37 @@ export function Clientes() {
                           </td>
                           <td className="px-6 py-4 text-gray-600">{c.email_cliente}</td>
                           <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{c.telefone_cliente}</td>
+                          <td className="px-6 py-4 text-gray-500 text-center">
+                            {c.ramal_cliente ?? <span className="text-gray-300">—</span>}
+                          </td>
                           <td className="px-6 py-4">
                             <GenderBadge g={c.genero_cliente} />
+                          </td>
+                          <td className="px-6 py-4 text-gray-600 text-center">
+                            {c.idade != null ? c.idade : "—"}
+                          </td>
+                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                            {c.data_nascimento_cliente ?? <span className="text-gray-300">—</span>}
+                          </td>
+                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                            {c.data_cadastro_cliente}
+                          </td>
+                          <td className="px-6 py-4 text-gray-500 max-w-[200px] truncate" title={c.endereco_cliente ?? ""}>
+                            {c.endereco_cliente ?? <span className="text-gray-300">—</span>}
                           </td>
                           <td className="px-6 py-4 text-gray-600">{c.cidade_cliente}</td>
                           <td className="px-6 py-4">
                             <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-600">
                               {c.estado_cliente}
                             </span>
+                          </td>
+                          <td className="px-6 py-4 text-gray-500">{c.pais_cliente}</td>
+                          <td className="px-6 py-4">
+                            {c.origem_cliente && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-secondary-50 text-secondary-700">
+                                {c.origem_cliente}
+                              </span>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -674,8 +927,8 @@ export function Clientes() {
                             key={`p-${page}`}
                             onClick={() => setPagina(page as number)}
                             className={`h-8 w-8 rounded-lg text-caption font-semibold transition-all duration-150 cursor-pointer ${pagina === page
-                                ? "bg-primary text-white shadow-sm"
-                                : "text-gray-500 hover:bg-gray-100"
+                              ? "bg-primary text-white shadow-sm"
+                              : "text-gray-500 hover:bg-gray-100"
                               }`}
                           >
                             {page}
