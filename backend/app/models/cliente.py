@@ -19,6 +19,7 @@ class Cliente(Base):
     pais_cliente = Column(String, nullable=True)
     origem_cliente = Column(String, nullable=True)
     data_nascimento_cliente = Column(String, nullable=True)
+    data_cadastro_cliente = Column(String, nullable=True)
 
     idade = column_property(
         func.cast(

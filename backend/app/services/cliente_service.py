@@ -10,13 +10,15 @@ def list_clientes(
     nome: Optional[str] = None,
     sobrenome: Optional[str] = None,
     email: Optional[str] = None,
-    cidade: Optional[str] = None,
+    cidade: Optional[List[str]] = None,        # FIX: era str, agora List[str]
     estado: Optional[List[str]] = None,
     pais: Optional[str] = None,
     genero: Optional[List[str]] = None,
     origem: Optional[List[str]] = None,
     idade_min: Optional[int] = None,
     idade_max: Optional[int] = None,
+    ramal: Optional[str] = None,
+    sem_ramal: Optional[bool] = None,          # FIX: era str, agora bool
     busca: Optional[str] = None,
     skip: int = 0,
     limit: int = 50,
@@ -39,7 +41,7 @@ def list_clientes(
     if email:
         query = query.filter(Cliente.email_cliente.ilike(f"%{email}%"))
     if cidade:
-        query = query.filter(Cliente.cidade_cliente.ilike(f"%{cidade}%"))
+        query = query.filter(Cliente.cidade_cliente.in_(cidade))  # FIX: .in_() para lista
     if pais:
         query = query.filter(Cliente.pais_cliente.ilike(f"%{pais}%"))
 
@@ -49,11 +51,24 @@ def list_clientes(
         query = query.filter(Cliente.genero_cliente.in_(genero))
     if origem:
         query = query.filter(Cliente.origem_cliente.in_(origem))
-
     if idade_min is not None:
         query = query.filter(Cliente.idade >= idade_min)
     if idade_max is not None:
         query = query.filter(Cliente.idade <= idade_max)
+
+    # FIX: sem_ramal e ramal são mutuamente exclusivos
+    # sem_ramal filtra clientes com ramal NULL, vazio ou "0"
+    # ramal faz busca textual pelo valor informado
+    if sem_ramal:
+        query = query.filter(
+            or_(
+                Cliente.ramal_cliente == None,
+                Cliente.ramal_cliente == "",
+                Cliente.ramal_cliente == "0",
+            )
+        )
+    elif ramal:
+        query = query.filter(Cliente.ramal_cliente.ilike(f"%{ramal}%"))
 
     return query.offset(skip).limit(limit).all()
 

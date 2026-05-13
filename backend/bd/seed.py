@@ -132,20 +132,21 @@ def seed_database():
             "file": os.path.join(BACKEND_DIR, "data/silver/silver_clientes.csv"),
             "model": Cliente,
             "mapper": lambda row: clean_nan_fields({
-                "id_cliente": row.get("id_cliente"),
-                "nome_cliente": row.get("nome_cliente"),
-                "sobrenome_cliente": row.get("sobrenome_cliente"),
-                "email_cliente": row.get("email_cliente"),
-                "telefone_cliente": row.get("telefone_cliente"),
-                "ramal_cliente": str(int(float(row.get("ramal_cliente")))) if pd.notna(row.get("ramal_cliente")) and str(row.get("ramal_cliente")).strip() != "" else None,
-                "genero_cliente": row.get("genero_cliente"),
-                "endereco_cliente": row.get("endereco_cliente"),
-                "cidade_cliente": row.get("cidade_cliente"),
-                "estado_cliente": row.get("estado_cliente"),
-                "pais_cliente": row.get("pais_cliente"),
-                "origem_cliente": row.get("origem_cliente"),
-                "data_nascimento_cliente": row.get("data_nascimento_cliente")
-            })
+            "id_cliente": row.get("id_cliente"),
+            "nome_cliente": row.get("nome_cliente"),
+            "sobrenome_cliente": row.get("sobrenome_cliente"),
+            "email_cliente": row.get("email_cliente"),
+            "telefone_cliente": row.get("telefone_cliente"),
+            "ramal_cliente": str(int(float(row.get("ramal_cliente")))) if pd.notna(row.get("ramal_cliente")) and str(row.get("ramal_cliente")).strip() != "" else None,
+            "genero_cliente": row.get("genero_cliente"),
+            "endereco_cliente": row.get("endereco_cliente"),
+            "cidade_cliente": row.get("cidade_cliente"),
+            "estado_cliente": row.get("estado_cliente"),
+            "pais_cliente": row.get("pais_cliente"),
+            "origem_cliente": row.get("origem_cliente"),
+            "data_nascimento_cliente": row.get("data_nascimento_cliente"),
+            "data_cadastro_cliente": row.get("data_cadastro_cliente"),  # ← linha faltante
+        })
         },
         {
             "file": os.path.join(BACKEND_DIR, "data/silver/silver_catalogo_produtos.csv"),
