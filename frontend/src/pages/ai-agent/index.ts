@@ -1,2 +1,1 @@
-/* Agente IA */
-export {}
+export { AiAgent } from './AiAgent'
