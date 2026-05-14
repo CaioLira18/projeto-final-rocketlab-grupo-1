@@ -4,7 +4,7 @@ from app.models import VendasPeriodo, Cliente360
 
 
 def calculate_dashboard_kpis(db: Session):
-    print("📊 [DB] Calculando KPIs do dashboard do zero (app_gold.db)...")
+    print("[DB] Calculando KPIs do dashboard (app_gold.db)...")
     total_revenue = db.query(func.sum(VendasPeriodo.receita_total)).scalar() or 0.0
     total_sales = db.query(func.sum(VendasPeriodo.total_pedidos)).scalar() or 0
     total_customers = db.query(func.count(Cliente360.id_cliente)).scalar() or 0

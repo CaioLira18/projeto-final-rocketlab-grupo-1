@@ -131,7 +131,7 @@ def create_produto(db: Session, prod_in: ProdutoCreate) -> DimProduto:
         db_gold.commit()
     except Exception as e:
         db_gold.rollback()
-        print(f"⚠️ Erro ao sincronizar criação do produto na camada Gold: {e}")
+        print(f"[WARN] Erro ao sincronizar criação do produto na camada Gold: {e}")
     finally:
         db_gold.close()
 
@@ -201,7 +201,7 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
         db_gold.commit()
     except Exception as e:
         db_gold.rollback()
-        print(f"⚠️ Erro ao sincronizar atualizações do produto na camada Gold: {e}")
+        print(f"[WARN] Erro ao sincronizar atualizações do produto na camada Gold: {e}")
     finally:
         db_gold.close()
 
@@ -242,7 +242,7 @@ def delete_produto(db: Session, produto_id: str) -> bool:
         db_gold.commit()
     except Exception as e:
         db_gold.rollback()
-        print(f"⚠️ Erro ao sincronizar remoção do produto na camada Gold: {e}")
+        print(f"[WARN] Erro ao sincronizar remoção do produto na camada Gold: {e}")
     finally:
         db_gold.close()
 
