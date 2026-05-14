@@ -635,13 +635,6 @@ export function Clientes() {
               iconBg="bg-primary-50"
               iconColor="text-primary"
             />
-            <ClienteCardKPI
-              title="Novos este Mês"
-              value="—"
-              icon={UserPlus}
-              iconBg="bg-success-50"
-              iconColor="text-success"
-            />
           </div>
 
           {/* ── Barra de filtros ── */}
