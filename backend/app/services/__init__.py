@@ -1,3 +1,4 @@
+from .agente_service import run_agent, list_suggested_questions
 from .produto_service import build_product_metric_subqueries, map_row_to_product_metric_schema, create_produto, update_produto, delete_produto
 from .cliente_service import list_clientes, get_cliente_by_id, get_cliente_historico
 from .pedido_service import list_pedidos
