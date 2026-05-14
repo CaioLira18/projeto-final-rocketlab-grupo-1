@@ -1,4 +1,4 @@
-# ----------chat_service.py — Agente de IA do CRM (Stack OverGol)----------
+# ----------chat_service.py - Agente de IA do CRM (Stack OverGol)----------
 
 # RESPONSABILIDADE DESTE ARQUIVO:
 # Configurar o agente IA que responde perguntas em linguagem natural sobre os dados da empresa V-Commerce.
@@ -67,7 +67,7 @@ def _create_agent() -> Agent:
     # Gemini 2.5 Flash, pode ser trocado para o lite.
     # A chave da API vem da variável de ambiente GEMINI_API_KEY.
     # A chave é lida automaticamente da variável de ambiente GEMINI_API_KEY
-    model = GeminiModel("gemini-2.5-flash")
+    model = GeminiModel("gemini-2.0-flash")
 
     # ----------PROMPT DO SISTEMA----------
     # O system prompt é a "instrução permanente" enviada ao modelo em toda conversa. Ele define:
@@ -90,7 +90,7 @@ FLUXO DE TRABALHO OBRIGATÓRIO para qualquer pergunta sobre clientes, vendas, pr
 NUNCA recuse uma pergunta sem antes tentar consultar as tabelas. Se não souber qual tabela usar, comece chamando `ver_schema` nas tabelas que pareçam mais prováveis.
 
 REGRAS DE SQL:
-- Apenas queries SELECT (leitura) — jamais INSERT, UPDATE, DELETE ou DROP
+- Apenas queries SELECT (leitura) - jamais INSERT, UPDATE, DELETE ou DROP
 - Aplique LIMIT quando a query puder retornar muitas linhas
 - Nunca invente valores; sempre busque do banco
 
@@ -101,7 +101,7 @@ FORMATO DE RESPOSTA:
 - Estrutura: resumo executivo → dados principais → análise → recomendação (quando aplicável)
 
 QUANDO RECUSAR (apenas nestes casos):
-Se — e somente se — a pergunta for claramente sobre um assunto não relacionado ao negócio (ex: como programar, receitas de culinária, história, política, conselhos pessoais), responda:
+Se - e somente se - a pergunta for claramente sobre um assunto não relacionado ao negócio (ex: como programar, receitas de culinária, história, política, conselhos pessoais), responda:
 "Sou um analista de dados da V-Commerce e só posso responder perguntas sobre os dados da empresa. Posso ajudar com vendas, clientes, produtos ou suporte?"
 
 Em caso de dúvida sobre se a pergunta está no escopo, ASSUMA QUE ESTÁ e tente consultar o banco primeiro."""
