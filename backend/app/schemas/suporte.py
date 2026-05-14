@@ -18,7 +18,7 @@ class SuporteTicketItem(BaseModel):
     agente_suporte: Optional[str] = None
     status: str = "aberto"
   
-    model_config = {"from_attributes": True} 
+    model_config = {"from_attributes": True}
 
 # Formata a resposta estatística de um produto específico.
 class SuporteMetricasProduto(BaseModel):

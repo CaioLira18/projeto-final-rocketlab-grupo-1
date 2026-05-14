@@ -1,3 +1,4 @@
+from app.models.suporte import FatoSuporte
 from sqlalchemy import Column, String, Float, Boolean, select
 from sqlalchemy.orm import column_property
 from bd.database import Base
@@ -18,11 +19,12 @@ class FatoAvaliacoes(Base):
     data_avaliacao = Column(String, nullable=True)
 
     nome_cliente = column_property(
-        select(Cliente.nome_cliente)
-        .where(Cliente.id_cliente == id_cliente)
+        lambda: select(Cliente.nome_cliente)
+        .where(Cliente.id_cliente == FatoSuporte.id_cliente)
         .correlate_except(Cliente)
         .scalar_subquery()
     )
+
     nome_produto = column_property(
         select(DimProduto.nome_produto)
         .where(DimProduto.id_produto == id_produto)
