@@ -56,7 +56,7 @@ SUGGESTED_QUESTIONS = [
 def show_welcome():
     """Exibe o menu inicial com exemplos de perguntas."""
     print("\n" + "-" * 65)
-    print("  ANALISTA CRM - STACK OVERGOL  (powered by Gemini 2.5 Flash)")
+    print("  ANALISTA CRM - STACK OVERGOL  (powered by Gemini - For Now)")
     print("-" * 65)
     print("\nExemplos de perguntas:")
     for i, q in enumerate(SUGGESTED_QUESTIONS, 1):
