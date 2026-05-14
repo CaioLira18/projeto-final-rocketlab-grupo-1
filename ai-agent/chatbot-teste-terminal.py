@@ -103,13 +103,13 @@ async def run():
             # - Envia a pergunta + histórico ao Gemini
             # - O Gemini decide se chama ferramentas (ver_schema, executar_sql)
             # - Cada resultado de ferramenta volta para o Gemini continuar
-            # - Quando o Gemini termina, result.output contém a resposta final
+            # - Quando o Gemini termina, result.data contém a resposta final
             result = await agent.run(user_input, message_history=history)
 
             # Atualiza o histórico com todas as mensagens desta rodada (pergunta, chamadas de ferramentas, respostas do modelo)
             history = list(result.all_messages())
 
-            print(f"Assistente: {result.output}\n")
+            print(f"Assistente: {result.data}\n")
 
         except Exception as e:
             print(f"Erro: {e}\n")
