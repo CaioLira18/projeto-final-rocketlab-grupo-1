@@ -10,7 +10,7 @@ def list_clientes(
     nome: Optional[str] = None,
     sobrenome: Optional[str] = None,
     email: Optional[str] = None,
-    cidade: Optional[List[str]] = None,        # FIX: era str, agora List[str]
+    cidade: Optional[List[str]] = None,
     estado: Optional[List[str]] = None,
     pais: Optional[str] = None,
     genero: Optional[List[str]] = None,
@@ -18,8 +18,9 @@ def list_clientes(
     idade_min: Optional[int] = None,
     idade_max: Optional[int] = None,
     ramal: Optional[str] = None,
-    sem_ramal: Optional[bool] = None,          # FIX: era str, agora bool
+    sem_ramal: Optional[bool] = None,
     busca: Optional[str] = None,
+    ano_cadastro: Optional[List[int]] = None,
     skip: int = 0,
     limit: int = 50,
 ):
@@ -41,10 +42,9 @@ def list_clientes(
     if email:
         query = query.filter(Cliente.email_cliente.ilike(f"%{email}%"))
     if cidade:
-        query = query.filter(Cliente.cidade_cliente.in_(cidade))  # FIX: .in_() para lista
+        query = query.filter(Cliente.cidade_cliente.in_(cidade))
     if pais:
         query = query.filter(Cliente.pais_cliente.ilike(f"%{pais}%"))
-
     if estado:
         query = query.filter(Cliente.estado_cliente.in_(estado))
     if genero:
@@ -55,10 +55,6 @@ def list_clientes(
         query = query.filter(Cliente.idade >= idade_min)
     if idade_max is not None:
         query = query.filter(Cliente.idade <= idade_max)
-
-    # FIX: sem_ramal e ramal são mutuamente exclusivos
-    # sem_ramal filtra clientes com ramal NULL, vazio ou "0"
-    # ramal faz busca textual pelo valor informado
     if sem_ramal:
         query = query.filter(
             or_(
@@ -67,8 +63,14 @@ def list_clientes(
                 Cliente.ramal_cliente == "0",
             )
         )
-    elif ramal:
-        query = query.filter(Cliente.ramal_cliente.ilike(f"%{ramal}%"))
+    if ramal:
+        query = query.filter(Cliente.ramal_cliente.ilike(f"{ramal}%"))
+    if ano_cadastro:
+        query = query.filter(
+            func.strftime("%Y", Cliente.data_cadastro_cliente).in_(
+                [str(a) for a in ano_cadastro]
+            )
+        )
 
     return query.offset(skip).limit(limit).all()
 

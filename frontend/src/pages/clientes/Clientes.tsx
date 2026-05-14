@@ -32,6 +32,7 @@ interface Cliente {
   estado_cliente: string
   pais_cliente: string
   origem_cliente: string
+  ano_cadastro: string
   idade: number
 }
 
@@ -326,6 +327,9 @@ export function Clientes() {
   const [pais, setPais] = useState("")
   const [paisDebounced, setPaisDebounced] = useState("")
 
+  const [ano_cadastro, setAnoCadastro] = useState("")
+  const [anoCadastroDebounced, setAnoCadastroDebounced] = useState("") // Adicione esta linha
+
   // filtro de faixa de idade
   const [idadeMin, setIdadeMin] = useState("")
   const [idadeMax, setIdadeMax] = useState("")
@@ -370,6 +374,11 @@ export function Clientes() {
     return () => clearTimeout(t)
   }, [idadeMax])
 
+  useEffect(() => {
+    const t = setTimeout(() => setAnoCadastroDebounced(ano_cadastro), 500)
+    return () => clearTimeout(t)
+  }, [ano_cadastro])
+
   // ── fetch por ID exato → GET /clientes/{id} ────────────────────────────
   const fetchPorId = useCallback(async () => {
     setLoading(true)
@@ -411,8 +420,10 @@ export function Clientes() {
     if (paisDebounced) params.set("pais", paisDebounced)
     if (idadeMinDebounced !== "") params.set("idade_min", idadeMinDebounced)
     if (idadeMaxDebounced !== "") params.set("idade_max", idadeMaxDebounced)
-    // FIX: removida a linha solta `if (ramalDebounced) params.set("ramal", ramalDebounced)`
-    // que conflitava com o bloco abaixo e causava envio simultâneo de ramal + sem_ramal
+
+    // Mudado para usar o valor com debounce:
+    if (anoCadastroDebounced) params.append("ano_cadastro", anoCadastroDebounced)
+
     if (semRamal) {
       params.set("sem_ramal", "true")
     } else if (ramalDebounced) {
@@ -420,8 +431,19 @@ export function Clientes() {
     }
     Object.entries(extra).forEach(([k, v]) => params.set(k, v))
     return params
-  }, [buscaDebounced, cidades, estados, generos, origens, paisDebounced, idadeMinDebounced, idadeMaxDebounced, ramalDebounced, semRamal])
-  // FIX: ↑ semRamal incluído nas dependências para o useCallback recriar buildParams quando o checkbox muda
+  }, [
+    buscaDebounced,
+    cidades,
+    estados,
+    generos,
+    origens,
+    paisDebounced,
+    idadeMinDebounced,
+    idadeMaxDebounced,
+    ramalDebounced,
+    semRamal,
+    anoCadastroDebounced
+  ])
 
   // ── fetch normal com filtros ───────────────────────────────────────────
   const fetchClientes = useCallback(async () => {
@@ -493,10 +515,22 @@ export function Clientes() {
     else fetchClientes()
   }, [modoIdExato, fetchPorId, fetchClientes])
 
-  // FIX: semRamal adicionado no useEffect de reset de página
   useEffect(() => {
     setPagina(1)
-  }, [buscaDebounced, buscaIdDebounced, cidades, estados, generos, origens, paisDebounced, idadeMinDebounced, idadeMaxDebounced, semRamal])
+  }, [
+    buscaDebounced,
+    buscaIdDebounced,
+    cidades,
+    estados,
+    generos,
+    origens,
+    paisDebounced,
+    idadeMinDebounced,
+    idadeMaxDebounced,
+    ramalDebounced,
+    semRamal,
+    anoCadastroDebounced
+  ])
 
   const toggleGenero = (g: string) =>
     setGeneros((prev) => prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g])
@@ -512,6 +546,7 @@ export function Clientes() {
     setBusca("")
     setBuscaId("")
     setRamal("")
+    setAnoCadastro("")
     setSemRamal(false)
     setPagina(1)
   }
@@ -711,14 +746,14 @@ export function Clientes() {
                       placeholder="Ex: 3019"
                       value={ramal}
                       disabled={semRamal}
-                      onChange={(e) => { setRamal(e.target.value); setPagina(1) }}
+                      onChange={(e) => { setRamal(e.target.value) }}
                       className={`pl-3 pr-7 py-2 rounded-lg border text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200 w-28
                         ${semRamal ? "opacity-40 cursor-not-allowed bg-gray-50" : ""}
                         ${ramal && !semRamal ? "border-primary-200 bg-primary-50/20 text-primary font-medium" : "border-gray-200 bg-white"}`}
                     />
                     {ramal && !semRamal && (
                       <button
-                        onClick={() => { setRamal(""); setPagina(1) }}
+                        onClick={() => { setRamal("") }}
                         className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500"
                       >
                         <X className="h-3.5 w-3.5" />
@@ -781,6 +816,28 @@ export function Clientes() {
                   {pais && (
                     <button
                       onClick={() => { setPais(""); setPagina(1) }}
+                      className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-caption font-medium text-gray-400 shrink-0">Ano Cadastro:</span>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Ex: 2022"
+                    value={ano_cadastro}
+                    onChange={(e) => setAnoCadastro(e.target.value)} // Mantido limpo, sem setPagina(1)
+                    className={`pl-3 pr-7 py-2 rounded-lg border text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200 w-36
+        ${ano_cadastro ? "border-primary-200 bg-primary-50/20 text-primary font-medium" : "border-gray-200 bg-white"}`}
+                  />
+                  {ano_cadastro && (
+                    <button
+                      onClick={() => setAnoCadastro("")} // Apenas limpa o estado
                       className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500"
                     >
                       <X className="h-3.5 w-3.5" />
