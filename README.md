@@ -1,5 +1,111 @@
 # Stack OverGol
 
+## 📁 Arquitetura do Projeto
+
+```
+📦 projeto/
+├── 📁 backend/
+│   ├── 📁 app/
+│   │   ├── 📁 models/
+│   │   │   ├── __init__.py
+│   │   │   ├── avaliacao.py
+│   │   │   ├── cliente_360.py
+│   │   │   ├── cliente_gold.py
+│   │   │   ├── cliente.py
+│   │   │   ├── pedido.py
+│   │   │   ├── produto_360.py
+│   │   │   ├── produto_gold.py
+│   │   │   ├── produto.py
+│   │   │   ├── suporte.py
+│   │   │   ├── usuario.py
+│   │   │   └── vendas_periodo.py
+│   │   ├── 📁 routes/
+│   │   │   ├── __init__.py
+│   │   │   ├── auth.py
+│   │   │   ├── cliente.py
+│   │   │   ├── dashboard.py
+│   │   │   ├── export.py
+│   │   │   ├── pedido.py
+│   │   │   ├── produto.py
+│   │   │   └── suporte.py
+│   │   ├── 📁 schemas/
+│   │   │   ├── __init__.py
+│   │   │   ├── cliente.py
+│   │   │   ├── dashboard.py
+│   │   │   ├── pedido.py
+│   │   │   ├── produto.py
+│   │   │   ├── suporte.py
+│   │   │   └── usuario.py
+│   │   └── 📁 services/
+│   │       ├── __init__.py
+│   │       ├── auth_service.py
+│   │       ├── chat_service.py
+│   │       ├── cliente_service.py
+│   │       ├── dashboard_service.py
+│   │       ├── pedido_service.py
+│   │       ├── produto_service.py
+│   │       └── suporte_service.py
+│   ├── 📁 bd/
+│   │   ├── 📁 alembic/
+│   │   ├── app_gold.db
+│   │   ├── app_silver.db
+│   │   ├── database.py
+│   │   └── seed.py
+│   ├── 📁 data/
+│   │   ├── 📁 gold/
+│   │   │   ├── .gitkeep
+│   │   │   ├── dim_cliente.csv
+│   │   │   ├── dim_produto.csv
+│   │   │   ├── dm_cliente_360.csv
+│   │   │   ├── dm_produto_360.csv
+│   │   │   └── dm_vendas_periodo.csv
+│   │   └── 📁 silver/
+│   │       ├── silver_avaliacoes.csv
+│   │       ├── silver_catalogo_produtos.csv
+│   │       ├── silver_clickstream.csv
+│   │       ├── silver_clientes_dispositivo.csv
+│   │       ├── silver_clientes.csv
+│   │       ├── silver_pedidos.csv
+│   │       └── silver_suporte_tickets.csv
+│   ├── 📁 tests/
+│   ├── 📁 venv/
+│   ├── .env.example
+│   ├── .gitkeep
+│   ├── alembic.ini
+│   ├── main.py
+│   └── requirements.txt
+├── 📁 data-engineering/
+│   ├── Bronze-Silver.ipynb
+│   ├── Landing-Bronze.ipynb
+│   ├── Silver-Gold.ipynb
+│   └── Stack_OverGol.yaml
+├── 📁 frontend/
+│   ├── 📁 node_modules/
+│   ├── 📁 public/
+│   ├── 📁 src/
+│   │   ├── 📁 assets/
+│   │   ├── 📁 components/
+│   │   ├── 📁 context/
+│   │   ├── 📁 hooks/
+│   │   ├── 📁 pages/
+│   │   ├── 📁 router/
+│   │   ├── 📁 services/
+│   │   ├── 📁 types/
+│   │   ├── 📁 utils/
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   ├── .gitignore
+│   ├── index.html
+│   ├── package.json
+│   ├── README.md
+│   └── vite.config.ts
+├── .gitignore
+├── DEV_SETUP.md
+└── README.md
+```
+
 ## 📊 Arquitetura e Fluxo de Dados
 A documentação completa e detalhada do fluxo de engenharia de dados (incluindo tratamento de colunas, modelagem e decisões técnicas) pode ser acessada na aba Links Úteis:
 
