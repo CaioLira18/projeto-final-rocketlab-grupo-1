@@ -1,3 +1,4 @@
+from .agente import router as agente_router
 from .cliente import router as cliente_router
 from .produto import router as produto_router
 from .pedido import router as pedido_router
