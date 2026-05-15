@@ -82,5 +82,28 @@ def download_and_import_gold():
             except Exception as e:
                 print(f"❌ Erro crítico ao inserir dados na tabela {table_name}: {e}")
 
+    # Atualiza o status 'ja_tratada' no banco Silver
+    print("\n✨ Marcando registros no banco Silver como tratados...")
+    DB_SILVER_PATH = os.path.join(BASE_DIR, "app_silver.db")
+    if os.path.exists(DB_SILVER_PATH):
+        try:
+            from sqlalchemy import text
+            engine_silver = create_engine(f"sqlite:///{DB_SILVER_PATH}")
+            tables_to_update = ["dim_cliente", "dim_produto", "fato_vendas", "fato_suporte", "fato_avaliacoes"]
+            
+            with engine_silver.connect() as conn:
+                for table in tables_to_update:
+                    try:
+                        conn.execute(text(f"UPDATE {table} SET ja_tratada = 1"))
+                        print(f"✅ Status atualizado em '{table}' (Silver)")
+                    except Exception as table_err:
+                        pass
+                conn.commit()
+            print("🚀 Sincronização de status concluída!")
+        except Exception as e:
+            print(f"⚠️ Aviso: Não foi possível atualizar o status no Silver: {e}")
+    else:
+        print("⚠️ Aviso: Banco Silver não encontrado para atualização de status.")
+
 if __name__ == "__main__":
     download_and_import_gold()
