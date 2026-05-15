@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import Optional, List
+from app.services.cliente360_service import get_cliente_360
 
-from bd.database import get_db
-from app.schemas import ClienteResponse, ClienteHistoricoResponse
+from bd.database import get_db, get_db_gold
+from app.schemas import ClienteResponse, ClienteHistoricoResponse, Cliente360Response
 from app.services import list_clientes, get_cliente_by_id, get_cliente_historico
 from app.routes.auth import get_current_user
+
 
 router = APIRouter(
     prefix="/clientes",
@@ -129,6 +131,25 @@ def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_by_id(db, cliente_id)
 
 
+@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
+def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    return get_cliente_historico(db, cliente_id)
+
+# ── NOVA ROTA 360 — deve ficar ANTES de /{cliente_id} ─────────────────────
+@router.get("/360/{cliente_id}", response_model=Cliente360Response)
+def buscar_cliente_360(
+    cliente_id: str,
+    db: Session = Depends(get_db_gold),   # usa o banco gold
+):
+    return get_cliente_360(db, cliente_id)
+ 
+ 
+# ── rotas existentes ───────────────────────────────────────────────────────
+@router.get("/{cliente_id}", response_model=ClienteResponse)
+def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    return get_cliente_by_id(db, cliente_id)
+ 
+ 
 @router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
 def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_historico(db, cliente_id)

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from app.models import Cliente, Pedidos, FatoSuporte
+from app.models import Cliente, Pedidos, FatoSuporte, Cliente360
 from fastapi import HTTPException
 
 
@@ -73,6 +73,20 @@ def list_clientes(
         )
 
     return query.offset(skip).limit(limit).all()
+
+
+def get_cliente_360(db: Session, cliente_id: str) -> Cliente360:
+    cliente = (
+        db.query(Cliente360)
+        .filter(Cliente360.id_cliente == cliente_id)
+        .first()
+    )
+    if not cliente:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Visão 360 não encontrada para o cliente {cliente_id}",
+        )
+    return cliente
 
 
 def get_cliente_by_id(db: Session, cliente_id: str):
