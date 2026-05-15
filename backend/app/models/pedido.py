@@ -16,6 +16,7 @@ class Pedidos(Base):
     valor_pedido = Column(Float)
     metodo_pagamento = Column(String)
     status_pedido = Column(String)
+    data_prevista_entrega = Column(Date, nullable=True)
 
     nome_cliente = column_property(
         select(Cliente.nome_cliente)
