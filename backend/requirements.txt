@@ -9,5 +9,6 @@ pandas==2.2.3
 pyjwt==2.8.0
 bcrypt==4.1.2
 python-multipart==0.0.9
+databricks-cli==0.18.0
 pydantic-ai[google]==0.0.41
 

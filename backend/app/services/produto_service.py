@@ -144,7 +144,7 @@ def update_produto(db: Session, produto_id: str, prod_in: ProdutoUpdate) -> DimP
         raise HTTPException(status_code=404, detail="Produto não encontrado")
 
     update_data = prod_in.model_dump(exclude_unset=True)
-    peso_val_update = update_data.pop("peso_kg_produto", None)
+    update_data.pop("peso_kg_produto", None)
 
     for field, value in update_data.items():
         if hasattr(db_prod, field):
