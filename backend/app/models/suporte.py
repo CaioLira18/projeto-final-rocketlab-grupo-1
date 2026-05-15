@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, select, DateTime
+from sqlalchemy import Column, String, Float, Boolean, select, DateTime
 from sqlalchemy.orm import column_property
 from bd.database import Base
 from .cliente import Cliente
@@ -16,6 +16,10 @@ class FatoSuporte(Base):
     data_resolucao = Column(DateTime, nullable=True)
     tempo_resolucao_horas = Column(Float, nullable=True)
     agente_suporte = Column(String, nullable=True)
+    nota_avaliacao_problema = Column(Float, nullable=True)
+    sentimento = Column(String, nullable=True)
+    status_ticket = Column(String, nullable=True)
+    ja_tratada = Column(Boolean, default=False)
 
     nome_cliente = column_property(
         select(Cliente.nome_cliente)

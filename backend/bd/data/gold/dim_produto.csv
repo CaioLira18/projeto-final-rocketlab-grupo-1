@@ -1,0 +1,518 @@
+id_produto,nome_produto,categoria_produto,preco_produto,fornecedor_produto,peso_kg_produto,estoque_produto,produto_ativo,data_cadastro_produto,faixa_preco_produto,status_estoque_produto
+PROD-0011,Tablet 10 Polegadas,Eletrônicos,682.0,Alpha Tech Importados,4.98,102,True,2020-04-05,Alto,Estoque Normal
+PROD-0019,Câmera Fotográfica Digital,Eletrônicos,1509.0,Alpha Tech Importados,,498,True,2023-06-06,Alto,Estoque Normal
+PROD-0081,Tênis de Corrida,Vestuário,157.0,Moda Brasil Atacado,0.29,150,True,2023-07-17,Medio,Estoque Normal
+PROD-0102,Sandália Feminina,Vestuário,249.0,Confecções do Sul,0.54,14,True,2022-11-09,Alto,Estoque Normal
+PROD-0103,Sapato Social Masculino,Vestuário,306.0,Moda Brasil Atacado,1.61,63,True,2021-02-13,Alto,Estoque Normal
+PROD-0113,Meia-calça Feminina,Vestuário,27.0,Fashion Import Ltda,0.51,133,False,2022-03-18,Baixo,Estoque Normal
+PROD-0121,Suéter Masculino,Vestuário,222.0,Moda Brasil Atacado,1.48,232,True,2018-12-12,Alto,Estoque Normal
+PROD-0140,Kit de Almofadas 4 Peças,Casa,183.0,Casa & Cia Distribuidora,9.95,251,True,2018-06-21,Medio,Estoque Normal
+PROD-0141,Luminária de Mesa,Casa,188.0,Decor Import,7.2,96,False,2023-10-24,Medio,Estoque Normal
+PROD-0155,Fritadeira Air Fryer 4L,Casa,258.0,Casa & Cia Distribuidora,2.43,310,True,2025-02-07,Alto,Estoque Normal
+PROD-0157,Batedeira Planetária,Casa,569.0,Utilidades do Lar Ltda,13.03,32,False,2021-03-05,Alto,Estoque Normal
+PROD-0182,Dispenser Sabonete Líquido,Casa,84.0,Casa & Cia Distribuidora,8.0,486,True,2019-02-18,Medio,Estoque Normal
+PROD-0183,Saboneteira,Casa,21.0,Decor Import,0.53,219,True,2021-05-31,Baixo,Estoque Normal
+PROD-0192,Halteres Par 5kg,Esportes,51.0,Atlética Import Ltda,12.46,268,True,2021-08-11,Medio,Estoque Normal
+PROD-0239,Regata Esportiva Masculina,Esportes,43.0,Esporte Total Ltda,12.21,441,True,2026-02-24,Baixo,Estoque Normal
+PROD-0251,Perfume Masculino 100ml,Beleza,148.0,Cosméticos do Brasil Ltda,0.7,210,True,2020-01-06,Medio,Estoque Normal
+PROD-0254,Secador de Cabelo 2200W,Beleza,,Perfumes & Cia,,258,False,2025-07-17,Nao Informado,Estoque Normal
+PROD-0255,Secador de Cabelo 1800W,Beleza,90.0,Perfumes & Cia,0.12,172,True,2025-07-23,Medio,Estoque Normal
+PROD-0268,Óleo Capilar 60ml,Beleza,61.0,Beauty Import Brasil,0.21,279,True,2025-12-21,Medio,Estoque Normal
+PROD-0273,Batom Gloss,Beleza,27.0,Beauty Import Brasil,1.48,22,True,2019-10-16,Baixo,Estoque Normal
+PROD-0275,Sérum Ácido Hialurônico,Beleza,186.0,Beauty Import Brasil,1.27,247,False,2024-04-11,Medio,Estoque Normal
+PROD-0303,Condicionador Hidratante 400ml,Beleza,50.0,Beauty Import Brasil,0.63,239,True,2022-07-25,Medio,Estoque Normal
+PROD-0305,Pos-barba Hidratante,Beleza,80.0,Beleza Total Atacado,0.19,368,True,2019-01-04,Medio,Estoque Normal
+PROD-0311,Tinta para Cabelo,Beleza,,Beauty Import Brasil,0.74,107,False,2020-03-06,Nao Informado,Estoque Normal
+PROD-0314,Pneu Aro 16,Automotivo,551.0,AutoPeças Brasil Ltda,13.17,232,True,2020-05-01,Alto,Estoque Normal
+PROD-0336,Lampada LED Automotiva H4,Automotivo,81.0,Automotivo Import,21.65,172,True,2023-06-22,Medio,Estoque Normal
+PROD-0343,GPS Veicular,Automotivo,210.0,AutoPeças Brasil Ltda,23.16,16,True,2022-11-04,Alto,Estoque Normal
+PROD-0351,Macaco Hidraulico 2T,Automotivo,427.0,Automotivo Import,6.9,381,True,2025-03-29,Alto,Estoque Normal
+PROD-0356,Shampoo Automotivo 1L,Automotivo,51.0,AutoPeças Brasil Ltda,13.82,1,True,2022-06-19,Medio,Estoque Baixo
+PROD-0369,Correia Dentada Kit,Automotivo,160.0,AutoPeças Brasil Ltda,10.52,0,True,2025-08-20,Medio,Sem Estoque
+PROD-0379,Quebra-cabeca 1000 Pecas,Brinquedos,53.0,Brinquedos do Brasil Ltda,7.88,462,False,2024-12-09,Medio,Estoque Normal
+PROD-0383,Blocos de Montar 500 Pecas,Brinquedos,457.0,Brinquedos do Brasil Ltda,3.3,145,True,2023-07-13,Alto,Estoque Normal
+PROD-0395,Balanco Infantil,Brinquedos,261.0,Brinquedos do Brasil Ltda,0.56,476,False,2025-02-14,Alto,Estoque Normal
+PROD-0470,Armario de Cozinha 6 Portas,Móveis,,Decor Brasil Atacado,24.95,0,False,2021-05-19,Nao Informado,Sem Estoque
+PROD-0478,Rede de Descanso,Móveis,,Interiores Import Ltda,9.72,12,False,2019-09-27,Nao Informado,Estoque Normal
+PROD-0481,Aparador de Sala,Móveis,339.0,MoveisPlus Distribuidora,16.4,406,True,2021-01-14,Alto,Estoque Normal
+PROD-0490,Banqueta Bar Alta,Móveis,429.0,MoveisPlus Distribuidora,52.1,44,True,2025-05-25,Alto,Estoque Normal
+PROD-0516,Velocipede Infantil,Brinquedos,236.0,Brinquedos do Brasil Ltda,7.44,70,True,2020-02-15,Alto,Estoque Normal
+PROD-0004,Notebook Intel Core i5,Eletrônicos,3359.0,Shenzhen Connect Brasil,,217,True,2020-12-21,Alto,Estoque Normal
+PROD-0059,Mesa Digitalizadora,Eletrônicos,479.0,Shenzhen Connect Brasil,1.42,34,True,2019-01-27,Alto,Estoque Normal
+PROD-0068,Calça Jeans Masculina,Vestuário,205.0,Confecções do Sul,1.49,258,True,2018-10-14,Alto,Estoque Normal
+PROD-0073,Moletom com Capuz,Vestuário,,Confecções do Sul,,458,False,2022-07-01,Nao Informado,Estoque Normal
+PROD-0082,Meia Esportiva Kit com 3,Vestuário,,TextilBrasil Distribuidora,1.06,497,False,2018-04-09,Nao Informado,Estoque Normal
+PROD-0099,Cachecol de Lã,Vestuário,79.0,Moda Brasil Atacado,1.85,399,False,2024-10-14,Medio,Estoque Normal
+PROD-0131,Edredom Solteiro,Casa,111.0,Utilidades do Lar Ltda,13.9,218,True,2021-03-23,Medio,Estoque Normal
+PROD-0145,Organizador de Gaveta,Casa,91.0,Utilidades do Lar Ltda,8.16,69,False,2025-07-19,Medio,Estoque Normal
+PROD-0167,Desumidificador,Casa,,Decor Import,3.65,365,False,2023-02-16,Nao Informado,Estoque Normal
+PROD-0171,Kit Suporte Banheiro,Casa,92.0,Utilidades do Lar Ltda,13.62,18,True,2018-06-11,Medio,Estoque Normal
+PROD-0172,Cesto de Roupa Suja,Casa,,Utilidades do Lar Ltda,5.44,85,False,2020-12-25,Nao Informado,Estoque Normal
+PROD-0188,Bicicleta Aro 29 Mountain Bike,Esportes,813.0,Fitness Distribuidora,5.86,87,False,2018-11-02,Alto,Estoque Normal
+PROD-0206,Colchão Inflável,Esportes,170.0,SportsBrasil Atacado,11.5,255,True,2018-12-22,Medio,Estoque Normal
+PROD-0207,Mochila de Trilha 40L,Esportes,563.0,SportsBrasil Atacado,4.11,27,True,2023-03-04,Alto,Estoque Normal
+PROD-0218,Kettlebell 12kg,Esportes,165.0,SportsBrasil Atacado,8.14,0,True,2018-07-21,Medio,Sem Estoque
+PROD-0222,Colchonete Ginástica,Esportes,,SportsBrasil Atacado,12.16,105,False,2018-02-02,Nao Informado,Estoque Normal
+PROD-0266,Condicionador Profissional 1L,Beleza,59.0,Beauty Import Brasil,0.16,204,True,2024-05-14,Medio,Estoque Normal
+PROD-0270,Paleta de Sombras 18 Cores,Beleza,99.0,Beauty Import Brasil,,463,True,2019-03-28,Medio,Estoque Normal
+PROD-0280,Esponja Mágica de Maquiagem,Beleza,80.0,Perfumes & Cia,0.75,42,True,2023-12-24,Medio,Estoque Normal
+PROD-0282,Tônico Facial,Beleza,149.0,Cosméticos do Brasil Ltda,1.19,308,True,2021-05-20,Medio,Estoque Normal
+PROD-0308,Creme de Depilação,Beleza,80.0,Beleza Total Atacado,1.0,427,True,2025-11-11,Medio,Estoque Normal
+PROD-0319,Oleo de Motor 5W30 4L,Automotivo,,AutoPeças Brasil Ltda,6.3,350,False,2021-03-12,Nao Informado,Estoque Normal
+PROD-0347,Pedal Esportivo Kit,Automotivo,193.0,AutoPeças Brasil Ltda,0.75,484,True,2025-12-29,Medio,Estoque Normal
+PROD-0360,Rack de Teto Universal,Automotivo,318.0,AutoPeças Brasil Ltda,22.64,137,False,2024-03-31,Alto,Estoque Normal
+PROD-0390,Robo Programavel,Brinquedos,490.0,Fun Kids Distribuidora,1.63,270,False,2019-04-30,Alto,Estoque Normal
+PROD-0461,Cabeceira Casal,Móveis,291.0,Decor Brasil Atacado,36.42,46,True,2025-04-28,Alto,Estoque Normal
+PROD-0462,Cabeceira Solteiro,Móveis,505.0,MoveisPlus Distribuidora,73.62,459,True,2022-05-14,Alto,Estoque Normal
+PROD-0465,Berco Multifuncional,Móveis,1927.0,MoveisPlus Distribuidora,,422,True,2024-11-27,Alto,Estoque Normal
+PROD-0492,Mesa de Canto Redonda,Móveis,246.0,Interiores Import Ltda,33.35,307,False,2021-06-27,Alto,Estoque Normal
+PROD-0031,Capinha de Celular,Eletrônicos,80.0,Shenzhen Connect Brasil,0.34,90,False,2018-07-05,Medio,Estoque Normal
+PROD-0048,Bateria Portátil 20000mAh,Eletrônicos,,Shenzhen Connect Brasil,0.75,493,False,2024-03-18,Nao Informado,Estoque Normal
+PROD-0061,Leitor Código de Barras,Eletrônicos,344.0,TechBrasil Distribuidora,3.16,128,True,2018-10-09,Alto,Estoque Normal
+PROD-0094,Carteira Masculina,Vestuário,168.0,Fashion Import Ltda,1.29,170,True,2019-12-02,Medio,Estoque Normal
+PROD-0112,Conjunto Esportivo,Vestuário,,Fashion Import Ltda,0.46,182,False,2022-05-29,Nao Informado,Estoque Normal
+PROD-0118,Kit Pijama Casal,Vestuário,302.0,Confecções do Sul,,111,False,2026-03-13,Alto,Estoque Normal
+PROD-0134,Cobertor Casal,Casa,,Decor Import,14.01,0,False,2023-06-26,Nao Informado,Sem Estoque
+PROD-0148,Persiana Horizontal,Casa,181.0,Decor Import,12.85,36,True,2019-02-01,Medio,Estoque Normal
+PROD-0152,Tábua de Corte Bambu,Casa,31.0,Casa & Cia Distribuidora,1.53,329,False,2024-10-14,Baixo,Estoque Normal
+PROD-0175,Multiprocessador,Casa,183.0,Utilidades do Lar Ltda,10.83,169,True,2026-01-26,Medio,Estoque Normal
+PROD-0176,Vela Perfumada,Casa,68.0,Casa & Cia Distribuidora,0.53,443,False,2018-04-27,Medio,Estoque Normal
+PROD-0223,Elástico de Resistência Kit,Esportes,66.0,Fitness Distribuidora,3.97,351,True,2021-04-01,Medio,Estoque Normal
+PROD-0228,Luvas de Ciclismo,Esportes,66.0,Esporte Total Ltda,6.96,111,True,2020-09-01,Medio,Estoque Normal
+PROD-0274,Sérum Vitamina C,Beleza,233.0,Perfumes & Cia,0.16,415,True,2019-06-24,Alto,Estoque Normal
+PROD-0276,Desodorante Antitranspirante,Beleza,18.0,Perfumes & Cia,0.84,379,True,2024-12-21,Baixo,Estoque Normal
+PROD-0286,Máscara Facial Argila,Beleza,58.0,Beleza Total Atacado,0.71,0,True,2023-08-15,Medio,Sem Estoque
+PROD-0313,Pneu Aro 14,Automotivo,432.0,Automotivo Import,5.01,0,True,2020-10-11,Alto,Sem Estoque
+PROD-0324,Capa para Banco Dianteiro Par,Automotivo,165.0,Automotivo Import,22.5,133,True,2020-01-20,Medio,Estoque Normal
+PROD-0332,Pelicula Automotiva Solar,Automotivo,192.0,AutoPeças Brasil Ltda,1.22,146,False,2023-10-02,Medio,Estoque Normal
+PROD-0363,Kit Primeiros Socorros Veicular,Automotivo,40.0,Peças & Cia Distribuidora,7.24,33,False,2023-01-08,Baixo,Estoque Normal
+PROD-0386,Pelucia Gigante 80cm,Brinquedos,165.0,Toy Import Atacado,2.11,114,True,2026-03-06,Medio,Estoque Normal
+PROD-0421,Moto de Brinquedo,Brinquedos,83.0,Brinquedos do Brasil Ltda,7.33,330,False,2023-02-09,Medio,Estoque Normal
+PROD-0468,Comoda 5 Gavetas,Móveis,462.0,Decor Brasil Atacado,5.53,58,True,2022-09-02,Alto,Estoque Normal
+PROD-0471,Balcao de Cozinha,Móveis,1485.0,Decor Brasil Atacado,78.72,263,True,2020-05-22,Alto,Estoque Normal
+PROD-0479,Cadeira Alta para Bebe,Móveis,620.0,MoveisPlus Distribuidora,37.92,394,True,2023-03-07,Alto,Estoque Normal
+PROD-0513,Smart TV 65 Polegadas,Eletrônicos,,Global Electronics Ltda,4.36,0,False,2025-04-22,Nao Informado,Sem Estoque
+PROD-0514,Conjunto Esportivo Feminino,Vestuário,,Fashion Import Ltda,1.09,233,False,2025-11-25,Nao Informado,Estoque Normal
+PROD-0014,Fone de Ouvido com Fio,Eletrônicos,90.0,Shenzhen Connect Brasil,1.42,388,True,2024-03-26,Medio,Estoque Normal
+PROD-0021,Projetor Full HD,Eletrônicos,3607.0,Shenzhen Connect Brasil,1.32,0,True,2023-06-30,Alto,Sem Estoque
+PROD-0057,Switch HDMI 4K,Eletrônicos,200.0,Alpha Tech Importados,3.42,307,True,2022-08-30,Alto,Estoque Normal
+PROD-0060,Placa de Captura HDMI,Eletrônicos,450.0,TechBrasil Distribuidora,2.13,55,True,2019-02-12,Alto,Estoque Normal
+PROD-0064,Camiseta Masculina Algodão,Vestuário,55.0,TextilBrasil Distribuidora,0.8,29,True,2018-06-30,Medio,Estoque Normal
+PROD-0080,Tênis Esportivo,Vestuário,440.0,Moda Brasil Atacado,1.3,459,True,2022-12-19,Alto,Estoque Normal
+PROD-0107,Calça Moletom,Vestuário,116.0,Moda Brasil Atacado,0.23,68,False,2022-09-08,Medio,Estoque Normal
+PROD-0120,Camisola Feminina,Vestuário,115.0,Confecções do Sul,1.31,476,False,2018-08-21,Medio,Estoque Normal
+PROD-0126,Conjunto de Panelas 5 Peças,Casa,203.0,HomeBrasil Atacado,13.83,305,True,2022-04-22,Alto,Estoque Normal
+PROD-0158,Panela de Pressão Elétrica,Casa,,Casa & Cia Distribuidora,12.31,125,False,2024-06-24,Nao Informado,Estoque Normal
+PROD-0162,Ferro de Passar a Vapor,Casa,,Utilidades do Lar Ltda,,426,False,2025-08-25,Nao Informado,Estoque Normal
+PROD-0221,Anilha 10kg Par,Esportes,193.0,Atlética Import Ltda,13.99,293,True,2024-11-02,Medio,Estoque Normal
+PROD-0229,Joelheira Esportiva Par,Esportes,70.0,Fitness Distribuidora,,488,True,2020-01-10,Medio,Estoque Normal
+PROD-0238,Tênis de Natação,Esportes,83.0,Esporte Total Ltda,11.99,397,True,2021-07-25,Medio,Estoque Normal
+PROD-0265,Shampoo Profissional 1L,Beleza,41.0,Beleza Total Atacado,0.85,354,True,2020-07-09,Baixo,Estoque Normal
+PROD-0289,Creme para as Mãos,Beleza,,Beauty Import Brasil,0.66,0,False,2021-04-30,Nao Informado,Sem Estoque
+PROD-0291,Spray Fixador de Maquiagem,Beleza,39.0,Beleza Total Atacado,1.13,356,True,2021-01-08,Baixo,Estoque Normal
+PROD-0294,Iluminador Facial,Beleza,,Beauty Import Brasil,0.27,22,False,2018-05-16,Nao Informado,Estoque Normal
+PROD-0301,Protetor Labial,Beleza,15.0,Beauty Import Brasil,0.77,292,False,2023-09-24,Baixo,Estoque Normal
+PROD-0307,Autobronzeador,Beleza,135.0,Perfumes & Cia,1.38,194,False,2019-12-05,Medio,Estoque Normal
+PROD-0329,Camera de Re,Automotivo,124.0,AutoPeças Brasil Ltda,11.96,410,True,2022-03-28,Medio,Estoque Normal
+PROD-0340,Capa de Chuva para Carro,Automotivo,248.0,Automotivo Import,21.9,479,False,2018-09-23,Alto,Estoque Normal
+PROD-0342,Cabo de Ligacao Veicular,Automotivo,,AutoPeças Brasil Ltda,24.08,340,False,2019-08-03,Nao Informado,Estoque Normal
+PROD-0358,Flanela Automotiva Kit 5,Automotivo,73.0,Peças & Cia Distribuidora,16.59,437,False,2025-10-12,Medio,Estoque Normal
+PROD-0365,Polidor Automotivo 500g,Automotivo,74.0,Peças & Cia Distribuidora,4.76,341,True,2024-09-14,Medio,Estoque Normal
+PROD-0400,Telescopio Infantil,Brinquedos,204.0,Toy Import Atacado,5.61,69,False,2023-05-16,Alto,Estoque Normal
+PROD-0420,Caminhao de Brinquedo,Brinquedos,98.0,Brinquedos do Brasil Ltda,4.2,0,False,2024-02-19,Medio,Sem Estoque
+PROD-0448,Guarda-roupa 2 Portas,Móveis,1228.0,Decor Brasil Atacado,44.9,252,True,2020-01-03,Alto,Estoque Normal
+PROD-0451,Cama Box Casal,Móveis,,Decor Brasil Atacado,56.75,170,False,2020-12-31,Nao Informado,Estoque Normal
+PROD-0454,Escrivaninha Simples,Móveis,290.0,MoveisPlus Distribuidora,,234,True,2019-06-06,Alto,Estoque Normal
+PROD-0474,Cabideiro de Parede,Móveis,113.0,Decor Brasil Atacado,11.97,391,True,2021-04-26,Medio,Estoque Normal
+PROD-0483,Estante Gamer,Móveis,1148.0,MoveisPlus Distribuidora,64.93,125,True,2020-04-18,Alto,Estoque Normal
+PROD-0491,Banco de Madeira,Móveis,303.0,Interiores Import Ltda,70.92,221,True,2024-07-16,Alto,Estoque Normal
+PROD-0499,Perfume Importado 200ml,Beleza,220.0,Beleza Total Atacado,1.24,106,True,2022-06-10,Alto,Estoque Normal
+PROD-0507,Câmera de Acao 4K,Eletrônicos,1400.0,TechBrasil Distribuidora,3.11,298,True,2020-06-17,Alto,Estoque Normal
+PROD-0509,Creme Corporal Premium,Beleza,101.0,Perfumes & Cia,0.29,167,False,2022-03-11,Medio,Estoque Normal
+PROD-0510,Suporte para Moto,Automotivo,107.0,Automotivo Import,2.61,241,True,2022-02-14,Medio,Estoque Normal
+PROD-0006,Notebook Intel Core i3,Eletrônicos,1631.0,Alpha Tech Importados,4.01,3,True,2019-03-16,Alto,Estoque Baixo
+PROD-0016,Caixa de Som Bluetooth,Eletrônicos,534.0,Shenzhen Connect Brasil,4.2,37,True,2022-10-14,Alto,Estoque Normal
+PROD-0018,Barra de Som,Eletrônicos,1466.0,Alpha Tech Importados,1.92,262,True,2025-02-18,Alto,Estoque Normal
+PROD-0024,Mouse Sem Fio,Eletrônicos,325.0,Shenzhen Connect Brasil,3.49,348,False,2024-08-24,Alto,Estoque Normal
+PROD-0039,Roteador Wi-Fi,Eletrônicos,254.0,Shenzhen Connect Brasil,3.73,396,True,2020-09-07,Alto,Estoque Normal
+PROD-0040,Drone com Câmera,Eletrônicos,2588.0,Shenzhen Connect Brasil,2.45,262,False,2022-01-27,Alto,Estoque Normal
+PROD-0042,Controle Sem Fio,Eletrônicos,313.0,TechBrasil Distribuidora,0.54,35,True,2024-12-23,Alto,Estoque Normal
+PROD-0084,Sutiã Conforto,Vestuário,117.0,TextilBrasil Distribuidora,0.93,472,True,2019-08-04,Medio,Estoque Normal
+PROD-0085,Shorts Academia,Vestuário,42.0,Moda Brasil Atacado,1.14,189,True,2023-09-01,Baixo,Estoque Normal
+PROD-0087,Bermuda Masculina,Vestuário,75.0,Fashion Import Ltda,1.68,207,True,2021-05-05,Medio,Estoque Normal
+PROD-0128,Jogo de Lençol Casal,Casa,266.0,Utilidades do Lar Ltda,2.88,50,True,2020-01-10,Alto,Estoque Normal
+PROD-0135,Toalha de Banho,Casa,37.0,Casa & Cia Distribuidora,8.61,197,True,2025-09-03,Baixo,Estoque Normal
+PROD-0149,Jogo de Banheiro 3 Peças,Casa,94.0,Casa & Cia Distribuidora,10.13,327,True,2021-01-08,Medio,Estoque Normal
+PROD-0154,Chaleira Elétrica,Casa,206.0,HomeBrasil Atacado,7.79,0,False,2025-10-28,Alto,Sem Estoque
+PROD-0173,Cabideiro de Chão,Casa,133.0,Utilidades do Lar Ltda,6.28,142,True,2024-07-23,Medio,Estoque Normal
+PROD-0186,Suporte para Secador,Casa,,Utilidades do Lar Ltda,4.94,74,False,2024-05-20,Nao Informado,Estoque Normal
+PROD-0190,Bicicleta Speed Aro 700,Esportes,735.0,Esporte Total Ltda,4.46,221,True,2025-09-21,Alto,Estoque Normal
+PROD-0216,Capacete Ciclismo,Esportes,140.0,SportsBrasil Atacado,0.46,409,True,2023-03-23,Medio,Estoque Normal
+PROD-0226,Esteira Ergométrica,Esportes,,Fitness Distribuidora,8.4,323,False,2018-08-08,Nao Informado,Estoque Normal
+PROD-0242,Luvas de Musculação,Esportes,160.0,SportsBrasil Atacado,13.03,234,True,2025-02-19,Medio,Estoque Normal
+PROD-0244,Rolo de Pilates,Esportes,76.0,SportsBrasil Atacado,2.5,34,False,2024-01-05,Medio,Estoque Normal
+PROD-0252,Perfume Feminino 50ml,Beleza,130.0,Perfumes & Cia,0.85,439,True,2021-12-24,Medio,Estoque Normal
+PROD-0277,Loção Corporal Hidratante,Beleza,58.0,Beauty Import Brasil,0.76,97,True,2019-09-18,Medio,Estoque Normal
+PROD-0279,Kit Manicure 10 Peças,Beleza,43.0,Cosméticos do Brasil Ltda,0.36,247,False,2025-03-07,Baixo,Estoque Normal
+PROD-0292,Corretivo Líquido,Beleza,85.0,Beauty Import Brasil,1.47,370,True,2024-07-19,Medio,Estoque Normal
+PROD-0302,Shampoo Anticaspa 400ml,Beleza,47.0,Beleza Total Atacado,1.2,246,True,2020-04-30,Baixo,Estoque Normal
+PROD-0309,Cera Depilatória,Beleza,45.0,Beauty Import Brasil,0.84,332,True,2018-07-23,Baixo,Estoque Normal
+PROD-0325,Capa para Banco Traseiro,Automotivo,297.0,AutoPeças Brasil Ltda,14.09,238,True,2024-04-14,Alto,Estoque Normal
+PROD-0354,Fluido de Arrefecimento 1L,Automotivo,47.0,AutoPeças Brasil Ltda,0.32,0,True,2025-04-05,Baixo,Sem Estoque
+PROD-0380,Quebra-cabeca 500 Pecas,Brinquedos,73.0,Fun Kids Distribuidora,1.97,291,True,2020-06-05,Medio,Estoque Normal
+PROD-0389,Robo Interativo,Brinquedos,,Fun Kids Distribuidora,1.03,3,False,2025-09-22,Nao Informado,Estoque Baixo
+PROD-0399,Fantasia Infantil,Brinquedos,122.0,Fun Kids Distribuidora,7.45,304,True,2022-06-09,Medio,Estoque Normal
+PROD-0402,Drone Infantil,Brinquedos,213.0,Brinquedos do Brasil Ltda,0.35,261,True,2019-09-15,Alto,Estoque Normal
+PROD-0408,Pistola de Bolhas,Brinquedos,46.0,Brinquedos do Brasil Ltda,3.91,73,True,2018-04-24,Baixo,Estoque Normal
+PROD-0439,Mesa de Jantar 4 Cadeiras,Móveis,1086.0,MoveisPlus Distribuidora,8.38,308,True,2025-02-08,Alto,Estoque Normal
+PROD-0444,Estante de Livros 5 Prateleiras,Móveis,655.0,MoveisPlus Distribuidora,19.7,0,False,2021-08-20,Alto,Sem Estoque
+PROD-0456,Mesa de Canto,Móveis,506.0,Decor Brasil Atacado,6.05,4,True,2022-03-22,Alto,Estoque Baixo
+PROD-0486,Gaveteiro com Rodas,Móveis,739.0,MoveisPlus Distribuidora,41.98,311,True,2022-06-22,Alto,Estoque Normal
+PROD-0487,Nicho Decorativo Kit 3,Móveis,177.0,MoveisPlus Distribuidora,5.45,3,True,2020-04-19,Medio,Estoque Baixo
+PROD-0496,Kit Churrasco 10 Pecas,Casa,109.0,Casa & Cia Distribuidora,1.07,331,True,2025-09-12,Medio,Estoque Normal
+PROD-0001,Smartphone 128GB,Eletrônicos,2504.0,Shenzhen Connect Brasil,2.99,429,False,2024-04-10,Alto,Estoque Normal
+PROD-0045,Hub USB 7 Portas,Eletrônicos,,Shenzhen Connect Brasil,3.49,177,False,2019-02-21,Nao Informado,Estoque Normal
+PROD-0072,Vestido Longo,Vestuário,228.0,TextilBrasil Distribuidora,0.92,22,True,2025-04-17,Alto,Estoque Normal
+PROD-0075,Jaqueta de Couro,Vestuário,,Fashion Import Ltda,1.77,17,False,2019-11-27,Nao Informado,Estoque Normal
+PROD-0091,Mochila Escolar,Vestuário,323.0,Confecções do Sul,1.72,457,True,2025-03-26,Alto,Estoque Normal
+PROD-0092,Mochila Executiva,Vestuário,386.0,Fashion Import Ltda,1.75,346,False,2020-08-27,Alto,Estoque Normal
+PROD-0098,Luvas de Inverno,Vestuário,98.0,Confecções do Sul,1.46,88,True,2023-08-19,Medio,Estoque Normal
+PROD-0104,Óculos de Sol,Vestuário,128.0,Fashion Import Ltda,1.21,180,False,2021-09-06,Medio,Estoque Normal
+PROD-0114,Roupa de Banho Masculina,Vestuário,63.0,Confecções do Sul,0.22,266,True,2021-09-03,Medio,Estoque Normal
+PROD-0132,Travesseiro Viscoelástico,Casa,174.0,Decor Import,5.81,19,True,2024-01-03,Medio,Estoque Normal
+PROD-0163,Aspirador de Pó Vertical,Casa,354.0,Decor Import,6.68,276,False,2022-09-25,Alto,Estoque Normal
+PROD-0233,Suporte Lombar Esportivo,Esportes,116.0,Esporte Total Ltda,3.5,375,True,2019-01-08,Medio,Estoque Normal
+PROD-0246,Body Board,Esportes,304.0,SportsBrasil Atacado,13.87,140,True,2020-01-22,Alto,Estoque Normal
+PROD-0261,Protetor Solar FPS 70,Beleza,57.0,Beauty Import Brasil,0.97,32,True,2022-08-11,Medio,Estoque Normal
+PROD-0285,Gel de Limpeza Facial,Beleza,,Cosméticos do Brasil Ltda,,98,False,2021-03-01,Nao Informado,Estoque Normal
+PROD-0300,Kit Barba Completo,Beleza,158.0,Beauty Import Brasil,0.83,0,False,2023-03-04,Medio,Sem Estoque
+PROD-0310,Kit Coloração Cabelo,Beleza,,Beauty Import Brasil,0.93,96,False,2023-03-02,Nao Informado,Estoque Normal
+PROD-0312,Pneu Aro 15,Automotivo,,Peças & Cia Distribuidora,6.08,198,False,2021-04-06,Nao Informado,Estoque Normal
+PROD-0318,Bateria Automotiva 80Ah,Automotivo,686.0,Peças & Cia Distribuidora,21.97,385,True,2020-04-02,Alto,Estoque Normal
+PROD-0330,Camera Frontal,Automotivo,,Peças & Cia Distribuidora,8.53,299,False,2018-02-09,Nao Informado,Estoque Normal
+PROD-0338,Aspirador Veicular 12V,Automotivo,221.0,Automotivo Import,21.21,296,True,2022-02-09,Alto,Estoque Normal
+PROD-0367,Filtro de Ar Veicular,Automotivo,92.0,AutoPeças Brasil Ltda,6.67,153,True,2023-08-05,Medio,Estoque Normal
+PROD-0387,Kit Massinha de Modelar,Brinquedos,81.0,Brinquedos do Brasil Ltda,1.25,72,True,2025-12-30,Medio,Estoque Normal
+PROD-0407,Lancador de Dardos,Brinquedos,66.0,Brinquedos do Brasil Ltda,6.02,359,True,2020-12-29,Medio,Estoque Normal
+PROD-0412,Violao Infantil,Brinquedos,107.0,Toy Import Atacado,7.48,351,False,2024-07-14,Medio,Estoque Normal
+PROD-0433,Sofa 3 Lugares,Móveis,,MoveisPlus Distribuidora,20.67,98,False,2021-02-10,Nao Informado,Estoque Normal
+PROD-0460,Penteadeira com Espelho,Móveis,806.0,MoveisPlus Distribuidora,,149,True,2025-06-18,Alto,Estoque Normal
+PROD-0472,Prateleira Flutuante Kit 3,Móveis,460.0,MoveisPlus Distribuidora,8.68,103,True,2019-12-21,Alto,Estoque Normal
+PROD-0512,Rack Suspenso para TV,Móveis,622.0,MoveisPlus Distribuidora,69.5,87,False,2025-08-29,Alto,Estoque Normal
+PROD-0053,SSD Externo 480GB,Eletrônicos,310.0,Shenzhen Connect Brasil,3.78,203,True,2021-02-16,Alto,Estoque Normal
+PROD-0067,Camiseta Polo Feminina,Vestuário,147.0,TextilBrasil Distribuidora,1.89,197,True,2024-06-25,Medio,Estoque Normal
+PROD-0117,Camiseta Ciclismo,Vestuário,187.0,Confecções do Sul,0.19,111,True,2020-04-23,Medio,Estoque Normal
+PROD-0142,Luminária de Piso,Casa,468.0,Casa & Cia Distribuidora,0.6,14,False,2022-03-28,Alto,Estoque Normal
+PROD-0160,Torradeira 2 Fatias,Casa,129.0,Casa & Cia Distribuidora,13.88,341,True,2019-07-13,Medio,Estoque Normal
+PROD-0169,Escorredor de Louças,Casa,87.0,HomeBrasil Atacado,4.51,409,True,2022-04-08,Medio,Estoque Normal
+PROD-0197,Bola de Tênis Kit 3,Esportes,36.0,Atlética Import Ltda,12.44,88,False,2025-04-17,Baixo,Estoque Normal
+PROD-0202,Patins Quad,Esportes,346.0,SportsBrasil Atacado,14.38,52,True,2019-06-19,Alto,Estoque Normal
+PROD-0215,Corda de Pular,Esportes,50.0,Esporte Total Ltda,9.69,55,True,2019-04-23,Medio,Estoque Normal
+PROD-0245,Prancha de Surf,Esportes,805.0,SportsBrasil Atacado,11.94,80,True,2019-05-19,Alto,Estoque Normal
+PROD-0317,Bateria Automotiva 45Ah,Automotivo,512.0,AutoPeças Brasil Ltda,8.16,483,True,2018-04-12,Alto,Estoque Normal
+PROD-0328,Suporte Veicular Celular,Automotivo,66.0,AutoPeças Brasil Ltda,23.16,198,True,2022-01-30,Medio,Estoque Normal
+PROD-0352,Limpador de Para-brisa Par,Automotivo,148.0,Peças & Cia Distribuidora,2.36,0,True,2024-11-27,Medio,Sem Estoque
+PROD-0396,Jogo de Memoria,Brinquedos,80.0,Toy Import Atacado,2.82,336,False,2025-02-14,Medio,Estoque Normal
+PROD-0424,Bolinha de Gude Kit,Brinquedos,31.0,Brinquedos do Brasil Ltda,4.03,278,True,2023-07-08,Baixo,Estoque Normal
+PROD-0426,Carrinho de Bebe de Boneca,Brinquedos,149.0,Brinquedos do Brasil Ltda,5.62,169,True,2020-04-27,Medio,Estoque Normal
+PROD-0437,Poltrona Reclinavel,Móveis,1520.0,MoveisPlus Distribuidora,9.12,133,True,2022-10-14,Alto,Estoque Normal
+PROD-0443,Cadeira Gamer,Móveis,,Interiores Import Ltda,40.25,308,False,2025-06-28,Nao Informado,Estoque Normal
+PROD-0477,Mesa de Jardim,Móveis,651.0,Interiores Import Ltda,65.68,0,True,2024-05-28,Alto,Sem Estoque
+PROD-0480,Mesa de Cabeceira,Móveis,,MoveisPlus Distribuidora,49.77,285,False,2022-12-28,Nao Informado,Estoque Normal
+PROD-0497,Smartphone Pro Max 512GB,Eletrônicos,3614.0,Shenzhen Connect Brasil,0.77,446,True,2021-04-10,Alto,Estoque Normal
+PROD-0501,Boneca de Pano 35cm,Brinquedos,64.0,Fun Kids Distribuidora,0.93,404,True,2025-09-13,Medio,Estoque Normal
+PROD-0020,Câmera de Segurança Wi-Fi,Eletrônicos,494.0,Shenzhen Connect Brasil,2.95,152,True,2023-08-06,Alto,Estoque Normal
+PROD-0023,Monitor 27 Polegadas,Eletrônicos,2146.0,TechBrasil Distribuidora,4.95,49,True,2018-01-12,Alto,Estoque Normal
+PROD-0029,Carregador Sem Fio,Eletrônicos,245.0,Global Electronics Ltda,0.32,81,True,2022-09-27,Alto,Estoque Normal
+PROD-0062,Impressora Fotográfica,Eletrônicos,784.0,TechBrasil Distribuidora,3.18,264,False,2023-11-16,Alto,Estoque Normal
+PROD-0063,Caixinha de Som Mini,Eletrônicos,,Global Electronics Ltda,4.06,4,False,2024-10-16,Nao Informado,Estoque Baixo
+PROD-0093,Bolsa Feminina,Vestuário,199.0,Moda Brasil Atacado,0.54,21,True,2022-12-13,Medio,Estoque Normal
+PROD-0097,Chapéu de Palha,Vestuário,75.0,Confecções do Sul,1.05,0,True,2024-12-14,Medio,Sem Estoque
+PROD-0111,Camiseta Dry Fit,Vestuário,90.0,TextilBrasil Distribuidora,0.91,319,True,2025-12-13,Medio,Estoque Normal
+PROD-0198,Raquete de Tênis,Esportes,258.0,Fitness Distribuidora,13.65,225,True,2025-05-06,Alto,Estoque Normal
+PROD-0209,Garrafa Térmica 1L,Esportes,94.0,SportsBrasil Atacado,10.43,12,True,2019-07-03,Medio,Estoque Normal
+PROD-0240,Bermuda de Natação,Esportes,130.0,SportsBrasil Atacado,,173,True,2019-03-08,Medio,Estoque Normal
+PROD-0247,Pé de Pato par,Esportes,125.0,Fitness Distribuidora,5.08,69,True,2019-06-13,Medio,Estoque Normal
+PROD-0256,Chapinha Profissional,Beleza,303.0,Beleza Total Atacado,1.29,0,True,2021-12-18,Alto,Sem Estoque
+PROD-0264,Creme Hidratante Facial,Beleza,62.0,Beauty Import Brasil,0.61,344,False,2022-03-22,Medio,Estoque Normal
+PROD-0337,Carregador Veicular USB,Automotivo,118.0,Peças & Cia Distribuidora,16.34,186,True,2024-08-26,Medio,Estoque Normal
+PROD-0339,Para-brisa Defletor,Automotivo,242.0,Peças & Cia Distribuidora,13.54,317,True,2021-10-06,Alto,Estoque Normal
+PROD-0353,Fluido de Freio 500ml,Automotivo,75.0,AutoPeças Brasil Ltda,6.03,21,True,2022-08-05,Medio,Estoque Normal
+PROD-0355,Cera Automotiva 500g,Automotivo,62.0,Peças & Cia Distribuidora,,497,False,2024-02-14,Medio,Estoque Normal
+PROD-0366,Selante de Pneu,Automotivo,46.0,AutoPeças Brasil Ltda,9.6,432,True,2019-11-11,Baixo,Estoque Normal
+PROD-0384,Pelucia 40cm,Brinquedos,183.0,Brinquedos do Brasil Ltda,7.84,416,True,2025-07-17,Medio,Estoque Normal
+PROD-0397,Domino Infantil,Brinquedos,,Toy Import Atacado,5.77,376,False,2021-02-02,Nao Informado,Estoque Normal
+PROD-0435,Sofa Retratil 3 Lugares,Móveis,1253.0,MoveisPlus Distribuidora,61.4,155,True,2023-06-09,Alto,Estoque Normal
+PROD-0450,Cama Solteiro com Cabeceira,Móveis,835.0,Interiores Import Ltda,13.78,470,True,2018-04-30,Alto,Estoque Normal
+PROD-0009,Smart TV 55 Polegadas,Eletrônicos,3746.0,Global Electronics Ltda,2.8,459,True,2024-02-04,Alto,Estoque Normal
+PROD-0022,Monitor 24 Polegadas,Eletrônicos,1676.0,Shenzhen Connect Brasil,2.97,23,False,2022-04-13,Alto,Estoque Normal
+PROD-0032,Headset Bluetooth,Eletrônicos,,Alpha Tech Importados,2.21,71,False,2026-02-20,Nao Informado,Estoque Normal
+PROD-0037,Webcam Full HD,Eletrônicos,252.0,Shenzhen Connect Brasil,0.33,387,True,2021-03-07,Alto,Estoque Normal
+PROD-0050,Smart Watch,Eletrônicos,1018.0,Alpha Tech Importados,3.18,443,False,2022-05-31,Alto,Estoque Normal
+PROD-0052,Impressora Térmica,Eletrônicos,,TechBrasil Distribuidora,2.76,384,False,2023-06-12,Nao Informado,Estoque Normal
+PROD-0115,Biquíni,Vestuário,197.0,Confecções do Sul,0.41,90,True,2018-03-23,Medio,Estoque Normal
+PROD-0129,Jogo de Lençol Solteiro,Casa,102.0,Casa & Cia Distribuidora,2.55,293,True,2021-02-09,Medio,Estoque Normal
+PROD-0133,Travesseiro de Pluma,Casa,198.0,Decor Import,11.71,0,False,2022-08-10,Medio,Sem Estoque
+PROD-0137,Tapete Sala 2x3m,Casa,267.0,Casa & Cia Distribuidora,1.64,0,True,2025-10-01,Alto,Sem Estoque
+PROD-0138,Tapete Banheiro,Casa,43.0,Casa & Cia Distribuidora,13.12,0,False,2021-09-02,Baixo,Sem Estoque
+PROD-0146,Cabide de Parede,Casa,64.0,Decor Import,8.68,48,False,2025-05-03,Medio,Estoque Normal
+PROD-0150,Espelho de Parede,Casa,168.0,Casa & Cia Distribuidora,3.15,91,False,2022-09-03,Medio,Estoque Normal
+PROD-0203,Patins Inline,Esportes,302.0,Fitness Distribuidora,3.86,0,False,2018-03-24,Alto,Sem Estoque
+PROD-0217,Óculos de Natação,Esportes,141.0,SportsBrasil Atacado,3.17,72,True,2018-09-03,Medio,Estoque Normal
+PROD-0253,Perfume Masculino 50ml,Beleza,109.0,Perfumes & Cia,0.35,385,True,2019-01-09,Medio,Estoque Normal
+PROD-0316,Bateria Automotiva 60Ah,Automotivo,516.0,Peças & Cia Distribuidora,18.18,411,True,2025-06-21,Alto,Estoque Normal
+PROD-0320,Oleo de Motor 10W40 4L,Automotivo,170.0,AutoPeças Brasil Ltda,8.78,3,True,2021-07-16,Medio,Estoque Baixo
+PROD-0341,Triangulo de Sinalizacao,Automotivo,67.0,Peças & Cia Distribuidora,7.91,89,True,2020-09-07,Medio,Estoque Normal
+PROD-0359,Suporte para Bicicleta Veicular,Automotivo,215.0,Automotivo Import,,17,True,2019-12-28,Alto,Estoque Normal
+PROD-0362,Buzina Automotiva,Automotivo,,AutoPeças Brasil Ltda,5.61,28,False,2021-03-31,Nao Informado,Estoque Normal
+PROD-0371,Pastilha de Freio Kit,Automotivo,208.0,Peças & Cia Distribuidora,21.7,164,True,2020-02-03,Alto,Estoque Normal
+PROD-0372,Boneca Articulada 30cm,Brinquedos,145.0,Fun Kids Distribuidora,5.72,0,True,2022-06-27,Medio,Sem Estoque
+PROD-0416,Kit Ferramentas Infantil,Brinquedos,63.0,Brinquedos do Brasil Ltda,1.92,457,True,2020-10-09,Medio,Estoque Normal
+PROD-0431,Mordedor Infantil Kit,Brinquedos,25.0,Brinquedos do Brasil Ltda,0.47,334,True,2025-04-26,Baixo,Estoque Normal
+PROD-0438,Mesa de Jantar 6 Cadeiras,Móveis,,MoveisPlus Distribuidora,73.85,192,False,2026-03-08,Nao Informado,Estoque Normal
+PROD-0440,Mesa de Jantar 8 Cadeiras,Móveis,4168.0,MoveisPlus Distribuidora,15.05,380,True,2024-10-17,Alto,Estoque Normal
+PROD-0482,Cristaleira 3 Portas,Móveis,1080.0,MoveisPlus Distribuidora,44.08,245,True,2025-10-22,Alto,Estoque Normal
+PROD-0495,Cama de Casal Queen Size,Móveis,3690.0,MoveisPlus Distribuidora,59.9,241,True,2025-05-03,Alto,Estoque Normal
+PROD-0503,Tablet Infantil 7 Polegadas,Eletrônicos,676.0,Shenzhen Connect Brasil,,28,True,2022-04-06,Alto,Estoque Normal
+PROD-0506,Sapatilha Feminina,Vestuário,137.0,Fashion Import Ltda,1.85,470,True,2021-07-30,Medio,Estoque Normal
+PROD-0511,Fantoche Kit 6 Personagens,Brinquedos,163.0,Fun Kids Distribuidora,1.95,128,True,2018-08-18,Medio,Estoque Normal
+PROD-0003,Smartphone 256GB,Eletrônicos,3955.0,Global Electronics Ltda,0.83,29,True,2025-11-07,Alto,Estoque Normal
+PROD-0015,Headset Gamer,Eletrônicos,359.0,Shenzhen Connect Brasil,1.35,274,True,2020-07-11,Alto,Estoque Normal
+PROD-0027,Teclado sem Fio,Eletrônicos,146.0,Shenzhen Connect Brasil,2.7,356,True,2023-04-14,Medio,Estoque Normal
+PROD-0033,HD Externo 1TB,Eletrônicos,369.0,Alpha Tech Importados,3.08,31,True,2022-11-19,Alto,Estoque Normal
+PROD-0043,Aspirador Robô,Casa,1549.0,Alpha Tech Importados,4.67,0,True,2021-09-12,Alto,Sem Estoque
+PROD-0055,Estabilizador 1000VA,Eletrônicos,349.0,Shenzhen Connect Brasil,4.86,85,True,2019-08-28,Alto,Estoque Normal
+PROD-0069,Calça Jeans Feminina,Vestuário,181.0,Moda Brasil Atacado,1.65,0,True,2025-01-04,Medio,Sem Estoque
+PROD-0109,Blusa de Seda Feminina,Vestuário,267.0,Moda Brasil Atacado,1.74,481,True,2024-11-24,Alto,Estoque Normal
+PROD-0110,Top Esportivo,Vestuário,116.0,Moda Brasil Atacado,1.85,441,False,2020-06-19,Medio,Estoque Normal
+PROD-0144,Vaso Decorativo,Casa,155.0,Decor Import,5.22,323,True,2023-12-17,Medio,Estoque Normal
+PROD-0151,Porta Temperos,Casa,79.0,Utilidades do Lar Ltda,1.62,84,True,2020-05-27,Medio,Estoque Normal
+PROD-0180,Relógio de Parede,Casa,99.0,Casa & Cia Distribuidora,4.46,0,True,2025-08-20,Medio,Sem Estoque
+PROD-0199,Raquete de Beach Tennis,Esportes,391.0,Atlética Import Ltda,7.11,321,False,2021-06-10,Alto,Estoque Normal
+PROD-0200,Raquete de Badminton Kit 2,Esportes,117.0,SportsBrasil Atacado,4.12,1,True,2021-07-13,Medio,Estoque Baixo
+PROD-0214,Bloco de Yoga,Esportes,87.0,Atlética Import Ltda,8.53,151,False,2020-04-12,Medio,Estoque Normal
+PROD-0243,Bola de Pilates 65cm,Esportes,157.0,Atlética Import Ltda,7.05,0,True,2019-06-22,Medio,Sem Estoque
+PROD-0250,Perfume Feminino 100ml,Beleza,229.0,Cosméticos do Brasil Ltda,0.44,280,True,2024-03-31,Alto,Estoque Normal
+PROD-0269,Escova de Cabelo Profissional,Beleza,,Cosméticos do Brasil Ltda,1.47,139,False,2020-07-23,Nao Informado,Estoque Normal
+PROD-0272,Batom Matte,Beleza,35.0,Beleza Total Atacado,0.93,128,True,2019-06-24,Baixo,Estoque Normal
+PROD-0290,Bálsamo Labial,Beleza,17.0,Perfumes & Cia,1.13,386,False,2020-08-03,Baixo,Estoque Normal
+PROD-0306,Loção Pos-sol,Beleza,73.0,Beleza Total Atacado,0.26,279,True,2023-02-13,Medio,Estoque Normal
+PROD-0323,Central Multimidia 9 Polegadas,Automotivo,904.0,AutoPeças Brasil Ltda,17.78,4,True,2026-01-16,Alto,Estoque Baixo
+PROD-0335,Caixa de Som Automotiva,Automotivo,240.0,AutoPeças Brasil Ltda,19.77,91,False,2025-02-22,Alto,Estoque Normal
+PROD-0348,Capa de Volante,Automotivo,33.0,Automotivo Import,20.86,280,True,2024-03-14,Baixo,Estoque Normal
+PROD-0377,Jogo de Cartas UNO,Brinquedos,71.0,Toy Import Atacado,2.9,84,False,2019-12-30,Medio,Estoque Normal
+PROD-0381,Quebra-cabeca 3D,Brinquedos,154.0,Fun Kids Distribuidora,0.68,117,False,2023-09-27,Medio,Estoque Normal
+PROD-0392,Bicicleta Infantil Aro 16,Brinquedos,366.0,Fun Kids Distribuidora,5.12,427,False,2021-05-07,Alto,Estoque Normal
+PROD-0393,Bicicleta Infantil Aro 12,Brinquedos,201.0,Brinquedos do Brasil Ltda,2.99,0,True,2023-04-09,Alto,Sem Estoque
+PROD-0401,Microscopio Infantil,Brinquedos,359.0,Toy Import Atacado,5.5,384,False,2018-01-09,Alto,Estoque Normal
+PROD-0414,Microfone Infantil,Brinquedos,60.0,Brinquedos do Brasil Ltda,3.86,115,True,2023-12-24,Medio,Estoque Normal
+PROD-0417,Pula Corda Infantil,Brinquedos,27.0,Brinquedos do Brasil Ltda,2.24,430,True,2024-04-04,Baixo,Estoque Normal
+PROD-0422,Boneco de Acao,Brinquedos,193.0,Toy Import Atacado,1.03,94,True,2025-03-19,Medio,Estoque Normal
+PROD-0425,Pipa Infantil,Brinquedos,,Brinquedos do Brasil Ltda,2.06,134,False,2024-09-03,Nao Informado,Estoque Normal
+PROD-0428,Cavalinho de Balanco,Brinquedos,196.0,Brinquedos do Brasil Ltda,3.6,353,True,2021-08-06,Medio,Estoque Normal
+PROD-0430,Gym para Bebe,Brinquedos,239.0,Brinquedos do Brasil Ltda,1.73,258,True,2020-03-27,Alto,Estoque Normal
+PROD-0449,Cama Casal com Cabeceira,Móveis,1070.0,Decor Brasil Atacado,14.6,66,True,2021-03-18,Alto,Estoque Normal
+PROD-0455,Mesa de Centro,Móveis,649.0,MoveisPlus Distribuidora,66.57,292,True,2020-08-07,Alto,Estoque Normal
+PROD-0457,Rack para TV,Móveis,1047.0,Decor Brasil Atacado,53.9,54,True,2024-04-04,Alto,Estoque Normal
+PROD-0458,Painel para TV,Móveis,591.0,Interiores Import Ltda,27.35,12,True,2018-10-22,Alto,Estoque Normal
+PROD-0475,Cadeira de Balanco,Móveis,632.0,MoveisPlus Distribuidora,6.42,399,True,2019-05-05,Alto,Estoque Normal
+PROD-0484,Bancada de Trabalho,Móveis,643.0,MoveisPlus Distribuidora,54.35,54,False,2023-08-02,Alto,Estoque Normal
+PROD-0485,Armario de Ferramentas,Móveis,828.0,Decor Brasil Atacado,40.7,368,True,2025-02-06,Alto,Estoque Normal
+PROD-0026,Teclado Mecânico,Eletrônicos,501.0,TechBrasil Distribuidora,1.25,212,True,2022-09-10,Alto,Estoque Normal
+PROD-0076,Jaqueta Impermeável,Vestuário,367.0,Moda Brasil Atacado,0.47,138,True,2022-11-03,Alto,Estoque Normal
+PROD-0077,Jaqueta Jeans,Vestuário,114.0,Moda Brasil Atacado,1.7,187,False,2025-06-27,Medio,Estoque Normal
+PROD-0079,Tênis Casual Feminino,Vestuário,495.0,Confecções do Sul,1.87,0,True,2022-01-28,Alto,Sem Estoque
+PROD-0096,Boné Aba Curva,Vestuário,57.0,Moda Brasil Atacado,1.09,139,True,2019-08-08,Medio,Estoque Normal
+PROD-0100,Chinelo Masculino,Vestuário,59.0,Confecções do Sul,0.54,267,False,2023-08-17,Medio,Estoque Normal
+PROD-0105,Regata Masculina,Vestuário,,Moda Brasil Atacado,1.8,13,False,2020-07-20,Nao Informado,Estoque Normal
+PROD-0116,Bermuda de Ciclismo,Vestuário,184.0,Moda Brasil Atacado,0.96,20,True,2018-09-28,Medio,Estoque Normal
+PROD-0153,Conjunto de Potes Herméticos,Casa,90.0,HomeBrasil Atacado,12.35,107,False,2020-03-23,Medio,Estoque Normal
+PROD-0159,Micro-ondas 20L,Casa,494.0,HomeBrasil Atacado,1.07,448,True,2023-07-02,Alto,Estoque Normal
+PROD-0161,Cafeteira Expresso,Casa,254.0,Decor Import,5.26,498,True,2018-07-11,Alto,Estoque Normal
+PROD-0166,Umidificador de Ar,Casa,,Decor Import,5.56,33,False,2019-12-12,Nao Informado,Estoque Normal
+PROD-0168,Lixeira com Pedal,Casa,123.0,Utilidades do Lar Ltda,11.88,0,True,2018-03-13,Medio,Sem Estoque
+PROD-0189,Bicicleta Aro 26,Esportes,,Esporte Total Ltda,1.28,0,False,2020-01-16,Nao Informado,Sem Estoque
+PROD-0205,Barraca de Camping 2 Pessoas,Esportes,,Esporte Total Ltda,13.03,420,False,2024-09-03,Nao Informado,Estoque Normal
+PROD-0212,Saco de Pancadas,Esportes,374.0,Esporte Total Ltda,13.63,340,False,2022-08-11,Alto,Estoque Normal
+PROD-0219,Kettlebell 8kg,Esportes,209.0,Atlética Import Ltda,7.87,337,True,2023-05-06,Alto,Estoque Normal
+PROD-0220,Barra de Musculação,Esportes,552.0,SportsBrasil Atacado,3.14,1,True,2024-05-06,Alto,Estoque Baixo
+PROD-0227,Bicicleta Ergométrica,Esportes,842.0,SportsBrasil Atacado,13.31,425,True,2021-04-09,Alto,Estoque Normal
+PROD-0236,Camiseta Esportiva Feminina,Vestuário,56.0,Atlética Import Ltda,4.34,24,True,2025-08-23,Medio,Estoque Normal
+PROD-0241,Maiô Esportivo,Esportes,,Atlética Import Ltda,6.3,146,False,2018-02-22,Nao Informado,Estoque Normal
+PROD-0296,Máscara de Cílios,Beleza,83.0,Beauty Import Brasil,0.17,176,True,2019-01-31,Medio,Estoque Normal
+PROD-0298,Kit Hidratação Capilar,Beleza,51.0,Beleza Total Atacado,0.55,40,True,2023-09-28,Medio,Estoque Normal
+PROD-0304,Creme de Barbear,Beleza,53.0,Cosméticos do Brasil Ltda,0.77,176,False,2021-01-06,Medio,Estoque Normal
+PROD-0322,Central Multimidia 7 Polegadas,Automotivo,592.0,AutoPeças Brasil Ltda,21.65,165,True,2025-01-17,Alto,Estoque Normal
+PROD-0350,Bomba de Ar Compressor 12V,Automotivo,,AutoPeças Brasil Ltda,19.2,131,False,2020-10-28,Nao Informado,Estoque Normal
+PROD-0361,Forro de Cacamba,Automotivo,471.0,AutoPeças Brasil Ltda,,335,True,2025-12-17,Alto,Estoque Normal
+PROD-0405,Gangorra Infantil,Brinquedos,178.0,Brinquedos do Brasil Ltda,5.06,365,True,2019-04-12,Medio,Estoque Normal
+PROD-0432,Chocalho Kit,Brinquedos,31.0,Brinquedos do Brasil Ltda,5.75,0,True,2019-11-11,Baixo,Sem Estoque
+PROD-0436,Sofa Cama,Móveis,1890.0,MoveisPlus Distribuidora,8.0,493,True,2025-03-14,Alto,Estoque Normal
+PROD-0504,Vestido de Festa Longo,Vestuário,,Moda Brasil Atacado,1.71,176,False,2025-06-26,Nao Informado,Estoque Normal
+PROD-0013,Fone de Ouvido Bluetooth,Eletrônicos,,TechBrasil Distribuidora,0.84,90,False,2025-11-08,Nao Informado,Estoque Normal
+PROD-0034,HD Externo 2TB,Eletrônicos,806.0,Shenzhen Connect Brasil,4.5,307,True,2019-01-31,Alto,Estoque Normal
+PROD-0035,Pen Drive 64GB,Eletrônicos,147.0,Shenzhen Connect Brasil,2.58,353,True,2023-12-23,Medio,Estoque Normal
+PROD-0044,Suporte para Notebook,Eletrônicos,153.0,Alpha Tech Importados,2.62,48,True,2021-12-08,Medio,Estoque Normal
+PROD-0047,Cabo USB-C 2m,Eletrônicos,59.0,TechBrasil Distribuidora,4.24,186,True,2021-09-17,Medio,Estoque Normal
+PROD-0049,Notebook Gamer,Eletrônicos,4182.0,Alpha Tech Importados,1.05,177,True,2021-09-30,Alto,Estoque Normal
+PROD-0065,Camiseta Feminina Algodão,Vestuário,65.0,Fashion Import Ltda,,429,True,2025-07-14,Medio,Estoque Normal
+PROD-0066,Camiseta Polo Masculina,Vestuário,102.0,TextilBrasil Distribuidora,0.45,66,False,2022-08-07,Medio,Estoque Normal
+PROD-0074,Jaqueta Corta Vento,Vestuário,394.0,Fashion Import Ltda,0.4,188,True,2022-04-13,Alto,Estoque Normal
+PROD-0127,Conjunto de Panelas 3 Peças,Casa,400.0,Decor Import,5.81,446,True,2024-09-21,Alto,Estoque Normal
+PROD-0143,Porta Retratos,Casa,,HomeBrasil Atacado,4.73,157,False,2021-07-24,Nao Informado,Estoque Normal
+PROD-0177,Conjunto de Toalhas 4 Peças,Casa,205.0,HomeBrasil Atacado,7.36,0,False,2024-06-23,Alto,Sem Estoque
+PROD-0181,Porta Chaves Parede,Casa,48.0,HomeBrasil Atacado,12.87,329,True,2020-07-25,Baixo,Estoque Normal
+PROD-0201,Skate Completo,Esportes,440.0,Esporte Total Ltda,5.69,140,True,2022-07-28,Alto,Estoque Normal
+PROD-0210,Cantil Esportivo 750ml,Esportes,57.0,Atlética Import Ltda,,159,False,2022-08-10,Medio,Estoque Normal
+PROD-0248,Rede de Vôlei,Esportes,,Atlética Import Ltda,8.55,223,False,2021-05-03,Nao Informado,Estoque Normal
+PROD-0249,Trave de Futebol Infantil,Esportes,302.0,Atlética Import Ltda,6.27,187,True,2024-12-09,Alto,Estoque Normal
+PROD-0333,Extintor de Incendio Veicular,Automotivo,137.0,Peças & Cia Distribuidora,9.3,457,True,2018-10-06,Medio,Estoque Normal
+PROD-0345,Sensor de Estacionamento,Automotivo,173.0,AutoPeças Brasil Ltda,,39,False,2022-03-23,Medio,Estoque Normal
+PROD-0349,Organizador de Porta Malas,Automotivo,190.0,Automotivo Import,24.75,345,True,2021-11-01,Medio,Estoque Normal
+PROD-0375,Carrinho de Friccao Kit 5,Brinquedos,140.0,Fun Kids Distribuidora,5.75,153,True,2021-08-14,Medio,Estoque Normal
+PROD-0382,Blocos de Montar 200 Pecas,Brinquedos,,Brinquedos do Brasil Ltda,5.35,486,False,2025-07-11,Nao Informado,Estoque Normal
+PROD-0403,Kit Experimentos Cientificos,Brinquedos,132.0,Brinquedos do Brasil Ltda,5.52,156,True,2018-04-21,Medio,Estoque Normal
+PROD-0406,Cama Elastica Infantil,Brinquedos,205.0,Toy Import Atacado,3.81,107,True,2021-07-19,Alto,Estoque Normal
+PROD-0410,Lousa Magnetica,Brinquedos,185.0,Brinquedos do Brasil Ltda,4.61,245,True,2020-01-30,Medio,Estoque Normal
+PROD-0446,Guarda-roupa 6 Portas,Móveis,3175.0,Decor Brasil Atacado,52.48,57,True,2019-07-05,Alto,Estoque Normal
+PROD-0447,Guarda-roupa 4 Portas,Móveis,,MoveisPlus Distribuidora,78.95,356,False,2019-08-10,Nao Informado,Estoque Normal
+PROD-0453,Escrivaninha com Gavetas,Móveis,541.0,MoveisPlus Distribuidora,7.1,238,True,2024-09-28,Alto,Estoque Normal
+PROD-0463,Poltrona Decorativa,Móveis,1491.0,Decor Brasil Atacado,31.62,211,False,2022-02-22,Alto,Estoque Normal
+PROD-0464,Berco Americano,Móveis,,Interiores Import Ltda,73.92,261,False,2020-12-20,Nao Informado,Estoque Normal
+PROD-0469,Comoda 3 Gavetas,Móveis,,MoveisPlus Distribuidora,23.07,299,False,2026-03-05,Nao Informado,Estoque Normal
+PROD-0494,Aspirador de Pó Sem Fio,Casa,451.0,Decor Import,,34,True,2021-09-06,Alto,Estoque Normal
+PROD-0010,Smart TV 32 Polegadas,Eletrônicos,1327.0,Global Electronics Ltda,3.38,71,True,2020-10-23,Alto,Estoque Normal
+PROD-0030,Película de Vidro,Eletrônicos,52.0,Shenzhen Connect Brasil,2.66,0,False,2024-01-10,Medio,Sem Estoque
+PROD-0051,Smartband Fitness,Eletrônicos,504.0,Global Electronics Ltda,1.49,394,False,2023-04-23,Alto,Estoque Normal
+PROD-0054,Microfone USB Condensador,Eletrônicos,401.0,TechBrasil Distribuidora,2.14,25,True,2025-09-20,Alto,Estoque Normal
+PROD-0071,Vestido Floral,Vestuário,234.0,Confecções do Sul,0.93,219,True,2022-06-29,Alto,Estoque Normal
+PROD-0088,Casaco de Inverno,Vestuário,447.0,Moda Brasil Atacado,1.04,78,True,2024-09-19,Alto,Estoque Normal
+PROD-0089,Blusa de Frio,Vestuário,235.0,Moda Brasil Atacado,1.76,4,True,2019-12-18,Alto,Estoque Baixo
+PROD-0106,Regata Feminina,Vestuário,47.0,Moda Brasil Atacado,0.79,453,False,2024-12-12,Baixo,Estoque Normal
+PROD-0122,Blusa de Tricô,Vestuário,157.0,Moda Brasil Atacado,1.48,45,True,2019-12-06,Medio,Estoque Normal
+PROD-0123,Colete Masculino,Vestuário,117.0,Moda Brasil Atacado,1.01,171,True,2020-11-01,Medio,Estoque Normal
+PROD-0124,Gravata,Vestuário,58.0,TextilBrasil Distribuidora,1.35,65,True,2018-06-19,Medio,Estoque Normal
+PROD-0125,Suspensório,Vestuário,66.0,TextilBrasil Distribuidora,1.36,28,True,2018-07-15,Medio,Estoque Normal
+PROD-0147,Cortina Blackout 2 Peças,Casa,178.0,Decor Import,10.92,0,True,2019-01-30,Medio,Sem Estoque
+PROD-0164,Ventilador de Mesa,Casa,149.0,HomeBrasil Atacado,7.81,152,True,2019-12-18,Medio,Estoque Normal
+PROD-0195,Bola de Basquete,Esportes,148.0,SportsBrasil Atacado,13.31,429,True,2021-06-15,Medio,Estoque Normal
+PROD-0224,Suporte para Bicicleta,Esportes,100.0,Atlética Import Ltda,8.93,106,True,2022-06-19,Medio,Estoque Normal
+PROD-0231,Munhequeira Kit 2,Esportes,53.0,Atlética Import Ltda,5.25,107,True,2020-01-26,Medio,Estoque Normal
+PROD-0258,Máquina de Cortar Cabelo,Beleza,223.0,Beauty Import Brasil,0.31,63,True,2021-07-27,Alto,Estoque Normal
+PROD-0263,Creme Anti-idade,Beleza,,Cosméticos do Brasil Ltda,1.0,0,False,2019-05-28,Nao Informado,Sem Estoque
+PROD-0284,Sabonete Líquido 500ml,Beleza,,Cosméticos do Brasil Ltda,0.81,3,False,2018-06-06,Nao Informado,Estoque Baixo
+PROD-0297,Lápis de Sobrancelha,Beleza,52.0,Perfumes & Cia,1.26,482,False,2023-04-14,Medio,Estoque Normal
+PROD-0331,Alarme Automotivo Completo,Automotivo,544.0,AutoPeças Brasil Ltda,10.89,85,True,2021-12-07,Alto,Estoque Normal
+PROD-0346,Volante Esportivo,Automotivo,307.0,Automotivo Import,22.97,38,False,2026-01-10,Alto,Estoque Normal
+PROD-0368,Vela de Ignicao Kit 4,Automotivo,65.0,AutoPeças Brasil Ltda,4.61,307,True,2019-12-13,Medio,Estoque Normal
+PROD-0373,Boneca Baby 20cm,Brinquedos,,Toy Import Atacado,0.2,104,False,2019-11-27,Nao Informado,Estoque Normal
+PROD-0374,Carrinho de Controle Remoto,Brinquedos,165.0,Brinquedos do Brasil Ltda,6.25,32,True,2022-04-21,Medio,Estoque Normal
+PROD-0398,Kit Panelinhas Infantil,Brinquedos,,Brinquedos do Brasil Ltda,6.49,265,False,2025-09-08,Nao Informado,Estoque Normal
+PROD-0413,Bateria Musical Infantil,Brinquedos,456.0,Brinquedos do Brasil Ltda,4.15,44,False,2024-05-18,Alto,Estoque Normal
+PROD-0419,Casinha de Bonecas,Brinquedos,371.0,Brinquedos do Brasil Ltda,3.71,327,True,2023-01-08,Alto,Estoque Normal
+PROD-0429,Tapete de Atividades,Brinquedos,132.0,Brinquedos do Brasil Ltda,3.02,169,True,2019-05-26,Medio,Estoque Normal
+PROD-0500,Suporte Veicular Magnetico,Automotivo,90.0,Automotivo Import,15.87,435,False,2024-05-28,Medio,Estoque Normal
+PROD-0505,Kit Churrasco Eletrico,Casa,,Casa & Cia Distribuidora,7.57,368,False,2022-03-22,Nao Informado,Estoque Normal
+PROD-0005,Notebook Intel Core i7,Eletrônicos,3364.0,TechBrasil Distribuidora,3.77,271,True,2018-12-02,Alto,Estoque Normal
+PROD-0036,Pen Drive 128GB,Eletrônicos,151.0,Global Electronics Ltda,3.38,3,True,2018-08-27,Medio,Estoque Baixo
+PROD-0083,Cueca Kit com 3,Vestuário,115.0,Moda Brasil Atacado,1.86,386,True,2025-06-02,Medio,Estoque Normal
+PROD-0090,Pijama Adulto,Vestuário,174.0,TextilBrasil Distribuidora,0.25,380,False,2023-07-31,Medio,Estoque Normal
+PROD-0101,Chinelo Feminino,Vestuário,70.0,TextilBrasil Distribuidora,0.92,166,False,2024-12-30,Medio,Estoque Normal
+PROD-0130,Edredom Casal,Casa,374.0,Casa & Cia Distribuidora,13.89,75,True,2018-11-30,Alto,Estoque Normal
+PROD-0139,Almofada Decorativa,Casa,114.0,Utilidades do Lar Ltda,6.28,193,True,2018-02-06,Medio,Estoque Normal
+PROD-0165,Purificador de Ar,Casa,485.0,Casa & Cia Distribuidora,9.38,329,True,2020-08-19,Alto,Estoque Normal
+PROD-0174,Espremedor de Frutas,Casa,162.0,Utilidades do Lar Ltda,8.89,69,True,2023-02-01,Medio,Estoque Normal
+PROD-0191,Halteres Par 10kg,Esportes,239.0,SportsBrasil Atacado,8.21,295,True,2021-11-21,Alto,Estoque Normal
+PROD-0193,Halteres Par 20kg,Esportes,264.0,SportsBrasil Atacado,1.43,451,True,2025-06-04,Alto,Estoque Normal
+PROD-0194,Bola de Futebol Profissional,Esportes,129.0,SportsBrasil Atacado,7.81,138,True,2018-09-10,Medio,Estoque Normal
+PROD-0196,Bola de Vôlei,Esportes,,Atlética Import Ltda,3.78,65,False,2024-07-02,Nao Informado,Estoque Normal
+PROD-0213,Tapete de Yoga,Esportes,141.0,Esporte Total Ltda,4.64,187,True,2023-01-19,Medio,Estoque Normal
+PROD-0225,Elíptico Doméstico,Esportes,,SportsBrasil Atacado,2.55,167,False,2018-10-11,Nao Informado,Estoque Normal
+PROD-0234,Óculos de Ciclismo,Esportes,187.0,Atlética Import Ltda,5.84,280,True,2020-05-07,Medio,Estoque Normal
+PROD-0267,Máscara Capilar 500g,Beleza,141.0,Beleza Total Atacado,1.17,131,True,2019-03-21,Medio,Estoque Normal
+PROD-0278,Óleo Corporal,Beleza,44.0,Beauty Import Brasil,0.78,338,True,2026-01-12,Baixo,Estoque Normal
+PROD-0295,Delineador Líquido,Beleza,44.0,Cosméticos do Brasil Ltda,1.41,474,True,2019-06-29,Baixo,Estoque Normal
+PROD-0299,Escova Progressiva,Beleza,243.0,Beleza Total Atacado,1.23,355,False,2025-01-19,Alto,Estoque Normal
+PROD-0326,Tapete Automotivo 4 Pecas,Automotivo,161.0,AutoPeças Brasil Ltda,12.8,131,True,2026-02-23,Medio,Estoque Normal
+PROD-0327,Tapete Automotivo Personalizado,Automotivo,291.0,Peças & Cia Distribuidora,22.15,166,True,2019-01-04,Alto,Estoque Normal
+PROD-0370,Amortecedor Traseiro Par,Automotivo,615.0,AutoPeças Brasil Ltda,16.44,362,False,2026-01-22,Alto,Estoque Normal
+PROD-0378,Xadrez Magnetico,Brinquedos,128.0,Brinquedos do Brasil Ltda,5.27,282,False,2023-10-25,Medio,Estoque Normal
+PROD-0394,Escorregador Infantil,Brinquedos,203.0,Fun Kids Distribuidora,1.02,254,True,2022-03-19,Alto,Estoque Normal
+PROD-0418,Bamboleo,Brinquedos,,Brinquedos do Brasil Ltda,1.55,104,False,2022-03-31,Nao Informado,Estoque Normal
+PROD-0423,Kit Magica Infantil,Brinquedos,95.0,Brinquedos do Brasil Ltda,6.22,218,True,2021-08-07,Medio,Estoque Normal
+PROD-0459,Painel com Lareira,Móveis,,Decor Brasil Atacado,44.6,106,False,2023-02-24,Nao Informado,Estoque Normal
+PROD-0466,Mesa Lateral,Móveis,274.0,MoveisPlus Distribuidora,11.15,340,False,2025-06-21,Alto,Estoque Normal
+PROD-0502,Mesa Escritorio em L,Móveis,728.0,MoveisPlus Distribuidora,17.15,51,True,2025-09-05,Alto,Estoque Normal
+PROD-0508,Kit Yoga Completo,Esportes,184.0,Esporte Total Ltda,6.28,274,False,2019-09-08,Medio,Estoque Normal
+PROD-0517,Monitor Gamer 144Hz,Eletrônicos,1233.0,Global Electronics Ltda,3.66,0,True,2025-11-11,Alto,Sem Estoque
+PROD-0002,Smartphone 64GB,Eletrônicos,1906.0,Global Electronics Ltda,4.46,407,True,2018-07-23,Alto,Estoque Normal
+PROD-0007,Smart TV 50 Polegadas,Eletrônicos,2319.0,Shenzhen Connect Brasil,1.63,459,True,2018-09-16,Alto,Estoque Normal
+PROD-0008,Smart TV 43 Polegadas,Eletrônicos,1486.0,TechBrasil Distribuidora,1.95,0,False,2024-10-27,Alto,Sem Estoque
+PROD-0028,Carregador Turbo,Eletrônicos,163.0,Shenzhen Connect Brasil,2.48,388,True,2023-10-28,Medio,Estoque Normal
+PROD-0038,Impressora Multifuncional,Eletrônicos,1176.0,TechBrasil Distribuidora,0.68,0,False,2025-03-19,Alto,Sem Estoque
+PROD-0041,Console de Videogame,Eletrônicos,4154.0,TechBrasil Distribuidora,4.74,247,True,2020-10-31,Alto,Estoque Normal
+PROD-0070,Calça Social Masculina,Vestuário,164.0,Moda Brasil Atacado,1.66,78,True,2020-10-22,Medio,Estoque Normal
+PROD-0078,Tênis Casual Masculino,Vestuário,452.0,Confecções do Sul,1.14,302,True,2021-09-17,Alto,Estoque Normal
+PROD-0108,Camisa Social Masculina,Vestuário,298.0,TextilBrasil Distribuidora,1.52,231,True,2022-09-29,Alto,Estoque Normal
+PROD-0136,Jogo de Toalhas 4 Peças,Casa,258.0,Decor Import,12.35,204,False,2020-10-31,Alto,Estoque Normal
+PROD-0184,Porta Papel Higiênico,Casa,35.0,HomeBrasil Atacado,11.02,175,True,2025-12-04,Baixo,Estoque Normal
+PROD-0185,Escova Sanitária,Casa,38.0,Casa & Cia Distribuidora,5.99,0,True,2022-09-14,Baixo,Sem Estoque
+PROD-0204,Barraca de Camping 4 Pessoas,Esportes,439.0,SportsBrasil Atacado,14.76,134,True,2020-04-17,Alto,Estoque Normal
+PROD-0208,Mochila de Trilha 20L,Esportes,231.0,SportsBrasil Atacado,4.92,197,False,2023-08-19,Alto,Estoque Normal
+PROD-0211,Luvas de Boxe,Esportes,169.0,SportsBrasil Atacado,0.83,329,True,2021-12-16,Medio,Estoque Normal
+PROD-0235,Camiseta Esportiva Masculina,Esportes,62.0,Esporte Total Ltda,7.99,492,True,2020-05-16,Medio,Estoque Normal
+PROD-0237,Bota para Caminhada,Esportes,333.0,Fitness Distribuidora,0.49,300,True,2023-01-03,Alto,Estoque Normal
+PROD-0257,Modelador de Cachos,Beleza,120.0,Beauty Import Brasil,0.21,127,True,2024-07-26,Medio,Estoque Normal
+PROD-0260,Kit Skincare Facial,Beleza,,Beauty Import Brasil,0.3,195,False,2020-05-14,Nao Informado,Estoque Normal
+PROD-0262,Protetor Solar FPS 30,Beleza,39.0,Perfumes & Cia,1.4,388,False,2020-10-20,Baixo,Estoque Normal
+PROD-0271,Base Líquida,Beleza,,Beleza Total Atacado,0.25,433,False,2018-01-20,Nao Informado,Estoque Normal
+PROD-0281,Removedor de Maquiagem,Beleza,46.0,Perfumes & Cia,0.83,466,False,2020-02-03,Baixo,Estoque Normal
+PROD-0315,Pneu Aro 17,Automotivo,556.0,AutoPeças Brasil Ltda,22.27,169,False,2022-11-12,Alto,Estoque Normal
+PROD-0321,Oleo de Motor 0W20 4L,Automotivo,,Peças & Cia Distribuidora,1.27,450,False,2023-12-24,Nao Informado,Estoque Normal
+PROD-0334,Chave de Roda,Automotivo,38.0,AutoPeças Brasil Ltda,11.98,227,True,2024-12-26,Baixo,Estoque Normal
+PROD-0344,Retrovisor com Monitor,Automotivo,276.0,Peças & Cia Distribuidora,12.77,461,True,2023-01-08,Alto,Estoque Normal
+PROD-0376,Jogo de Tabuleiro Familia,Brinquedos,160.0,Brinquedos do Brasil Ltda,1.13,337,True,2018-06-22,Medio,Estoque Normal
+PROD-0388,Pista de Corrida Eletrica,Brinquedos,546.0,Brinquedos do Brasil Ltda,4.35,75,True,2018-09-01,Alto,Estoque Normal
+PROD-0411,Teclado Musical Infantil,Brinquedos,84.0,Fun Kids Distribuidora,7.49,417,False,2019-05-14,Medio,Estoque Normal
+PROD-0415,Kit Medico Infantil,Brinquedos,112.0,Fun Kids Distribuidora,7.87,327,True,2024-06-17,Medio,Estoque Normal
+PROD-0434,Sofa 2 Lugares,Móveis,703.0,Interiores Import Ltda,60.88,233,True,2022-08-06,Alto,Estoque Normal
+PROD-0441,Cadeira de Escritorio Ergonomica,Móveis,820.0,MoveisPlus Distribuidora,7.33,191,False,2026-01-25,Alto,Estoque Normal
+PROD-0442,Cadeira de Escritorio Basica,Móveis,538.0,Decor Brasil Atacado,,82,False,2024-07-05,Alto,Estoque Normal
+PROD-0445,Estante de Livros 3 Prateleiras,Móveis,513.0,Decor Brasil Atacado,49.55,400,False,2025-01-09,Alto,Estoque Normal
+PROD-0452,Cama Box Solteiro,Móveis,703.0,Interiores Import Ltda,59.6,0,True,2023-01-02,Alto,Sem Estoque
+PROD-0467,Criado Mudo,Móveis,464.0,MoveisPlus Distribuidora,17.6,481,True,2024-11-09,Alto,Estoque Normal
+PROD-0488,Mesa Dobravek,Móveis,310.0,MoveisPlus Distribuidora,41.38,53,False,2024-05-11,Alto,Estoque Normal
+PROD-0489,Cadeira Dobravek,Móveis,298.0,Decor Brasil Atacado,41.9,386,True,2023-04-11,Alto,Estoque Normal
+PROD-0493,Sofa Modular,Móveis,4560.0,MoveisPlus Distribuidora,59.38,207,False,2020-02-10,Alto,Estoque Normal
+PROD-0515,Difusor de Aromas,Casa,166.0,Utilidades do Lar Ltda,8.25,339,False,2020-06-09,Medio,Estoque Normal
+PROD-0012,Tablet 8 Polegadas,Eletrônicos,583.0,TechBrasil Distribuidora,2.84,348,False,2022-10-11,Alto,Estoque Normal
+PROD-0017,Caixa de Som Portátil,Eletrônicos,110.0,Shenzhen Connect Brasil,2.29,422,True,2025-05-03,Medio,Estoque Normal
+PROD-0025,Mouse Gamer,Eletrônicos,254.0,Shenzhen Connect Brasil,3.13,29,True,2025-06-27,Alto,Estoque Normal
+PROD-0046,Adaptador HDMI,Eletrônicos,112.0,Shenzhen Connect Brasil,4.49,66,True,2021-11-19,Medio,Estoque Normal
+PROD-0056,Nobreak 1000VA,Eletrônicos,518.0,Shenzhen Connect Brasil,0.47,275,False,2025-07-02,Alto,Estoque Normal
+PROD-0058,Suporte para Monitor,Eletrônicos,124.0,Shenzhen Connect Brasil,4.99,176,True,2023-08-16,Medio,Estoque Normal
+PROD-0086,Legging Feminina,Vestuário,73.0,Confecções do Sul,1.73,3,True,2021-09-21,Medio,Estoque Baixo
+PROD-0095,Cinto de Couro,Vestuário,51.0,Moda Brasil Atacado,1.83,224,True,2024-10-08,Medio,Estoque Normal
+PROD-0119,Roupão de Banho,Vestuário,193.0,Confecções do Sul,1.07,156,False,2019-03-15,Medio,Estoque Normal
+PROD-0156,Liquidificador 700W,Casa,161.0,Utilidades do Lar Ltda,4.61,107,False,2022-04-03,Medio,Estoque Normal
+PROD-0170,Fruteira 3 Andares,Casa,69.0,Utilidades do Lar Ltda,8.03,168,True,2019-03-22,Medio,Estoque Normal
+PROD-0178,Kit Organização Cozinha,Casa,181.0,Casa & Cia Distribuidora,12.53,0,True,2020-02-03,Medio,Sem Estoque
+PROD-0179,Suporte para Livros,Casa,62.0,Decor Import,5.39,56,False,2023-11-18,Medio,Estoque Normal
+PROD-0187,Espelho de Banheiro,Casa,95.0,Decor Import,8.21,17,False,2026-03-18,Medio,Estoque Normal
+PROD-0230,Cotoveleira Esportiva Par,Esportes,111.0,Fitness Distribuidora,14.5,75,True,2019-09-27,Medio,Estoque Normal
+PROD-0232,Meias de Compressão Par,Esportes,148.0,Atlética Import Ltda,4.62,496,True,2025-03-13,Medio,Estoque Normal
+PROD-0259,Aparador de Pelos,Beleza,104.0,Perfumes & Cia,0.31,487,True,2023-04-18,Medio,Estoque Normal
+PROD-0283,Esfoliante Corporal,Beleza,48.0,Beauty Import Brasil,1.22,1,True,2023-07-18,Baixo,Estoque Baixo
+PROD-0287,Pincel de Maquiagem Kit,Beleza,111.0,Perfumes & Cia,0.97,442,False,2025-06-28,Medio,Estoque Normal
+PROD-0288,Esmalte Kit 6 Cores,Beleza,,Cosméticos do Brasil Ltda,0.84,50,False,2020-12-09,Nao Informado,Estoque Normal
+PROD-0293,Blush em Pó,Beleza,42.0,Beauty Import Brasil,1.39,60,True,2018-01-30,Baixo,Estoque Normal
+PROD-0357,Pretinho para Pneu,Automotivo,59.0,Automotivo Import,11.11,349,True,2018-08-02,Medio,Estoque Normal
+PROD-0364,Desembacador de Para-brisa,Automotivo,47.0,Peças & Cia Distribuidora,0.65,160,False,2019-04-11,Baixo,Estoque Normal
+PROD-0385,Pelucia 60cm,Brinquedos,291.0,Brinquedos do Brasil Ltda,4.19,87,True,2024-06-06,Alto,Estoque Normal
+PROD-0391,Patinete Infantil,Brinquedos,334.0,Brinquedos do Brasil Ltda,3.52,426,True,2022-01-20,Alto,Estoque Normal
+PROD-0404,Piscina de Bolinhas,Brinquedos,154.0,Brinquedos do Brasil Ltda,3.31,0,True,2018-07-28,Medio,Sem Estoque
+PROD-0409,Kit de Pintura Infantil,Brinquedos,165.0,Fun Kids Distribuidora,4.24,32,True,2023-06-07,Medio,Estoque Normal
+PROD-0427,Cozinha Infantil,Brinquedos,256.0,Brinquedos do Brasil Ltda,1.96,172,False,2019-05-05,Alto,Estoque Normal
+PROD-0473,Sapateira com Tampa,Móveis,449.0,MoveisPlus Distribuidora,45.65,388,True,2024-03-16,Alto,Estoque Normal
+PROD-0476,Cadeira de Jardim,Móveis,397.0,MoveisPlus Distribuidora,,50,True,2019-08-07,Alto,Estoque Normal
+PROD-0498,Mochila de Hidratacao,Esportes,300.0,Atlética Import Ltda,6.08,109,True,2020-04-09,Alto,Estoque Normal

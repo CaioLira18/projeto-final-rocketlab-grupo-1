@@ -92,7 +92,8 @@ export const Home = () => {
     else setLoading(true)
     setError(null)
     try {
-      const res = await apiFetch<DashboardKPIs>("/dashboard/kpis")
+      const endpoint = isRefresh ? "/dashboard/kpis?sync=true" : "/dashboard/kpis"
+      const res = await apiFetch<DashboardKPIs>(endpoint)
       setData(res)
     } catch (err: any) {
       setError(err.message || "Não foi possível carregar os dados do dashboard.")

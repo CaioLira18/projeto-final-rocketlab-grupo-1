@@ -218,6 +218,7 @@ class ProdutoResponse(BaseModel):
     estoque_produto: Optional[int] = None
     produto_ativo: Optional[bool] = None
     faixa_preco: Optional[str] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 
@@ -251,8 +252,9 @@ class ProdutoMetricas(BaseModel):
     data_cadastro_produto: Optional[str] = None
     data_primeira_venda: Optional[str] = None
     data_ultima_venda: Optional[str] = None
-    pedidos_entregues: Optional[int] = None
-    pedidos_cancelados: Optional[int] = None
+    pedidos_aprovados: Optional[int] = None
+    pedidos_recusados: Optional[int] = None
+    pedidos_processando: Optional[int] = None
     pedidos_reembolsados: Optional[int] = None
     tempo_medio_resolucao_produto: Optional[float] = None
     total_eventos_produto: Optional[int] = None

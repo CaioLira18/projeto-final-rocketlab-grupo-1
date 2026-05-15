@@ -44,6 +44,16 @@ def parse_date_obj(val):
         return None
 
 
+def parse_bool(val):
+    """Converte strings de booleano (true/false) ou valores numéricos em bool."""
+    if pd.isna(val) or val is None:
+        return False
+    if isinstance(val, bool):
+        return val
+    val_str = str(val).strip().lower()
+    return val_str in ("true", "1", "s", "sim", "yes")
+
+
 def parse_datetime_obj(val):
     """Converte data e hora operacionais (com T ou milissegundos) em datetime."""
     if pd.isna(val) or val is None or val == "":
@@ -123,6 +133,10 @@ def seed_database():
     print("Conectado aos bancos de dados SQLite (Silver e Gold)...")
     
     # Cria as tabelas necessárias automaticamente caso não existam
+    # (Dropamos antes para garantir que alterações no schema dos modelos sejam aplicadas)
+    print("Atualizando schemas dos bancos de dados...")
+    Base.metadata.drop_all(bind=engine_silver)
+    BaseGold.metadata.drop_all(bind=engine_gold)
     Base.metadata.create_all(bind=engine_silver)
     BaseGold.metadata.create_all(bind=engine_gold)
     
@@ -146,6 +160,7 @@ def seed_database():
             "origem_cliente": row.get("origem_cliente"),
             "data_nascimento_cliente": row.get("data_nascimento_cliente"),
             "data_cadastro_cliente": row.get("data_cadastro_cliente"),  # ← linha faltante
+            "ja_tratada": parse_bool(row.get("ja_tratada"))
         })
         },
         {
@@ -157,9 +172,12 @@ def seed_database():
                 "categoria_produto": row.get("categoria_produto"),
                 "preco_produto": float(row.get("preco_produto")) if pd.notna(row.get("preco_produto")) else None,
                 "fornecedor_produto": row.get("fornecedor_produto"),
+                "peso_kg_produto": float(row.get("peso_kg_produto")) if pd.notna(row.get("peso_kg_produto")) else None,
                 "estoque_produto": int(float(row.get("estoque_produto"))) if pd.notna(row.get("estoque_produto")) else None,
                 "produto_ativo": bool(row.get("produto_ativo")) if pd.notna(row.get("produto_ativo")) else None,
-                "faixa_preco": calculate_faixa_preco(row.get("preco_produto"))
+                "data_cadastro_produto": row.get("data_cadastro_produto"),
+                "faixa_preco": calculate_faixa_preco(row.get("preco_produto")),
+                "ja_tratada": parse_bool(row.get("ja_tratada"))
             })
         },
         {
@@ -173,7 +191,9 @@ def seed_database():
                 "quantidade_produto": int(float(row.get("quantidade_produto"))) if pd.notna(row.get("quantidade_produto")) else None,
                 "valor_pedido": float(row.get("valor_pedido")) if pd.notna(row.get("valor_pedido")) else None,
                 "metodo_pagamento": row.get("metodo_pagamento"),
-                "status_pedido": row.get("status_pedido")
+                "status_pedido": row.get("status_pedido"),
+                "data_prevista_entrega": parse_date_obj(row.get("data_prevista_entrega")),
+                "ja_tratada": parse_bool(row.get("ja_tratada"))
             })
         },
         {
@@ -185,9 +205,11 @@ def seed_database():
                 "id_produto": row.get("id_produto"),
                 "id_pedido": row.get("id_pedido"),
                 "nota_produto": float(row.get("nota_produto")) if pd.notna(row.get("nota_produto")) else None,
+                "comentario_avaliacao": row.get("comentario_avaliacao"),
                 "nota_nps": float(row.get("nota_nps")) if pd.notna(row.get("nota_nps")) else None,
                 "recomenda_produto": bool(row.get("recomenda_produto")) if pd.notna(row.get("recomenda_produto")) else None,
-                "data_avaliacao": row.get("data_avaliacao")
+                "data_avaliacao": row.get("data_avaliacao"),
+                "ja_tratada": parse_bool(row.get("ja_tratada"))
             })
         },
         {
@@ -201,7 +223,11 @@ def seed_database():
                 "data_abertura": parse_datetime_obj(row.get("data_abertura")),
                 "data_resolucao": parse_datetime_obj(row.get("data_resolucao")),
                 "tempo_resolucao_horas": float(row.get("tempo_resolucao_horas")) if pd.notna(row.get("tempo_resolucao_horas")) else None,
-                "agente_suporte": row.get("agente_suporte")
+                "agente_suporte": row.get("agente_suporte"),
+                "nota_avaliacao_problema": float(row.get("nota_avaliacao_problema")) if pd.notna(row.get("nota_avaliacao_problema")) else None,
+                "sentimento": row.get("sentimento"),
+                "status_ticket": row.get("status_ticket"),
+                "ja_tratada": parse_bool(row.get("ja_tratada"))
             })
         }
     ]
@@ -297,6 +323,9 @@ def seed_database():
             for date_col in parse_dates:
                 if date_col in df_gold.columns:
                     df_gold[date_col] = pd.to_datetime(df_gold[date_col]).dt.date
+            
+            # Forçamos a flag 'ja_tratada' para True em todos os registros da Gold
+            df_gold["ja_tratada"] = 1
 
             # Insere no banco Gold (app_gold.db) de forma nativa e extremamente rápida
             print(f"Inserindo {len(df_gold)} registros na tabela Gold '{tablename}' via to_sql...")

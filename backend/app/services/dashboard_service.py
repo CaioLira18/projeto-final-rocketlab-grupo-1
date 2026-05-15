@@ -1,9 +1,22 @@
+import time
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.models import VendasPeriodo, Cliente360
 
+_CACHE = {
+    "data": None,
+    "last_updated": 0
+}
+CACHE_TTL = 300  # 5 minutos de cache
 
-def calculate_dashboard_kpis(db: Session):
+def calculate_dashboard_kpis(db: Session, sync: bool = False):
+    global _CACHE
+    current_time = time.time()
+    
+    if not sync and _CACHE["data"] is not None and (current_time - _CACHE["last_updated"]) < CACHE_TTL:
+        print("[DB] Retornando KPIs do dashboard do CACHE...")
+        return _CACHE["data"]
+
     print("[DB] Calculando KPIs do dashboard (app_gold.db)...")
     total_revenue = db.query(func.sum(VendasPeriodo.receita_total)).scalar() or 0.0
     total_sales = db.query(func.sum(VendasPeriodo.total_pedidos)).scalar() or 0
@@ -125,6 +138,11 @@ def calculate_dashboard_kpis(db: Session):
         "paymentSales": payment_sales,
         "customerSegments": customer_segments
     }
+    
+    # Atualiza o cache com o novo resultado
+    _CACHE["data"] = result
+    _CACHE["last_updated"] = current_time
+    
     return result
 
 
