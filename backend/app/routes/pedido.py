@@ -5,8 +5,8 @@ from typing import Optional, List
 from datetime import date
 
 from bd.database import get_db
-from app.models import Pedidos, Cliente
-from app.schemas import PedidoListItem
+from app.models import Pedidos
+from app.schemas import PedidoListItem, PedidoCountResponse
 from app.services import list_pedidos
 from app.routes.auth import get_current_user
 
@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("/count", summary="Contagem de pedidos por status")
+@router.get("/count", response_model=PedidoCountResponse, summary="Contagem de pedidos por status")
 def contar_pedidos(
     nome_cliente: Optional[str] = Query(None),
     nome_produto: Optional[str] = Query(None),

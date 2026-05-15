@@ -17,3 +17,9 @@ class PedidoListItem(BaseModel):
     data_prevista_entrega: Optional[date] = None
 
     model_config = {"from_attributes": True}
+
+class PedidoCountResponse(BaseModel):
+    total: int
+    aprovados: int
+    recusados: int
+    reembolsados: int
