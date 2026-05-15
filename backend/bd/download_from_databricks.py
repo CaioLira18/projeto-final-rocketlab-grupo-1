@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 # variaveis do .env (importante colocar os dados do seu databricks!!!)
 load_dotenv()
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_GOLD_PATH = os.path.join(BASE_DIR, "app_gold.db")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_GOLD_PATH = os.path.join(BASE_DIR, "bd", "app_gold.db")
 
 DATABRICKS_HOST = os.getenv("DATABRICKS_HOST", "").rstrip("/")
 DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN", "")
@@ -84,7 +84,7 @@ def download_and_import_gold():
 
     # Atualiza o status 'ja_tratada' no banco Silver
     print("\n✨ Marcando registros no banco Silver como tratados...")
-    DB_SILVER_PATH = os.path.join(BASE_DIR, "app_silver.db")
+    DB_SILVER_PATH = os.path.join(BASE_DIR, "bd", "app_silver.db")
     if os.path.exists(DB_SILVER_PATH):
         try:
             from sqlalchemy import text
