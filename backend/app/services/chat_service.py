@@ -67,7 +67,7 @@ def _create_agent() -> Agent:
     # Gemini 2.5 Flash, pode ser trocado para o lite.
     # A chave da API vem da variável de ambiente GEMINI_API_KEY.
     # A chave é lida automaticamente da variável de ambiente GEMINI_API_KEY
-    model = GeminiModel("gemini-2.0-flash")
+    model = GeminiModel("gemini-2.5-flash")
 
     # ----------PROMPT DO SISTEMA----------
     # O system prompt é a "instrução permanente" enviada ao modelo em toda conversa. Ele define:
