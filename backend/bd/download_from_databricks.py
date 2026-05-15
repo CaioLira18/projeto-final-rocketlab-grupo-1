@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_GOLD_PATH = os.path.join(BASE_DIR, "bd", "app_gold.db")
+DB_GOLD_PATH = os.path.join(BASE_DIR, "app_gold.db")
 
 DATABRICKS_HOST = os.getenv("DATABRICKS_HOST", "").rstrip("/")
 DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN", "")
