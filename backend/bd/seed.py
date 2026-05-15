@@ -323,6 +323,9 @@ def seed_database():
             for date_col in parse_dates:
                 if date_col in df_gold.columns:
                     df_gold[date_col] = pd.to_datetime(df_gold[date_col]).dt.date
+            
+            # Forçamos a flag 'ja_tratada' para True em todos os registros da Gold
+            df_gold["ja_tratada"] = 1
 
             # Insere no banco Gold (app_gold.db) de forma nativa e extremamente rápida
             print(f"Inserindo {len(df_gold)} registros na tabela Gold '{tablename}' via to_sql...")

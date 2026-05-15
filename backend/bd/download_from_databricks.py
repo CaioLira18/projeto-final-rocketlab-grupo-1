@@ -74,11 +74,14 @@ def download_and_import_gold():
                 # aq o pandas lê o CSV recém baixado...
                 df = pd.read_csv(local_csv_path)
                 
+                # Forçamos a flag 'ja_tratada' para True em todos os registros baixados da Gold
+                df["ja_tratada"] = 1
+                
                 # e salva no banco SQLite. 
                 # if_exists="replace" DROPA a tabela antiga e recria ela limpinha e atualizada!
                 df.to_sql(table_name, con=engine, if_exists="replace", index=False)
                 
-                print(f"✅ Tabela '{table_name}' atualizada com sucesso no app_gold.db!")
+                print(f"✅ Tabela '{table_name}' atualizada e marcada como tratada no app_gold.db!")
             except Exception as e:
                 print(f"❌ Erro crítico ao inserir dados na tabela {table_name}: {e}")
 

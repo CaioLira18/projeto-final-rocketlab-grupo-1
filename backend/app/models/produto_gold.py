@@ -15,3 +15,4 @@ class ProdutoGold(BaseGold):
     data_cadastro_produto = Column(String)
     faixa_preco_produto = Column(String)
     status_estoque_produto = Column(String)
+    ja_tratada = Column(Boolean, default=True)

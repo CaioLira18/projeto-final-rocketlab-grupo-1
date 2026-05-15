@@ -40,3 +40,4 @@ class Produto360(BaseGold):
     data_ultimo_evento_produto = Column(String)
     status_comercial_produto = Column(String)
     produto_com_alto_volume_suporte = Column(Boolean)
+    ja_tratada = Column(Boolean, default=True)
