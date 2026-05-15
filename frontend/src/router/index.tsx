@@ -5,6 +5,7 @@ import { Produtos } from "@/pages/produtos"
 import { Pedidos } from "@/pages/pedidos"
 import { Suporte } from "@/pages/suporte"
 import { Clientes } from "@/pages/clientes"
+import { AiAgent } from "@/pages/ai-agent"
 import { Login } from "@/pages/auth"
 import { AuthProvider, useAuth } from "@/context"
 import ButtonsShowcase from "@/pages/dev/ButtonsShowcase"
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
           { path: "/produtos", element: <Produtos /> },
           { path: "/pedidos", element: <Pedidos /> },
           { path: "/suporte", element: <Suporte /> },
+          { path: "/ai-agent", element: <AiAgent /> },
         ],
       },
     ],

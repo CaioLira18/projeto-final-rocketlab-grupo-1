@@ -5,4 +5,5 @@ from .dashboard import router as dashboard_router
 from .suporte import router as suporte_router
 from .export import router as export_router
 from .auth import router as auth_router, get_current_user
+from .chat import router as chat_router
 
