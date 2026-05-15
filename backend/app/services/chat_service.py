@@ -56,6 +56,21 @@ _FORBIDDEN_SQL_TOKENS: tuple[str, ...] = (
 # Padrão para extrair nomes de tabelas após FROM/JOIN em uma query.
 _TABLE_REF_RE = re.compile(r"\b(?:FROM|JOIN)\s+([a-zA-Z_][a-zA-Z0-9_]*)", re.IGNORECASE)
 
+# ----------PERGUNTAS SUGERIDAS----------
+# Lista exposta via endpoint GET /chat/suggestions para o frontend renderizar
+# como atalhos clicáveis na tela inicial do chat.
+SUGGESTED_QUESTIONS: list[str] = [
+    "Qual é a saúde financeira geral da empresa?",
+    "Quem são os clientes VIP?",
+    "Quantos clientes estão em risco de churn?",
+    "Qual categoria de produto gera mais receita?",
+    "Como evoluiu o ticket médio nos últimos 12 meses?",
+    "Qual é o NPS médio?",
+    "Qual estado teve maior receita?",
+    "Qual método de pagamento é mais utilizado?",
+    "Quais são os 5 produtos com maior receita total?",
+]
+
 
 def _get_table_names() -> str:
     """

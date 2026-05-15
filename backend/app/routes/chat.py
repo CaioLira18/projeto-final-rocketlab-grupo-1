@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 _ai_env = Path(__file__).resolve().parents[3] / "ai-agent" / ".env"
 load_dotenv(_ai_env, override=False)
 
-from app.services.chat_service import agent
+from app.services.chat_service import agent, SUGGESTED_QUESTIONS
 from app.routes.auth import get_current_user
 
 router = APIRouter(prefix="/chat", tags=["Agente IA"])
@@ -26,6 +26,10 @@ class ChatResponse(BaseModel):
     response: str
 
 
+class SuggestionsResponse(BaseModel):
+    suggestions: list[str]
+
+
 @router.post("", response_model=ChatResponse)
 async def chat(req: ChatRequest, _=Depends(get_current_user)):
     history = _sessions.get(req.session_id, [])
@@ -36,6 +40,12 @@ async def chat(req: ChatRequest, _=Depends(get_current_user)):
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/suggestions", response_model=SuggestionsResponse)
+def get_suggestions(_=Depends(get_current_user)):
+    """Lista de perguntas sugeridas exibidas na tela inicial do chat."""
+    return SuggestionsResponse(suggestions=SUGGESTED_QUESTIONS)
 
 
 @router.delete("/session/{session_id}", status_code=204)
