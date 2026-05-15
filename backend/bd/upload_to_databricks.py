@@ -52,19 +52,45 @@ def export_and_upload():
     engine = create_engine(f"sqlite:///{DB_PATH}")
     
     tables_to_export = {
-        "dim_cliente": "clientes.csv",
-        "dim_produto": "catalogo_produtos.csv",
-        "fato_vendas": "pedidos.csv",
-        "fato_suporte": "suporte_tickets.csv",
-        "fato_avaliacoes": "avaliacoes.csv"
+        "dim_cliente": {
+            "filename": "clientes.csv",
+            "columns": ["id_cliente", "nome_cliente", "sobrenome_cliente", "email_cliente", "telefone_cliente", "ramal_cliente", "genero_cliente", "data_nascimento_cliente", "data_cadastro_cliente", "endereco_cliente", "cidade_cliente", "estado_cliente", "pais_cliente", "origem_cliente", "ja_tratada"]
+        },
+        "dim_produto": {
+            "filename": "catalogo_produtos.csv",
+            "columns": ["id_produto", "nome_produto", "categoria_produto", "preco_produto", "fornecedor_produto", "peso_kg_produto", "estoque_produto", "produto_ativo", "data_cadastro_produto", "ja_tratada"]
+        },
+        "fato_vendas": {
+            "filename": "pedidos.csv",
+            "columns": ["id_pedido", "id_cliente", "id_produto", "valor_pedido", "data_pedido", "metodo_pagamento", "status_pedido", "quantidade_produto", "data_prevista_entrega", "ja_tratada"]
+        },
+        "fato_suporte": {
+            "filename": "suporte_tickets.csv",
+            "columns": ["ticket_id", "id_cliente", "id_pedido", "tipo_problema", "data_abertura", "data_resolucao", "tempo_resolucao_horas", "agente_suporte", "nota_avaliacao_problema", "sentimento", "status_ticket", "ja_tratada"]
+        },
+        "fato_avaliacoes": {
+            "filename": "avaliacoes.csv",
+            "columns": ["id_avaliacao", "id_pedido", "id_cliente", "id_produto", "nota_produto", "comentario_avaliacao", "nota_nps", "recomenda_produto", "data_avaliacao", "ja_tratada"]
+        }
     }
     
-    for table_name, csv_filename in tables_to_export.items():
+    for table_name, config in tables_to_export.items():
+        csv_filename = config["filename"]
+        cols = config["columns"]
         print(f"\n📦 Extraindo dados da tabela '{table_name}'...")
         try:
             df = pd.read_sql_table(table_name, con=engine)
+            
+            # Reordena as colunas para bater com o CSV original (importante para o Databricks)
+            # Se alguma coluna faltar no banco, preenche com None pra não quebrar o schema
+            for c in cols:
+                if c not in df.columns:
+                    df[c] = None
+            
+            df = df[cols]
+            
             df.to_csv(csv_filename, index=False)
-            print(f"✅ Arquivo local gerado: {csv_filename}")
+            print(f"✅ Arquivo local gerado: {csv_filename} (colunas reordenadas)")
             
             print(f"☁️ Fazendo upload via API para: {DEST_DIR}{csv_filename}...")
             upload_file_to_databricks(csv_filename, csv_filename)

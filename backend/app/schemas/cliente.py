@@ -20,6 +20,7 @@ class ClienteResponse(BaseModel):
     idade: Optional[int] = None
     data_nascimento_cliente: Optional[str] = None
     data_cadastro_cliente: Optional[str] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 

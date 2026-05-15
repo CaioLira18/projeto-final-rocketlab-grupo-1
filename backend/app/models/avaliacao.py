@@ -13,9 +13,11 @@ class FatoAvaliacoes(Base):
     id_produto = Column(String, index=True, nullable=True)
     id_pedido = Column(String, nullable=True)
     nota_produto = Column(Float, nullable=True)
+    comentario_avaliacao = Column(String, nullable=True)
     nota_nps = Column(Float, nullable=True)
     recomenda_produto = Column(Boolean, nullable=True)
     data_avaliacao = Column(String, nullable=True)
+    ja_tratada = Column(Boolean, default=False)
 
     nome_cliente = column_property(
         select(Cliente.nome_cliente)

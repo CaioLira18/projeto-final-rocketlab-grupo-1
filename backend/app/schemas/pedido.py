@@ -15,6 +15,7 @@ class PedidoListItem(BaseModel):
     metodo_pagamento: Optional[str]
     status_pedido: Optional[str]
     data_prevista_entrega: Optional[date] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 

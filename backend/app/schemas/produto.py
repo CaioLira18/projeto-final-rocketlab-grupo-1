@@ -218,6 +218,7 @@ class ProdutoResponse(BaseModel):
     estoque_produto: Optional[int] = None
     produto_ativo: Optional[bool] = None
     faixa_preco: Optional[str] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 

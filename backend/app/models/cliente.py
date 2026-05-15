@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, func
+from sqlalchemy import Column, Integer, String, Boolean, func
 from sqlalchemy.orm import column_property
 from bd.database import Base
 
@@ -20,6 +20,7 @@ class Cliente(Base):
     origem_cliente = Column(String, nullable=True)
     data_nascimento_cliente = Column(String, nullable=True)
     data_cadastro_cliente = Column(String, nullable=True)
+    ja_tratada = Column(Boolean, default=False)
 
     idade = column_property(
         func.cast(
