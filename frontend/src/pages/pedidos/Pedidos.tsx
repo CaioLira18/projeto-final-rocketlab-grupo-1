@@ -35,12 +35,6 @@ function StatusBadge({ status }: { status: string | null }) {
 
 
 // Definindo tipos e constantes ---
-interface KPIs {
-  total: number
-  aprovados: number
-  recusados: number
-  reembolsados: number
-}
 
 interface CountResponse {
   total: number
@@ -55,7 +49,7 @@ const PAGE_SIZE = 8
 // Componente  principal ---
 export function Pedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([])
-  const [kpis, setKpis] = useState<KPIs>({ total: 0, aprovados: 0, recusados: 0, reembolsados: 0 })
+  const [kpis, setKpis] = useState<CountResponse>({ total: 0, aprovados: 0, recusados: 0, reembolsados: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -72,43 +66,17 @@ export function Pedidos() {
   const [total, setTotal] = useState(0)
   const totalPages = Math.ceil(total / PAGE_SIZE) || 1
 
-  //KPIs
-  const fetchKPIs = useCallback (async () => {
+  const fetchCounts = useCallback(async () => {
     try {
       const params = new URLSearchParams()
-      if (busca) {
-        if (busca.includes("-") || /^[a-f0-9]+$/i.test(busca)) {
-          params.set("id_pedido", busca)
-        } else {
-          params.set("nome_cliente", busca)
-        }
-      }
-      if (dataInicio) params.set("data_inicio", dataInicio)
-      if (dataFim)    params.set("data_fim", dataFim)
-      if (categoriaFiltro) params.set("categoria_produto", categoriaFiltro)
+      if (busca)           params.set("nome_cliente", busca)
       if (statusFiltro)    params.set("status", statusFiltro)
+      if (dataInicio)      params.set("data_inicio", dataInicio)
+      if (dataFim)         params.set("data_fim", dataFim)
+      if (categoriaFiltro) params.set("categoria_produto", categoriaFiltro)
+
       const data = await apiFetch<CountResponse>(`/pedidos/count?${params}`)
       setKpis(data)
-    } catch {
-    }
-  }, [busca, dataInicio, dataFim, categoriaFiltro, statusFiltro])
-
-  //Tabela: página atual + total
-  const fetchTotal = useCallback(async () => {
-    try {
-      const params = new URLSearchParams()
-      if (busca) {
-        if (busca.includes("-") || /^[a-f0-9]+$/i.test(busca)) {
-          params.set("id_pedido", busca)
-        } else {
-          params.set("nome_cliente", busca)
-        }
-      }
-      if (statusFiltro) params.set("status", statusFiltro)
-      if (dataInicio)   params.set("data_inicio", dataInicio)
-      if (dataFim)      params.set("data_fim", dataFim)
-      if (categoriaFiltro) params.set("categoria_produto", categoriaFiltro)
-      const data = await apiFetch<CountResponse>(`/pedidos/count?${params}`)
       setTotal(data.total)
     } catch {}
   }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
@@ -141,8 +109,7 @@ export function Pedidos() {
     }
   }, [page, busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
 
-  useEffect(() => { fetchKPIs() }, [fetchKPIs])
-  useEffect(() => { fetchTotal() },   [fetchTotal])
+  useEffect(() => { fetchCounts() }, [fetchCounts])
   useEffect(() => { fetchPedidos() }, [fetchPedidos])
   useEffect(() => { setPage(1) }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
 
@@ -284,7 +251,7 @@ export function Pedidos() {
 
           <button
             onClick={handleExportCSV}
-            className="h-10 px-4 flex items-center gap-2 rounded-lg border border-action text-body-2 font-semibold text-action bg- hover:bg-gray-50 transition-colors"
+            className="h-10 px-4 flex items-center gap-2 rounded-lg border border-action text-body-2 font-semibold text-action bg-hover:bg-gray-50 transition-colors"
           >
             <Download className="w-4 h-4" />
             Exportar CSV
