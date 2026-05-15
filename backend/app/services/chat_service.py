@@ -22,6 +22,7 @@
 #   backend/app/routes/chat.py  →  POST /api/chat
 
 import os
+import re
 import sqlite3
 from pydantic_ai import Agent
 from pydantic_ai.models.gemini import GeminiModel
@@ -32,20 +33,61 @@ from pydantic_ai.models.gemini import GeminiModel
 _BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 _DB_PATH = os.getenv("GOLD_DB_PATH", os.path.join(_BACKEND_DIR, "bd", "app_gold.db"))
 
+# ----------TABELAS PERMITIDAS (WHITELIST)----------
+# Restringe o que o agente pode consultar no banco Gold.
+# Camada extra de defesa: mesmo que o modelo invente uma tabela ou tente acessar
+# algo fora do escopo de CRM/BI, a query é rejeitada antes de chegar ao SQLite.
+ALLOWED_TABLES: set[str] = {
+    "dim_cliente",
+    "dim_produto",
+    "dm_cliente_360",
+    "dm_produto_360",
+    "dm_vendas_periodo",
+}
+
+# Tokens SQL que nunca devem aparecer em uma query do agente.
+# Mesmo com a guarda "começa com SELECT", subqueries ou CTEs maliciosas
+# poderiam embutir esses comandos — bloqueamos por busca textual.
+_FORBIDDEN_SQL_TOKENS: tuple[str, ...] = (
+    "INSERT", "UPDATE", "DELETE", "DROP", "ALTER",
+    "CREATE", "ATTACH", "DETACH", "PRAGMA",
+)
+
+# Padrão para extrair nomes de tabelas após FROM/JOIN em uma query.
+_TABLE_REF_RE = re.compile(r"\b(?:FROM|JOIN)\s+([a-zA-Z_][a-zA-Z0-9_]*)", re.IGNORECASE)
+
+# ----------PERGUNTAS SUGERIDAS----------
+# Lista exposta via endpoint GET /chat/suggestions para o frontend renderizar
+# como atalhos clicáveis na tela inicial do chat.
+SUGGESTED_QUESTIONS: list[str] = [
+    "Qual é a saúde financeira geral da empresa?",
+    "Quem são os clientes VIP?",
+    "Quantos clientes estão em risco de churn?",
+    "Qual categoria de produto gera mais receita?",
+    "Como evoluiu o ticket médio nos últimos 12 meses?",
+    "Qual é o NPS médio?",
+    "Qual estado teve maior receita?",
+    "Qual método de pagamento é mais utilizado?",
+    "Quais são os 5 produtos com maior receita total?",
+]
+
 
 def _get_table_names() -> str:
     """
-    Retorna apenas os nomes das tabelas do banco Gold como uma string.
+    Retorna apenas os nomes das tabelas permitidas do banco Gold como uma string.
 
     Por que só os nomes e não as colunas?
     - Carregar o schema completo (todas as tabelas + todas as colunas) no prompt do sistema consumiria milhares de tokens a cada conversa.
     - Ao invés disso, o agente descobre as colunas sob demanda usando a ferramenta ver_schema(), pagando tokens só quando necessário.
+
+    Filtramos pela ALLOWED_TABLES: o modelo só "vê" o que tem permissão para consultar,
+    reduzindo a chance de gerar SQL que será rejeitado em runtime.
     """
     try:
         with sqlite3.connect(_DB_PATH) as conn:
             cur = conn.cursor()
             cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
-            tables = [r[0] for r in cur.fetchall()]
+            tables = [r[0] for r in cur.fetchall() if r[0] in ALLOWED_TABLES]
             return ", ".join(tables)
     except Exception as e:
         return f"[tabelas indisponíveis: {e}]"
@@ -67,7 +109,7 @@ def _create_agent() -> Agent:
     # Gemini 2.5 Flash, pode ser trocado para o lite.
     # A chave da API vem da variável de ambiente GEMINI_API_KEY.
     # A chave é lida automaticamente da variável de ambiente GEMINI_API_KEY
-    model = GeminiModel("gemini-2.0-flash")
+    model = GeminiModel("gemini-2.5-flash")
 
     # ----------PROMPT DO SISTEMA----------
     # O system prompt é a "instrução permanente" enviada ao modelo em toda conversa. Ele define:
@@ -128,6 +170,12 @@ Em caso de dúvida sobre se a pergunta está no escopo, ASSUMA QUE ESTÁ e tente
     @agent.tool_plain
     def ver_schema(tabela: str) -> str:
         """Retorna as colunas e tipos de uma tabela do banco de dados."""
+        # Whitelist: só deixa inspecionar tabelas que o agente tem permissão de consultar.
+        if tabela not in ALLOWED_TABLES:
+            return (
+                f"Tabela '{tabela}' não está disponível. "
+                f"Tabelas permitidas: {', '.join(sorted(ALLOWED_TABLES))}."
+            )
         try:
             with sqlite3.connect(_DB_PATH) as conn:
                 cur = conn.cursor()
@@ -156,10 +204,27 @@ Em caso de dúvida sobre se a pergunta está no escopo, ASSUMA QUE ESTÁ e tente
     def executar_sql(query: str) -> str:
         """Executa uma query SQL SELECT no banco Gold e retorna os resultados."""
         sql = query.strip()
+        sql_upper = sql.upper()
 
-        # Barreira de segurança: rejeita qualquer coisa que não seja SELECT
-        if not sql.upper().startswith("SELECT"):
+        # 1) Só SELECT na entrada.
+        if not sql_upper.startswith("SELECT"):
             return "Erro: apenas queries SELECT são permitidas."
+
+        # 2) Bloqueia múltiplas instruções (ex: "SELECT 1; DROP TABLE x").
+        # Retiramos um ";" final isolado antes de checar, porque ele é inofensivo.
+        if ";" in sql.rstrip(";"):
+            return "Erro: múltiplas instruções SQL não são permitidas."
+
+        # 3) Bloqueia tokens proibidos mesmo quando escondidos em subqueries/CTEs.
+        for token in _FORBIDDEN_SQL_TOKENS:
+            if token in sql_upper:
+                return f"Erro: query contém comando não permitido ({token})."
+
+        # 4) Whitelist de tabelas: só pode referenciar o que está em ALLOWED_TABLES.
+        referenced = {t.lower() for t in _TABLE_REF_RE.findall(sql)}
+        invalid = referenced - ALLOWED_TABLES
+        if invalid:
+            return f"Erro: tabelas não permitidas na query: {', '.join(sorted(invalid))}."
 
         try:
             with sqlite3.connect(_DB_PATH) as conn:

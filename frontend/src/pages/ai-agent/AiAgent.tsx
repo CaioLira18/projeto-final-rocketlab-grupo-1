@@ -10,16 +10,18 @@ import { cn } from '@/utils/cn'
 // Chave do localStorage onde guardamos o id da conversa atual
 const SESSION_KEY = 'chat_session_id'
 
-// Perguntas mostradas como atalhos clicáveis na tela inicial
-const SUGGESTED_QUESTIONS = [
+// Fallback usado se o GET /chat/suggestions falhar (rede, 401, etc.).
+// Em condições normais a lista vem do backend, mantendo a fonte da verdade lá.
+const FALLBACK_SUGGESTED_QUESTIONS = [
   'Qual é a saúde financeira geral da empresa?',
-  'Quem são os clientes com maior LTV?',
+  'Quem são os clientes VIP?',
   'Quantos clientes estão em risco de churn?',
-  'Qual categoria de produto é mais lucrativa?',
-  'Como evoluiu o ticket médio nos últimos meses?',
-  'Qual é o NPS médio da empresa?',
-  'Quais foram os 10 produtos mais vendidos?',
-  'Qual estado tem maior receita?',
+  'Qual categoria de produto gera mais receita?',
+  'Como evoluiu o ticket médio nos últimos 12 meses?',
+  'Qual é o NPS médio?',
+  'Qual estado teve maior receita?',
+  'Qual método de pagamento é mais utilizado?',
+  'Quais são os 5 produtos com maior receita total?',
 ]
 
 // ----------------- TIPOS -----------------
@@ -33,7 +35,6 @@ interface Message {
 }
 
 // ----------------- HELPERS -----------------
-
 // Retorna o session_id atual, criando um novo na primeira chamada.
 // Fora do componente pra poder ser chamada na inicialização do useRef.
 function getOrCreateSessionId(): string {
@@ -52,6 +53,7 @@ export function AiAgent() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>(FALLBACK_SUGGESTED_QUESTIONS)
 
   // useRef em vez de useState: o session_id muda, mas não deve causar re-render
   const sessionId = useRef(getOrCreateSessionId())
@@ -66,6 +68,22 @@ export function AiAgent() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isLoading])
+
+  // Busca a lista oficial de sugestões do backend. Se falhar, fica com o fallback.
+  // O backend é a fonte da verdade pra equipe poder atualizar perguntas sem rebuild do front.
+  useEffect(() => {
+    let cancelled = false
+    apiFetch<{ suggestions: string[] }>('/chat/suggestions')
+      .then((data) => {
+        if (!cancelled && Array.isArray(data?.suggestions) && data.suggestions.length > 0) {
+          setSuggestedQuestions(data.suggestions)
+        }
+      })
+      .catch(() => {
+        // silencioso: já temos fallback hard-coded
+      })
+    return () => { cancelled = true }
+  }, [])
 
   function resetTextareaHeight() {
     if (textareaRef.current) {
@@ -160,7 +178,7 @@ export function AiAgent() {
                 Posso responder perguntas sobre os dados da V-Commerce em linguagem natural. Por onde quer começar?
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-xl">
-                {SUGGESTED_QUESTIONS.map((q) => (
+                {suggestedQuestions.map((q) => (
                   <button
                     key={q}
                     onClick={() => sendMessage(q)}
@@ -193,7 +211,7 @@ export function AiAgent() {
                   {/* Bolha - whitespace-pre-wrap preserva quebras de linha do agente */}
                   <div
                     className={cn(
-                      'max-w-[75%] px-4 py-3 rounded-xl text-body-2 leading-relaxed whitespace-pre-wrap break-words',
+                      'max-w-[75%] px-4 py-3 rounded-xl text-body-2 leading-relaxed whitespace-pre-wrap wrap-break-word',
                       msg.role === 'user'
                         ? 'bg-primary text-white rounded-br-sm'
                         : 'bg-secondary-50 border border-secondary-200 text-gray-800 rounded-bl-sm',
@@ -243,7 +261,7 @@ export function AiAgent() {
               placeholder="Faça uma pergunta sobre os dados da empresa..."
               rows={1}
               disabled={isLoading}
-              className="flex-1 resize-none px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-body-2 text-dark placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-colors min-h-[42px] max-h-32 disabled:opacity-60"
+              className="flex-1 resize-none px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-body-2 text-dark placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-colors min-h-10.5 max-h-32 disabled:opacity-60"
             />
             <Button
               intent="secondary"
