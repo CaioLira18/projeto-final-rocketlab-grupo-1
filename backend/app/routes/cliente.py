@@ -139,21 +139,10 @@ def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
 def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_historico(db, cliente_id)
 
-# ── NOVA ROTA 360 — deve ficar ANTES de /{cliente_id} ─────────────────────
+# ROTA 360 — deve ficar ANTES de /{cliente_id} para o roteamento do FastAPI
 @router.get("/360/{cliente_id}", response_model=Cliente360Response)
 def buscar_cliente_360(
     cliente_id: str,
     db: Session = Depends(get_db_gold),   # usa o banco gold
 ):
     return get_cliente_360(db, cliente_id)
- 
- 
-# ── rotas existentes ───────────────────────────────────────────────────────
-@router.get("/{cliente_id}", response_model=ClienteResponse)
-def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    return get_cliente_by_id(db, cliente_id)
- 
- 
-@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
-def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    return get_cliente_historico(db, cliente_id)
