@@ -7,6 +7,7 @@ from fastapi import HTTPException
 
 def list_clientes(
     db: Session,
+    id_cliente: Optional[str] = None,
     nome: Optional[str] = None,
     sobrenome: Optional[str] = None,
     email: Optional[str] = None,
@@ -27,14 +28,24 @@ def list_clientes(
     query = db.query(Cliente)
 
     if busca:
-        query = query.filter(
-            or_(
-                Cliente.nome_cliente.ilike(f"%{busca}%"),
-                Cliente.sobrenome_cliente.ilike(f"%{busca}%"),
-                Cliente.email_cliente.ilike(f"%{busca}%"),
+        partes = busca.strip().split()
+        if len(partes) >= 2:
+            # "alan m" → busca nome contendo "alan" E sobrenome contendo "m"
+            query = query.filter(
+                Cliente.nome_cliente.ilike(f"%{partes[0]}%"),
+                Cliente.sobrenome_cliente.ilike(f"%{' '.join(partes[1:])}%"),
             )
-        )
+        else:
+            query = query.filter(
+                or_(
+                    Cliente.nome_cliente.ilike(f"%{busca}%"),
+                    Cliente.sobrenome_cliente.ilike(f"%{busca}%"),
+                    Cliente.email_cliente.ilike(f"%{busca}%"),
+                )
+            )
 
+    if id_cliente:
+        query = query.filter(Cliente.id_cliente.ilike(f"%{id_cliente}%"))
     if nome:
         query = query.filter(Cliente.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:

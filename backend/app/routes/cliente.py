@@ -19,6 +19,7 @@ router = APIRouter(
 
 @router.get("/")
 def listar_clientes(
+    id_cliente: Optional[str] = Query(None),
     nome: Optional[str] = Query(None),
     sobrenome: Optional[str] = Query(None),
     email: Optional[str] = Query(None),
@@ -39,6 +40,7 @@ def listar_clientes(
 ):
     clientes = list_clientes(
         db=db,
+        id_cliente=id_cliente,
         nome=nome,
         sobrenome=sobrenome,
         email=email,
@@ -71,6 +73,8 @@ def listar_clientes(
                 ClienteModel.email_cliente.ilike(f"%{busca}%"),
             )
         )
+    if id_cliente:
+        query = query.filter(ClienteModel.id_cliente.ilike(f"%{id_cliente}%"))
     if nome:
         query = query.filter(ClienteModel.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:
