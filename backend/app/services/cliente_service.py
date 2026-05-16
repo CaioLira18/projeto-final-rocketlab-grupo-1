@@ -1,16 +1,17 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, func
-from app.models import Cliente, Pedidos, FatoSuporte
+from app.models import Cliente, Pedidos, FatoSuporte, Cliente360
 from fastapi import HTTPException
 
 
 def list_clientes(
     db: Session,
+    id_cliente: Optional[str] = None,
     nome: Optional[str] = None,
     sobrenome: Optional[str] = None,
     email: Optional[str] = None,
-    cidade: Optional[List[str]] = None,        # FIX: era str, agora List[str]
+    cidade: Optional[List[str]] = None,
     estado: Optional[List[str]] = None,
     pais: Optional[str] = None,
     genero: Optional[List[str]] = None,
@@ -18,22 +19,33 @@ def list_clientes(
     idade_min: Optional[int] = None,
     idade_max: Optional[int] = None,
     ramal: Optional[str] = None,
-    sem_ramal: Optional[bool] = None,          # FIX: era str, agora bool
+    sem_ramal: Optional[bool] = None,
     busca: Optional[str] = None,
+    ano_cadastro: Optional[List[int]] = None,
     skip: int = 0,
     limit: int = 50,
 ):
     query = db.query(Cliente)
 
     if busca:
-        query = query.filter(
-            or_(
-                Cliente.nome_cliente.ilike(f"%{busca}%"),
-                Cliente.sobrenome_cliente.ilike(f"%{busca}%"),
-                Cliente.email_cliente.ilike(f"%{busca}%"),
+        partes = busca.strip().split()
+        if len(partes) >= 2:
+            # "alan m" → busca nome contendo "alan" E sobrenome contendo "m"
+            query = query.filter(
+                Cliente.nome_cliente.ilike(f"%{partes[0]}%"),
+                Cliente.sobrenome_cliente.ilike(f"%{' '.join(partes[1:])}%"),
             )
-        )
+        else:
+            query = query.filter(
+                or_(
+                    Cliente.nome_cliente.ilike(f"%{busca}%"),
+                    Cliente.sobrenome_cliente.ilike(f"%{busca}%"),
+                    Cliente.email_cliente.ilike(f"%{busca}%"),
+                )
+            )
 
+    if id_cliente:
+        query = query.filter(Cliente.id_cliente.ilike(f"%{id_cliente}%"))
     if nome:
         query = query.filter(Cliente.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:
@@ -41,10 +53,9 @@ def list_clientes(
     if email:
         query = query.filter(Cliente.email_cliente.ilike(f"%{email}%"))
     if cidade:
-        query = query.filter(Cliente.cidade_cliente.in_(cidade))  # FIX: .in_() para lista
+        query = query.filter(Cliente.cidade_cliente.in_(cidade))
     if pais:
         query = query.filter(Cliente.pais_cliente.ilike(f"%{pais}%"))
-
     if estado:
         query = query.filter(Cliente.estado_cliente.in_(estado))
     if genero:
@@ -55,10 +66,6 @@ def list_clientes(
         query = query.filter(Cliente.idade >= idade_min)
     if idade_max is not None:
         query = query.filter(Cliente.idade <= idade_max)
-
-    # FIX: sem_ramal e ramal são mutuamente exclusivos
-    # sem_ramal filtra clientes com ramal NULL, vazio ou "0"
-    # ramal faz busca textual pelo valor informado
     if sem_ramal:
         query = query.filter(
             or_(
@@ -67,10 +74,30 @@ def list_clientes(
                 Cliente.ramal_cliente == "0",
             )
         )
-    elif ramal:
-        query = query.filter(Cliente.ramal_cliente.ilike(f"%{ramal}%"))
+    if ramal:
+        query = query.filter(Cliente.ramal_cliente.ilike(f"{ramal}%"))
+    if ano_cadastro:
+        query = query.filter(
+            func.strftime("%Y", Cliente.data_cadastro_cliente).in_(
+                [str(a) for a in ano_cadastro]
+            )
+        )
 
     return query.offset(skip).limit(limit).all()
+
+
+def get_cliente_360(db: Session, cliente_id: str) -> Cliente360:
+    cliente = (
+        db.query(Cliente360)
+        .filter(Cliente360.id_cliente == cliente_id)
+        .first()
+    )
+    if not cliente:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Visão 360 não encontrada para o cliente {cliente_id}",
+        )
+    return cliente
 
 
 def get_cliente_by_id(db: Session, cliente_id: str):

@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import Optional, List
+from app.services.cliente360_service import get_cliente_360
 
-from bd.database import get_db
-from app.schemas import ClienteResponse, ClienteHistoricoResponse
+from bd.database import get_db, get_db_gold
+from app.schemas import ClienteResponse, ClienteHistoricoResponse, Cliente360Response
 from app.services import list_clientes, get_cliente_by_id, get_cliente_historico
 from app.routes.auth import get_current_user
+
 
 router = APIRouter(
     prefix="/clientes",
@@ -17,10 +19,11 @@ router = APIRouter(
 
 @router.get("/")
 def listar_clientes(
+    id_cliente: Optional[str] = Query(None),
     nome: Optional[str] = Query(None),
     sobrenome: Optional[str] = Query(None),
     email: Optional[str] = Query(None),
-    cidade: Optional[List[str]] = Query(None),   # FIX: era str, agora List[str] igual aos outros
+    cidade: Optional[List[str]] = Query(None),
     estado: Optional[List[str]] = Query(None),
     pais: Optional[str] = Query(None),
     genero: Optional[List[str]] = Query(None),
@@ -28,14 +31,16 @@ def listar_clientes(
     idade_min: Optional[int] = Query(None),
     idade_max: Optional[int] = Query(None),
     ramal: Optional[str] = Query(None),
-    sem_ramal: Optional[bool] = Query(None),     # FIX: parâmetro sem_ramal adicionado
+    sem_ramal: Optional[bool] = Query(None),
     busca: Optional[str] = Query(None),
+    ano_cadastro: Optional[List[int]] = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=500),
     db: Session = Depends(get_db),
 ):
     clientes = list_clientes(
         db=db,
+        id_cliente=id_cliente,
         nome=nome,
         sobrenome=sobrenome,
         email=email,
@@ -45,17 +50,18 @@ def listar_clientes(
         genero=genero,
         origem=origem,
         ramal=ramal,
-        sem_ramal=sem_ramal,                     # FIX: repassado para o service
+        sem_ramal=sem_ramal,
         idade_min=idade_min,
         idade_max=idade_max,
         busca=busca,
+        ano_cadastro=ano_cadastro,
         skip=skip,
         limit=limit,
     )
 
     # conta o total com os mesmos filtros (sem paginação)
     from app.models import Cliente as ClienteModel
-    from sqlalchemy import or_
+    from sqlalchemy import or_, func
 
     query = db.query(ClienteModel)
 
@@ -67,6 +73,8 @@ def listar_clientes(
                 ClienteModel.email_cliente.ilike(f"%{busca}%"),
             )
         )
+    if id_cliente:
+        query = query.filter(ClienteModel.id_cliente.ilike(f"%{id_cliente}%"))
     if nome:
         query = query.filter(ClienteModel.nome_cliente.ilike(f"%{nome}%"))
     if sobrenome:
@@ -74,7 +82,7 @@ def listar_clientes(
     if email:
         query = query.filter(ClienteModel.email_cliente.ilike(f"%{email}%"))
     if cidade:
-        query = query.filter(ClienteModel.cidade_cliente.in_(cidade))  # FIX: .in_() para lista
+        query = query.filter(ClienteModel.cidade_cliente.in_(cidade))
     if pais:
         query = query.filter(ClienteModel.pais_cliente.ilike(f"%{pais}%"))
     if estado:
@@ -87,7 +95,6 @@ def listar_clientes(
         query = query.filter(ClienteModel.idade >= idade_min)
     if idade_max is not None:
         query = query.filter(ClienteModel.idade <= idade_max)
-    # FIX: sem_ramal e ramal mutuamente exclusivos na contagem também
     if sem_ramal:
         query = query.filter(
             (ClienteModel.ramal_cliente == None) |
@@ -95,7 +102,14 @@ def listar_clientes(
             (ClienteModel.ramal_cliente == "0")
         )
     elif ramal:
-        query = query.filter(ClienteModel.ramal_cliente.ilike(f"%{ramal}%"))
+        query = query.filter(ClienteModel.ramal_cliente.ilike(f"{ramal}%"))
+
+    if ano_cadastro:
+        query = query.filter(
+            func.strftime("%Y", ClienteModel.data_cadastro_cliente).in_(
+                [str(a) for a in ano_cadastro]
+            )
+        )
 
     total = query.count()
 
@@ -103,6 +117,7 @@ def listar_clientes(
         "clientes": clientes,
         "total": total,
     }
+
 
 @router.get("/teste")
 def teste(db: Session = Depends(get_db)):
@@ -114,11 +129,31 @@ def teste(db: Session = Depends(get_db)):
 
     return cliente.__dict__
 
+
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_by_id(db, cliente_id)
 
 
+@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
+def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    return get_cliente_historico(db, cliente_id)
+
+# ── NOVA ROTA 360 — deve ficar ANTES de /{cliente_id} ─────────────────────
+@router.get("/360/{cliente_id}", response_model=Cliente360Response)
+def buscar_cliente_360(
+    cliente_id: str,
+    db: Session = Depends(get_db_gold),   # usa o banco gold
+):
+    return get_cliente_360(db, cliente_id)
+ 
+ 
+# ── rotas existentes ───────────────────────────────────────────────────────
+@router.get("/{cliente_id}", response_model=ClienteResponse)
+def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    return get_cliente_by_id(db, cliente_id)
+ 
+ 
 @router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
 def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_historico(db, cliente_id)
