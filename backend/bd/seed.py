@@ -319,6 +319,13 @@ def seed_database():
             df_gold = pd.read_csv(filepath, encoding="utf-8-sig")
             df_gold.columns = [col.replace("\ufeff", "").strip() for col in df_gold.columns]
             
+            # 🔍 BLOCO CORRIGIDO: Usa o import global diretamente
+            if tablename == "dm_cliente_360":
+                # Pega apenas as colunas mapeadas no SQLAlchemy usando o Cliente360 já importado globalmente
+                colunas_validas = [c.name for c in Cliente360.__table__.columns]
+                # Mantém no DataFrame apenas o que existe no modelo
+                df_gold = df_gold[[col for col in df_gold.columns if col in colunas_validas]]
+
             # Converte os tipos de dados temporais para date se necessário
             for date_col in parse_dates:
                 if date_col in df_gold.columns:
@@ -327,7 +334,7 @@ def seed_database():
             # Forçamos a flag 'ja_tratada' para True em todos os registros da Gold
             df_gold["ja_tratada"] = 1
 
-            # Insere no banco Gold (app_gold.db) de forma nativa e extremamente rápida
+            # Insere no banco Gold (app_gold.db)
             print(f"Inserindo {len(df_gold)} registros na tabela Gold '{tablename}' via to_sql...")
             df_gold.to_sql(tablename, engine_gold, if_exists="append", index=False, chunksize=20000)
             print(f"Tabela Gold '{tablename}' populada com sucesso em {time.time() - start_gold:.2f} segundos!")

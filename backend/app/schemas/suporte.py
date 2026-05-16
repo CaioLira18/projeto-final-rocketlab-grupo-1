@@ -19,7 +19,7 @@ class SuporteTicketItem(BaseModel):
     status: str = "aberto"
     ja_tratada: Optional[bool] = None
   
-    model_config = {"from_attributes": True} 
+    model_config = {"from_attributes": True}
 
 # Formata a resposta estatística de um produto específico.
 class SuporteMetricasProduto(BaseModel):

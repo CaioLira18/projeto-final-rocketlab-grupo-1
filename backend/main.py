@@ -15,6 +15,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Total-Count"],  # ← adicionar isso
 )
 
 # Registra o router de autenticação (público) primeiro
