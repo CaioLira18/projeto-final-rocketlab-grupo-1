@@ -1,12 +1,6 @@
 import traceback
-from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from dotenv import load_dotenv
-
-# Carrega GEMINI_API_KEY do .env do agente antes de importar o chat_service
-_ai_env = Path(__file__).resolve().parents[3] / "ai-agent" / ".env"
-load_dotenv(_ai_env, override=False)
 
 from app.services.chat_service import agent, SUGGESTED_QUESTIONS
 from app.routes.auth import get_current_user

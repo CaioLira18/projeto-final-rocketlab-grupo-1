@@ -1,3 +1,0 @@
-pydantic-ai[google]==0.0.41
-pydantic==2.13.4
-python-dotenv
