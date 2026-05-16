@@ -19,7 +19,7 @@ router = APIRouter(
 )
 
 
-@router.get("/metricas", response_model=List[ProdutoMetricas]) 
+@router.get("/metricas", response_model=List[ProdutoMetricas], summary="Lista produtos com métricas agregadas (Gold)")
 def listar_metricas_produtos(
     categoria: Optional[str] = Query(None, description="Filtrar por categoria do produto"),
     faixa_preco: Optional[str] = Query(None, description="Filtrar por faixa de preço (baixo/medio/alto)"),
@@ -29,7 +29,15 @@ def listar_metricas_produtos(
     limit: int = Query(50, ge=1, le=10000, description="Limite de registros por página"),
     db_gold: Session = Depends(get_db_gold),
 ):
-    # sincronização real-time ativa, pra a gente ter aqui os dados mais recentes possiveis 
+    """
+    Lista produtos com todas as métricas consolidadas pela camada Gold:
+    receita total, ticket médio, total de pedidos, avaliações, NPS, tickets
+    de suporte, métricas de engajamento digital, etc.
+
+    Aceita filtros de categoria, faixa de preço, status (ativo/inativo) e
+    busca livre (nome/ID/fornecedor). Usado pela tela principal de Produtos.
+    """
+    # sincronização real-time ativa, pra a gente ter aqui os dados mais recentes possiveis
     query = db_gold.query(Produto360).order_by(Produto360.id_produto.asc())
 
     if busca:
@@ -101,11 +109,15 @@ def listar_metricas_produtos(
     return result
 
 
-@router.get("/metricas/{produto_id}", response_model=ProdutoMetricas)
+@router.get("/metricas/{produto_id}", response_model=ProdutoMetricas, summary="Métricas agregadas de um produto (Gold)")
 def buscar_metricas_produto(
-    produto_id: str, 
+    produto_id: str,
     db_gold: Session = Depends(get_db_gold)
 ):
+    """
+    Retorna as métricas Gold completas de um único produto. Retorna 404 se
+    o `produto_id` não existir na camada Gold.
+    """
     m = db_gold.query(Produto360).filter(Produto360.id_produto == produto_id).first()
     if not m:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -167,6 +179,11 @@ def listar_produtos(
     limit: int = Query(50, ge=1, le=10000, description="Limite de registros"),
     db: Session = Depends(get_db),
 ):
+    """
+    Lista produtos da camada Silver com apenas os campos cadastrais (sem as
+    métricas agregadas). Endpoint mais leve que `GET /produtos/metricas`,
+    útil quando o frontend precisa apenas dos dados de catálogo.
+    """
     query = db.query(DimProduto)
     if busca:
         query = query.filter(
@@ -182,6 +199,10 @@ def listar_produtos(
 
 @router.get("/{produto_id}", response_model=ProdutoResponse, summary="Busca básica de produto")
 def buscar_produto(produto_id: str, db: Session = Depends(get_db)):
+    """
+    Retorna os dados cadastrais de um produto (camada Silver). Retorna 404
+    se o `produto_id` não existir.
+    """
     produto = db.query(DimProduto).filter(DimProduto.id_produto == produto_id).first()
     if not produto:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
@@ -190,16 +211,29 @@ def buscar_produto(produto_id: str, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=ProdutoResponse, status_code=201, summary="Adiciona um novo produto")
 def adicionar_produto(prod_in: ProdutoCreate, db: Session = Depends(get_db)):
+    """
+    Cria um novo produto na camada Silver. As métricas Gold associadas só
+    aparecerão após a próxima execução do pipeline de dados.
+    """
     return create_produto(db, prod_in)
 
 
 @router.put("/{produto_id}", response_model=ProdutoResponse, summary="Edita um produto existente")
 def editar_produto(produto_id: str, prod_in: ProdutoUpdate, db: Session = Depends(get_db)):
+    """
+    Atualiza os dados cadastrais de um produto existente. Aceita atualizações
+    parciais (PATCH-like) - apenas os campos enviados são modificados.
+    """
     return update_produto(db, produto_id, prod_in)
 
 
 @router.delete("/{produto_id}", summary="Remove um produto")
 def remover_produto(produto_id: str, db: Session = Depends(get_db)):
+    """
+    Remove um produto da camada Silver. A remoção é hard delete; os registros
+    históricos de vendas e avaliações associados permanecem no banco para fins
+    de relatório.
+    """
     delete_produto(db, produto_id)
     return {"message": "Produto removido com sucesso", "id_produto": produto_id}
 

@@ -51,8 +51,23 @@ def get_current_user(
     return user
 
 
-@router.post("/register", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=UsuarioResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Cadastra um novo usuário",
+)
 def registrar_usuario(user_in: UsuarioCreate, db: Session = Depends(get_db)):
+    """
+    Cria uma nova conta de usuário no sistema.
+
+    Valida que o `username` e o `email` ainda não estão em uso antes de
+    persistir o registro. A senha é armazenada com hash (bcrypt), nunca em
+    texto puro.
+
+    Retorna o usuário criado (sem a senha). Para obter um token de acesso,
+    use o endpoint `POST /auth/login` em seguida.
+    """
     user = get_user_by_username(db, user_in.username)
     if user:
         raise HTTPException(
@@ -68,8 +83,15 @@ def registrar_usuario(user_in: UsuarioCreate, db: Session = Depends(get_db)):
     return create_user(db, user_in)
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=TokenResponse, summary="Autentica o usuário e retorna um JWT")
 def login_json(user_in: UsuarioLogin, db: Session = Depends(get_db)):
+    """
+    Autentica o usuário pelo par `email`/`password` e retorna um token JWT
+    (`access_token`) que deve ser enviado no header `Authorization: Bearer <token>`
+    nas demais requisições protegidas.
+
+    Retorna 401 se as credenciais estiverem incorretas.
+    """
     user = authenticate_user(db, user_in.email, user_in.password)
     if not user:
         raise HTTPException(
@@ -80,6 +102,11 @@ def login_json(user_in: UsuarioLogin, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me", response_model=UsuarioResponse)
+@router.get("/me", response_model=UsuarioResponse, summary="Retorna o perfil do usuário autenticado")
 def obter_perfil(current_user: Usuario = Depends(get_current_user)):
+    """
+    Retorna os dados do usuário autenticado pelo token JWT enviado no header
+    `Authorization`. Útil para o frontend descobrir quem é o usuário logado e
+    verificar se o token ainda é válido.
+    """
     return current_user

@@ -20,7 +20,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("/resumo")
+@router.get("/resumo", summary="Resumo agregado dos tickets de suporte")
 def resumo_suporte(
     id_cliente: Optional[str] = Query(None),
     tipo_problema: Optional[str] = Query(None),
@@ -30,6 +30,14 @@ def resumo_suporte(
     data_fim: Optional[datetime] = Query(None),
     db: Session = Depends(get_db)
 ):
+    """
+    Retorna contagens agregadas dos tickets de suporte (total, abertos,
+    resolvidos) e o tempo médio de resolução, respeitando os mesmos filtros
+    aceitos por `GET /suporte/tickets`.
+
+    Útil para alimentar os cards de KPI da tela de suporte sem precisar
+    paginar a listagem inteira.
+    """
     q = db.query(FatoSuporte)
 
     if id_cliente:
@@ -61,7 +69,7 @@ def resumo_suporte(
         "tempo_medio": round(r.tempo_medio, 1) if r.tempo_medio else None,
     }
     
-@router.get("/tickets", response_model=List[SuporteTicketItem])
+@router.get("/tickets", response_model=List[SuporteTicketItem], summary="Lista tickets de suporte com filtros e paginação")
 def listar_tickets(
     response: Response,
     id_produto: Optional[str] = Query(None, description="Filtrar por ID do produto"),
@@ -76,6 +84,13 @@ def listar_tickets(
     limit: int = Query(50, ge=1, le=500, description="Limite de registros por página"),
     db: Session = Depends(get_db),
 ):
+    """
+    Lista os tickets de suporte com filtros opcionais e paginação por `skip`/`limit`.
+
+    O total de registros (ignorando paginação, respeitando filtros) é exposto
+    no header de resposta `X-Total-Count`, usado pelo frontend para renderizar
+    o componente de paginação.
+    """
     # query de dados
     query = build_suporte_base_query(db)
     # query de contagem independente com os mesmos joins
@@ -110,8 +125,13 @@ def listar_tickets(
 
     return [map_row_to_ticket_schema(r) for r in query.offset(skip).limit(limit).all()]
 
-@router.get("/tickets/{ticket_id}", response_model=SuporteTicketItem)
+@router.get("/tickets/{ticket_id}", response_model=SuporteTicketItem, summary="Busca um ticket pelo ID")
 def buscar_ticket(ticket_id: str, db: Session = Depends(get_db)):
+    """
+    Retorna os detalhes completos de um ticket de suporte, incluindo dados
+    enriquecidos do cliente e do produto associados. Retorna 404 se o
+    `ticket_id` não existir.
+    """
     resultado = build_suporte_base_query(db).filter(FatoSuporte.ticket_id == ticket_id).first()
 
     if not resultado:
@@ -120,8 +140,13 @@ def buscar_ticket(ticket_id: str, db: Session = Depends(get_db)):
     return map_row_to_ticket_schema(resultado)
 
 
-@router.get("/metricas/{produto_id}", response_model=SuporteMetricasProduto)
+@router.get("/metricas/{produto_id}", response_model=SuporteMetricasProduto, summary="Métricas de suporte de um produto")
 def metricas_suporte_produto(produto_id: str, db: Session = Depends(get_db)):
+    """
+    Retorna métricas agregadas de suporte para um produto específico:
+    volume de tickets, tempo médio de resolução, distribuição por tipo de
+    problema, etc. Retorna 404 se o `produto_id` não existir.
+    """
     produto = db.query(DimProduto).filter(DimProduto.id_produto == produto_id).first()
 
     if not produto:

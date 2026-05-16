@@ -27,6 +27,14 @@ def contar_pedidos(
     id_pedido: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
+    """
+    Retorna a contagem total de pedidos e a contagem segmentada por status
+    (aprovados, recusados, reembolsados), respeitando os mesmos filtros aceitos
+    por `GET /pedidos`.
+
+    Usado pelos cards de KPI da tela de pedidos sem precisar paginar a
+    listagem inteira.
+    """
     query = db.query(
         func.count(Pedidos.id_pedido).label("total"),
         func.sum(case((Pedidos.status_pedido == "Aprovado",    1), else_=0)).label("aprovados"),
@@ -82,6 +90,14 @@ def listar_pedidos(
     limite: int = Query(50, ge=1, le=9999999, description="Limite de registros"),
     db: Session = Depends(get_db)
 ):
+    """
+    Lista pedidos com filtros amplos (cliente, produto, datas, valores, status,
+    método de pagamento, localização) e paginação por `skip`/`limite`.
+
+    Cada item já vem enriquecido com nome do cliente, nome do produto e
+    categoria, evitando JOINs no frontend. Suporta ordenação configurável
+    por `order_by` e `order_dir`.
+    """
     return list_pedidos(
         db,
         id_pedido=id_pedido, id_cliente=id_cliente, id_produto=id_produto,
