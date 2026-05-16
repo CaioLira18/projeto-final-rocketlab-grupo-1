@@ -15,7 +15,18 @@ export async function apiFetch<T>(
       ...options?.headers,
     },
   })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  if (!res.ok) {
+    let errorMsg = `HTTP ${res.status}`
+    try {
+      const errorJson = await res.json()
+      if (errorJson && errorJson.detail) {
+        errorMsg = errorJson.detail
+      }
+    } catch (_) {
+      // Ignora erro ao decodificar JSON se o corpo não for JSON
+    }
+    throw new Error(errorMsg)
+  }
   return res.json() as Promise<T>
 }
 

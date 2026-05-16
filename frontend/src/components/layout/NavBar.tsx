@@ -1,14 +1,16 @@
 import { NavLink } from "react-router-dom"
-import { 
-  LayoutDashboard, 
-  Users, 
-  Package, 
-  ShoppingCart, 
-  LifeBuoy, 
-  LogOut, 
-  Rocket 
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  ShoppingCart,
+  LifeBuoy,
+  LogOut,
+  Rocket,
+  Sparkles,
 } from "lucide-react"
 import { useAuth } from "@/context"
+import { cn } from "@/utils/cn"
 
 export function NavBar() {
   const { user, logout } = useAuth()
@@ -19,6 +21,7 @@ export function NavBar() {
     { to: "/produtos", label: "Produtos", icon: Package },
     { to: "/pedidos", label: "Pedidos", icon: ShoppingCart },
     { to: "/suporte", label: "Suporte", icon: LifeBuoy },
+    { to: "/ai-agent", label: "Agente IA", icon: Sparkles, accentIcon: true },
   ]
 
   return (
@@ -43,17 +46,25 @@ export function NavBar() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-3 rounded-lg text-body-2 font-medium transition-all duration-200 group
-                  ${
-                    isActive
-                      ? "bg-secondary text-white shadow-md shadow-secondary/20 font-semibold"
-                      : "text-gray-300 hover:bg-primary-400 hover:text-white"
-                  }
-                `}
+                end={item.to === "/"}
+                className={({ isActive }) => cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg text-body-2 font-medium transition-all duration-200 group",
+                  isActive
+                    ? "bg-secondary text-white shadow-md shadow-secondary/20 font-semibold"
+                    : "text-gray-300 hover:bg-primary-400 hover:text-white",
+                )}
               >
-                <Icon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-                <span>{item.label}</span>
+                {({ isActive }) => (
+                  <>
+                    <Icon
+                      className={cn(
+                        "h-5 w-5 transition-transform duration-200 group-hover:scale-110",
+                        !isActive && item.accentIcon && "text-secondary-300",
+                      )}
+                    />
+                    <span>{item.label}</span>
+                  </>
+                )}
               </NavLink>
             )
           })}

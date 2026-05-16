@@ -1,10 +1,9 @@
 from sqlalchemy import case, func
 from sqlalchemy.orm import Session
-from app.models import DimProduto, FatoSuporte, Pedidos
+from app.models import DimProduto, FatoSuporte, Pedidos, Cliente
 from app.schemas.suporte import SuporteTicketItem, SuporteMetricasProduto
 
 
-# Coluna de status baseada na data de resolução do ticket
 def build_status_col():
     return case(
         (FatoSuporte.data_resolucao == None, "aberto"),
@@ -12,15 +11,14 @@ def build_status_col():
     ).label("status")
 
 
-# Consulta base com join para Pedidos e coluna de status
 def build_suporte_base_query(db: Session):
     return (
         db.query(
             FatoSuporte.ticket_id,
             FatoSuporte.id_cliente,
-            FatoSuporte.nome_cliente,
+            Cliente.nome_cliente.label("nome_cliente"),
             FatoSuporte.id_pedido,
-            FatoSuporte.data_pedido,
+            Pedidos.data_pedido.label("data_pedido"),
             FatoSuporte.tipo_problema,
             FatoSuporte.data_abertura,
             FatoSuporte.data_resolucao,
@@ -31,11 +29,11 @@ def build_suporte_base_query(db: Session):
             Pedidos.categoria_produto,
             build_status_col(),
         )
-        .outerjoin(Pedidos, FatoSuporte.id_pedido == Pedidos.id_pedido)  # Trará todos os tickets, mesmo sem pedido correspondente
+        .outerjoin(Cliente, FatoSuporte.id_cliente == Cliente.id_cliente)
+        .outerjoin(Pedidos, FatoSuporte.id_pedido == Pedidos.id_pedido)
     )
 
 
-# Converte o resultado da query em um schema de resposta
 def map_row_to_ticket_schema(r) -> SuporteTicketItem:
     return SuporteTicketItem(
         ticket_id=r.ticket_id,
@@ -55,7 +53,6 @@ def map_row_to_ticket_schema(r) -> SuporteTicketItem:
     )
 
 
-# Calcula métricas agregadas de suporte para um produto específico
 def get_metricas_by_produto(db: Session, produto_id: str) -> SuporteMetricasProduto:
     produto = db.query(DimProduto).filter(DimProduto.id_produto == produto_id).first()
 

@@ -45,8 +45,12 @@ def get_user_by_username(db: Session, username: str):
     return db.query(Usuario).filter(Usuario.username == username).first()
 
 
-def authenticate_user(db: Session, username: str, password: str):
-    user = get_user_by_username(db, username)
+def get_user_by_email(db: Session, email: str):
+    return db.query(Usuario).filter(Usuario.email == email).first()
+
+
+def authenticate_user(db: Session, email: str, password: str):
+    user = get_user_by_email(db, email)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):
@@ -58,6 +62,7 @@ def create_user(db: Session, user_in: UsuarioCreate):
     hashed_pwd = get_password_hash(user_in.password)
     db_user = Usuario(
         username=user_in.username,
+        email=user_in.email,
         hashed_password=hashed_pwd,
         is_active=True
     )

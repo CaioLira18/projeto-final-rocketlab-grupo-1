@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import cliente_router, produto_router, pedido_router, dashboard_router, auth_router, suporte_router, export_router
+from app.routes import cliente_router, produto_router, pedido_router, dashboard_router, auth_router, suporte_router, export_router, chat_router
 
 app = FastAPI(
     title="RocketLab API",
@@ -15,6 +15,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Total-Count"],  # ← adicionar isso
 )
 
 # Registra o router de autenticação (público) primeiro
@@ -27,6 +28,7 @@ app.include_router(pedido_router)
 app.include_router(dashboard_router)
 app.include_router(suporte_router)
 app.include_router(export_router)
+app.include_router(chat_router)
 
 
 

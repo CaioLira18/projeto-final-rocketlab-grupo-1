@@ -48,3 +48,4 @@ class Cliente360(BaseGold):
     eventos_pageview = Column(Integer)
     faixa_valor_cliente = Column(String)
     cliente_ativo_90d = Column(Boolean)
+    ja_tratada = Column(Boolean, default=True)

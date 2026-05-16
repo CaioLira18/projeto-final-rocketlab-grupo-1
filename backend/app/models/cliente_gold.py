@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from bd.database import BaseGold
 
 class ClienteGold(BaseGold):
@@ -20,3 +20,4 @@ class ClienteGold(BaseGold):
     pais_cliente = Column(String)
     origem_cliente = Column(String)
     idade_cliente = Column(Integer)
+    ja_tratada = Column(Boolean, default=True)

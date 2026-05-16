@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Column, Integer, String, Float, Date, Boolean
 from bd.database import BaseGold
 
 class VendasPeriodo(BaseGold):
@@ -20,6 +20,8 @@ class VendasPeriodo(BaseGold):
     total_itens = Column(Integer)
     receita_total = Column(Float)
     ticket_medio = Column(Float)
-    receita_entregue = Column(Float)
-    receita_cancelada = Column(Float)
-    receita_reembolsada = Column(Float)
+    receita_aprovados = Column(Float)
+    receita_recusados = Column(Float)
+    receita_processando = Column(Float)
+    receita_reembolsado = Column(Float)
+    ja_tratada = Column(Boolean, default=True)

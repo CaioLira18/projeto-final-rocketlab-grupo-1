@@ -14,5 +14,13 @@ class PedidoListItem(BaseModel):
     valor_pedido: Optional[float]
     metodo_pagamento: Optional[str]
     status_pedido: Optional[str]
+    data_prevista_entrega: Optional[date] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
+
+class PedidoCountResponse(BaseModel):
+    total: int
+    aprovados: int
+    recusados: int
+    reembolsados: int

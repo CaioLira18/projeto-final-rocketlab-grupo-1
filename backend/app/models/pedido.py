@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, select
+from sqlalchemy import Column, Integer, String, Float, Date, Boolean, select
 from sqlalchemy.orm import column_property
 from bd.database import Base
 from .cliente import Cliente
@@ -16,6 +16,8 @@ class Pedidos(Base):
     valor_pedido = Column(Float)
     metodo_pagamento = Column(String)
     status_pedido = Column(String)
+    data_prevista_entrega = Column(Date, nullable=True)
+    ja_tratada = Column(Boolean, default=False)
 
     nome_cliente = column_property(
         select(Cliente.nome_cliente)

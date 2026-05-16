@@ -17,8 +17,9 @@ class SuporteTicketItem(BaseModel):
     tempo_resolucao_horas: Optional[float] = None # Na gold ta exportando como int, mas faz mais sentido como float para calcular a média de tempo de resolução
     agente_suporte: Optional[str] = None
     status: str = "aberto"
+    ja_tratada: Optional[bool] = None
   
-    model_config = {"from_attributes": True} 
+    model_config = {"from_attributes": True}
 
 # Formata a resposta estatística de um produto específico.
 class SuporteMetricasProduto(BaseModel):

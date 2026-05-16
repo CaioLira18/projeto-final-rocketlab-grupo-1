@@ -111,6 +111,19 @@ class ProdutoCreate(BaseModel):
     fornecedor_produto: Optional[str] = Field(None, description="Fornecedor do produto")
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(True, description="Indica se o produto está ativo")
+    peso_kg_produto: Optional[float] = Field(None, description="Peso do produto em kg")
+
+    @field_validator("id_produto", mode="before")
+    @classmethod
+    def val_id_produto(cls, v):
+        if v is None:
+            return None
+        val_str = str(v).strip().upper()
+        if val_str == "":
+            return None
+        if not re.match(r"^PROD-\d{4}$", val_str):
+            raise ValueError("O código SKU deve seguir o formato padrão oficial: PROD-XXXX (onde X é um dígito de 0 a 9). Ex: PROD-0020")
+        return val_str
 
     @field_validator("nome_produto", mode="before")
     @classmethod
@@ -150,6 +163,7 @@ class ProdutoUpdate(BaseModel):
     fornecedor_produto: Optional[str] = Field(None, description="Fornecedor do produto")
     estoque_produto: Optional[int] = Field(None, description="Quantidade em estoque")
     produto_ativo: Optional[bool] = Field(None, description="Indica se o produto está ativo")
+    peso_kg_produto: Optional[float] = Field(None, description="Peso do produto em kg")
 
     @field_validator("nome_produto", mode="before")
     @classmethod
@@ -204,6 +218,7 @@ class ProdutoResponse(BaseModel):
     estoque_produto: Optional[int] = None
     produto_ativo: Optional[bool] = None
     faixa_preco: Optional[str] = None
+    ja_tratada: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 
@@ -215,6 +230,7 @@ class ProdutoMetricas(BaseModel):
     preco_produto: Optional[float] = None
     faixa_preco: Optional[str] = None
     estoque_produto: Optional[int] = None
+    produto_active: Optional[bool] = None  # vou remover, mas to colocando aq pra fins de teste
     produto_ativo: Optional[bool] = None
     fornecedor_produto: Optional[str] = None
     
@@ -229,6 +245,25 @@ class ProdutoMetricas(BaseModel):
     taxa_recomendacao: Optional[float] = None
     
     total_tickets: int = 0
+
+    # Campos Analíticos Avançados da Camada Gold
+    peso_kg_produto: Optional[float] = None
+    status_estoque_produto: Optional[str] = None
+    data_cadastro_produto: Optional[str] = None
+    data_primeira_venda: Optional[str] = None
+    data_ultima_venda: Optional[str] = None
+    pedidos_aprovados: Optional[int] = None
+    pedidos_recusados: Optional[int] = None
+    pedidos_processando: Optional[int] = None
+    pedidos_reembolsados: Optional[int] = None
+    tempo_medio_resolucao_produto: Optional[float] = None
+    total_eventos_produto: Optional[int] = None
+    total_sessoes_produto: Optional[int] = None
+    total_pageviews_produto: Optional[int] = None
+    total_add_carrinho_produto: Optional[int] = None
+    total_eventos_compra_produto: Optional[int] = None
+    status_comercial_produto: Optional[str] = None
+    produto_com_alto_volume_suporte: Optional[bool] = None
 
     model_config = {"from_attributes": True}
 

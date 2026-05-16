@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from bd.database import get_db
 from app.models import Usuario
-from app.schemas import TokenResponse, UsuarioCreate, UsuarioResponse
+from app.schemas import TokenResponse, UsuarioCreate, UsuarioResponse, UsuarioLogin
 from app.services import (
     SECRET_KEY,
     ALGORITHM,
@@ -14,6 +14,7 @@ from app.services import (
     create_access_token,
     create_user,
     get_user_by_username,
+    get_user_by_email,
 )
 
 router = APIRouter(prefix="/auth", tags=["Autenticação"])
@@ -58,16 +59,22 @@ def registrar_usuario(user_in: UsuarioCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Nome de usuário já cadastrado",
         )
+    user_email = get_user_by_email(db, user_in.email)
+    if user_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="E-mail já cadastrado",
+        )
     return create_user(db, user_in)
 
 
 @router.post("/login", response_model=TokenResponse)
-def login_json(user_in: UsuarioCreate, db: Session = Depends(get_db)):
-    user = authenticate_user(db, user_in.username, user_in.password)
+def login_json(user_in: UsuarioLogin, db: Session = Depends(get_db)):
+    user = authenticate_user(db, user_in.email, user_in.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuário ou senha incorretos",
+            detail="E-mail ou senha incorretos",
         )
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}

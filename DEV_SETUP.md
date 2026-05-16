@@ -101,3 +101,24 @@ O frontend estará rodando e sincronizado (HMR) localmente. Normalmente disponí
 
 ---
 
+## ☁️ Integração com Databricks (Upload & Download)
+Nosso backend possui uma comunicação de via de mão dupla através da API REST com o Unity Catalog do Databricks:
+
+- **Upload (`bd/upload_to_databricks.py`)**: Extrai os dados operacionais da base transacional local (Silver) e os envia para a Landing Zone do Databricks. É lá na nuvem que ocorre o **retratamento de dados**, onde ocorrem as transformações pesadas, agregações e a modelagem do Star Schema.
+- **Download (`bd/download_from_databricks.py`)**: Baixa os arquivos consolidados e processados (Camada Gold) pelo Databricks. Ele **atualiza os dados Gold e o banco de dados analítico local (`app_gold.db`)**, o que garante a performance no carregamento de nossos Dashboards.
+
+### ⚙️ Como Configurar a Integração Databricks
+1. Acesse o seu workspace do Databricks e gere um **Token de Acesso Pessoal (PAT)** (em *User Settings* > *Developer* > *Access tokens*).
+2. Obtenha a **URL do Workspace** (Host), por exemplo: `https://adb-12345678.azuredatabricks.net`.
+3. Navegue até o diretório `backend`, crie ou edite o arquivo `.env` (baseado no `.env.example`) e configure as variáveis principais:
+   ```env
+   DATABRICKS_HOST="https://adb-<seu-id>.azuredatabricks.net"
+   DATABRICKS_TOKEN="dapi..."
+   DATABRICKS_DEST_DIR="/Volumes/stack_overgol/default/landing/"
+   DATABRICKS_GOLD_DIR="/Volumes/stack_overgol/default/gold/"
+   ```
+4. No seu terminal, dentro da pasta `backend` (com o ambiente virtual ativado), você pode rodar os scripts de integração manualmente:
+   - Para enviar dados para o retratamento: `python bd/upload_to_databricks.py`
+   - Para receber e atualizar o banco analítico (Gold): `python bd/download_from_databricks.py`
+
+---
