@@ -347,6 +347,14 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 
 ---
 
+## 👥 Membros do Grupo
+
+| Nome | GitHub |
+|------|--------|
+| Caio Ferreira | [@CaioLira18](https://github.com/CaioLira18) |
+
+---
+
 ## 🔗 Links Úteis
 
 - [📄 Documentação Completa — Fluxo de Dados](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing)
