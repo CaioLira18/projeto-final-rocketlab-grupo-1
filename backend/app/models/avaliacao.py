@@ -19,7 +19,7 @@ class FatoAvaliacoes(Base):
     data_avaliacao = Column(String, nullable=True)
 
     nome_cliente = column_property(
-        lambda: select(Cliente.nome_cliente)
+        select(Cliente.nome_cliente)
         .where(Cliente.id_cliente == FatoSuporte.id_cliente)
         .correlate_except(Cliente)
         .scalar_subquery()
