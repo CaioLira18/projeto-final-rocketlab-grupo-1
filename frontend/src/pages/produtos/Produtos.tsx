@@ -201,7 +201,7 @@ export function Produtos() {
 
 function LoadingState() {
   return (
-    <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4">
+    <div className="min-h-75 flex flex-col items-center justify-center space-y-4">
       <Loader2 className="h-10 w-10 text-secondary animate-spin" />
       <p className="text-body-2 text-gray-500">Buscando métricas consolidando dados operacionais e analíticos...</p>
     </div>
@@ -210,7 +210,7 @@ function LoadingState() {
 
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
-    <div className="min-h-[300px] flex flex-col items-center justify-center p-6 bg-error-50 rounded-xl border border-error-100 max-w-2xl mx-auto text-center space-y-4">
+    <div className="min-h-75 flex flex-col items-center justify-center p-6 bg-error-50 rounded-xl border border-error-100 max-w-2xl mx-auto text-center space-y-4">
       <AlertCircle className="h-12 w-12 text-error" />
       <div>
         <h3 className="text-h3 text-error-500 font-bold">Falha na Comunicação</h3>

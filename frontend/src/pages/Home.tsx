@@ -183,7 +183,7 @@ export const Home = () => {
       {/* Grid de KPIs Básicos (Cartões Premium) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* KPI 1: Receita Total */}
-        <div className="bg-gradient-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+        <div className="bg-linear-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
           <div className="space-y-2">
             <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Receita Total</span>
             <h2 className="text-h2 text-primary font-bold">{formatCurrency(data?.totalRevenue)}</h2>
@@ -198,7 +198,7 @@ export const Home = () => {
         </div>
 
         {/* KPI 2: Volume de Pedidos */}
-        <div className="bg-gradient-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+        <div className="bg-linear-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
           <div className="space-y-2">
             <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Volume de Pedidos</span>
             <h2 className="text-h2 text-gray-800 font-bold">{formatNumber(data?.totalSales)} <span className="text-caption font-normal text-gray-500">un</span></h2>
@@ -213,7 +213,7 @@ export const Home = () => {
         </div>
 
         {/* KPI 3: Base de Clientes */}
-        <div className="bg-gradient-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+        <div className="bg-linear-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
           <div className="space-y-2">
             <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Clientes Cadastrados</span>
             <h2 className="text-h2 text-gray-800 font-bold">{formatNumber(data?.totalCustomers)} <span className="text-caption font-normal text-gray-500">base</span></h2>
@@ -228,7 +228,7 @@ export const Home = () => {
         </div>
 
         {/* KPI 4: Ticket Médio */}
-        <div className="bg-gradient-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+        <div className="bg-linear-to-br from-white to-gray-50/10 rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
           <div className="space-y-2">
             <span className="text-caption text-gray-400 uppercase font-bold tracking-wider">Ticket Médio Geral</span>
             <h2 className="text-h2 text-gray-800 font-bold">{formatCurrency(data?.averageOrderValue)}</h2>
@@ -346,7 +346,7 @@ export const Home = () => {
             {data?.categorySales.map((item, index) => (
               <div key={index} className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: COLORS_CATEGORY[index % COLORS_CATEGORY.length] }} />
-                <span className="truncate max-w-[100px] font-semibold">{item.categoria}</span>
+                <span className="truncate max-w-25 font-semibold">{item.categoria}</span>
                 <span className="text-gray-400">({formatCurrency(item.receita).split(",")[0]})</span>
               </div>
             ))}
