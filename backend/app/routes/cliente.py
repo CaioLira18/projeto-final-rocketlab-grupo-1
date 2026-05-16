@@ -163,7 +163,7 @@ def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
     """
     return get_cliente_historico(db, cliente_id)
 
-# ROTA 360 — deve ficar ANTES de /{cliente_id} para o roteamento do FastAPI
+# ROTA 360 - deve ficar ANTES de /{cliente_id} para o roteamento do FastAPI
 @router.get("/360/{cliente_id}", response_model=Cliente360Response, summary="Visão 360 do cliente (camada Gold)")
 def buscar_cliente_360(
     cliente_id: str,

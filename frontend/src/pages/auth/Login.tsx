@@ -44,18 +44,18 @@ export function Login() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] select-none">
       
-      <div className="w-full md:w-1/2 bg-[#0B1120] text-white p-8 md:p-10 flex flex-col justify-between min-h-[340px] md:min-h-screen">
+      <div className="w-full md:w-1/2 bg-[#0B1120] text-white p-8 md:p-10 flex flex-col justify-between min-h-85 md:min-h-screen">
         <div className="text-subtitle-1 font-heading font-bold tracking-wide">
           Stack OverGol
         </div>
 
-        <div className="max-w-[480px] my-auto space-y-4">
+        <div className="max-w-120 my-auto space-y-4">
           <h1 className="text-h1 md:text-[40px] font-heading font-bold leading-tight">
             Uma única visão de cliente.<br />
             Para todos os times.
           </h1>
           <p className="text-body-2 text-gray-400 leading-relaxed font-sans">
-            CRM 360 com dados unificados de clientes, pedidos, produtos e suporte — potencializado por um agente de IA conversacional.
+            CRM 360 com dados unificados de clientes, pedidos, produtos e suporte - potencializado por um agente de IA conversacional.
           </p>
         </div>
 
@@ -64,8 +64,8 @@ export function Login() {
         </div>
       </div>
 
-      <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-16 min-h-[500px]">
-        <div className="w-full max-w-[380px] flex flex-col">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-16 min-h-125">
+        <div className="w-full max-w-95 flex flex-col">
           
           <div className="mb-8">
             <h2 className="text-h2 text-gray-900 font-heading font-bold tracking-tight">

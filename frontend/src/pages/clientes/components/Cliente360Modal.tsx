@@ -67,28 +67,28 @@ interface Cliente360ModalProps {
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function fmt(value: string | null | undefined) {
-  if (!value) return "—"
+  if (!value) return "-"
   const [year, month, day] = value.split("-")
   return `${day}/${month}/${year}`
 }
 
 function fmtMoney(value: number | null | undefined) {
-  if (value == null) return "—"
+  if (value == null) return "-"
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
 }
 
-function fmtNum(value: number | null | undefined, fallback = "—") {
+function fmtNum(value: number | null | undefined, fallback = "-") {
   if (value == null) return fallback
   return value.toLocaleString("pt-BR")
 }
 
 function fmtPct(value: number | null | undefined) {
-  if (value == null) return "—"
+  if (value == null) return "-"
   return `${(value * 100).toFixed(0)}%`
 }
 
 function Stars({ value }: { value: number | undefined | null }) {
-  if (value == null) return <span className="text-gray-400 text-sm">—</span>
+  if (value == null) return <span className="text-gray-400 text-sm">-</span>
   const rounded = Math.round(value * 2) / 2
   return (
     <span className="flex items-center gap-1">
@@ -243,11 +243,11 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
               <section>
                 <SectionTitle icon={User} label="Informações Pessoais" />
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <StatCard icon={Mail}     label="E-mail"        value={d.email_cliente     ?? "—"} accent="blue" />
-                  <StatCard icon={Phone}    label="Telefone"      value={d.telefone_cliente  ?? "—"} accent="blue" />
-                  <StatCard icon={User}     label="Gênero / Idade" value={`${d.genero_cliente ?? "—"} · ${d.idade_cliente ?? "—"} anos`} accent="purple" />
-                  <StatCard icon={MapPin}   label="Localização"   value={`${d.cidade_cliente ?? "—"}, ${d.estado_cliente ?? "—"}`} sub={d.pais_cliente} accent="teal" />
-                  <StatCard icon={Globe}    label="Origem"        value={d.origem_cliente    ?? "—"} accent="teal" />
+                  <StatCard icon={Mail}     label="E-mail"        value={d.email_cliente     ?? "-"} accent="blue" />
+                  <StatCard icon={Phone}    label="Telefone"      value={d.telefone_cliente  ?? "-"} accent="blue" />
+                  <StatCard icon={User}     label="Gênero / Idade" value={`${d.genero_cliente ?? "-"} · ${d.idade_cliente ?? "-"} anos`} accent="purple" />
+                  <StatCard icon={MapPin}   label="Localização"   value={`${d.cidade_cliente ?? "-"}, ${d.estado_cliente ?? "-"}`} sub={d.pais_cliente} accent="teal" />
+                  <StatCard icon={Globe}    label="Origem"        value={d.origem_cliente    ?? "-"} accent="teal" />
                   <StatCard icon={Calendar} label="Cadastro"      value={fmt(d.data_cadastro_cliente)} accent="blue" />
                 </div>
               </section>
@@ -260,7 +260,7 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
                   <StatCard icon={TrendingUp}   label="Receita Total"         value={fmtMoney(d.receita_total_cliente)} accent="green" />
                   <StatCard icon={TrendingUp}   label="Ticket Médio"          value={fmtMoney(d.ticket_medio_cliente)}  accent="green" />
                   <StatCard icon={Package}      label="Itens Comprados"       value={fmtNum(d.total_itens_comprados)}  accent="blue" />
-                  <StatCard icon={Clock}        label="Recência"              value={d.recencia_dias != null ? `${d.recencia_dias} dias` : "—"} sub={`Última compra: ${fmt(d.data_ultima_compra)}`} accent="amber" />
+                  <StatCard icon={Clock}        label="Recência"              value={d.recencia_dias != null ? `${d.recencia_dias} dias` : "-"} sub={`Última compra: ${fmt(d.data_ultima_compra)}`} accent="amber" />
                   <StatCard icon={Calendar}     label="1ª Compra"             value={fmt(d.data_primeira_compra)}      accent="blue" />
                 </div>
 
@@ -295,7 +295,7 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <StatCard icon={TicketCheck}   label="Total de Tickets"       value={fmtNum(d.total_tickets)}                                     accent="purple" />
                   <StatCard icon={TicketCheck}   label="Abertos / Fechados"     value={`${fmtNum(d.tickets_abertos)} / ${fmtNum(d.tickets_fechados)}`} accent="rose"   />
-                  <StatCard icon={Clock}         label="Tempo Médio Resolução"  value={d.tempo_medio_resolucao_horas != null ? `${d.tempo_medio_resolucao_horas.toFixed(1)}h` : "—"} accent="amber" />
+                  <StatCard icon={Clock}         label="Tempo Médio Resolução"  value={d.tempo_medio_resolucao_horas != null ? `${d.tempo_medio_resolucao_horas.toFixed(1)}h` : "-"} accent="amber" />
                   <StatCard icon={Star}          label="Nota Média Atendimento" value={<Stars value={d.nota_media_atendimento} />}                   accent="amber" />
                   <StatCard icon={Calendar}      label="Último Ticket"          value={(d.data_ultimo_ticket)}                                    accent="blue"   />
                 </div>
@@ -307,7 +307,7 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <StatCard icon={Star}          label="Total de Avaliações"  value={fmtNum(d.total_avaliacoes)}               accent="amber" />
                   <StatCard icon={Star}          label="Nota Média Produto"   value={<Stars value={d.nota_media_produto} />}    accent="amber" />
-                  <StatCard icon={TrendingUp}    label="NPS Médio"            value={d.nps_medio_cliente != null ? d.nps_medio_cliente.toFixed(1) : "—"} accent="green" />
+                  <StatCard icon={TrendingUp}    label="NPS Médio"            value={d.nps_medio_cliente != null ? d.nps_medio_cliente.toFixed(1) : "-"} accent="green" />
                   <StatCard icon={TrendingUp}    label="Taxa de Recomendação" value={fmtPct(d.taxa_recomendacao_cliente)}       accent="green" />
                   <StatCard icon={Calendar}      label="Última Avaliação"     value={fmt(d.data_ultima_avaliacao)}              accent="blue"  />
                 </div>
@@ -319,7 +319,7 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <StatCard icon={Activity}      label="Total de Sessões"       value={fmtNum(d.total_sessoes)}   accent="teal" />
                   <StatCard icon={Activity}      label="Total de Eventos"       value={fmtNum(d.total_eventos)}   accent="teal" />
-                  <StatCard icon={Clock}         label="Tempo Médio na Página"  value={d.tempo_medio_pagina_seg != null ? `${d.tempo_medio_pagina_seg.toFixed(0)}s` : "—"} accent="blue" />
+                  <StatCard icon={Clock}         label="Tempo Médio na Página"  value={d.tempo_medio_pagina_seg != null ? `${d.tempo_medio_pagina_seg.toFixed(0)}s` : "-"} accent="blue" />
                   <StatCard icon={ShoppingCart}  label="Eventos de Compra"      value={fmtNum(d.eventos_compra)}  accent="green" />
                   <StatCard icon={ShoppingCart}  label="Add ao Carrinho"        value={fmtNum(d.eventos_add_carrinho)} accent="amber" />
                   <StatCard icon={Eye}           label="Page Views"             value={fmtNum(d.eventos_pageview)} accent="purple" />
