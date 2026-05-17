@@ -66,9 +66,6 @@ cp .env.example .env
 Com o ambiente ativado e as dependências instaladas, crie a estrutura do banco e popule os dados a partir dos arquivos CSV locais na pasta `data/`:
 
 ```bash
-# Executa as migrações do Alembic para estruturar o banco de dados (SQLite)
-alembic upgrade head
-
 # Executa o script de seed para popular todas as tabelas (Dimensões e Fatos)
 python bd/seed.py
 ```
