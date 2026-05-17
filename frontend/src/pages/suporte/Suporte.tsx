@@ -210,6 +210,7 @@ export function Suporte() {
         })
         if (!res.ok) return
         const data = await res.json()
+        console.log(data)
         setKpis({
           abertos: data.abertos ?? 0,
           resolvidos: data.resolvidos ?? 0,
@@ -253,6 +254,7 @@ export function Suporte() {
         if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`)
 
         const data = await res.json()
+        console.log(data)
         const lista = Array.isArray(data) ? data : data.tickets ?? data.items ?? []
         const totalHeader = res.headers.get("X-Total-Count")
         
