@@ -177,6 +177,62 @@ POST /auth/login
 }
 ```
 
+> O endpoint `POST /auth/register` é público e sempre cria o usuário com a role padrão `operador_suporte`. Mudanças de role devem ser feitas por um `admin` (futuramente via área administrativa).
+
+---
+
+## 🛡️ Permissões e Roles (RBAC)
+
+O sistema usa Role-Based Access Control aplicado em duas camadas:
+
+- **Backend:** dependências `require_*` em `backend/app/routes/dependencies.py` plugadas em cada router via `Depends(...)`. A classe `RoleChecker` (em `backend/app/routes/auth.py`) faz a verificação e libera `admin` automaticamente por curto-circuito.
+- **Frontend:** hook `usePermission()` em `frontend/src/hooks/usePermission.ts` que retorna `can(capability)`. Usado para esconder botões, esconder itens do menu lateral e redirecionar rotas inacessíveis.
+
+A matriz do frontend (capacidades) **deve permanecer em sincronia** com a matriz do backend (roles permitidas por dependência). Se mudar uma, atualize a outra.
+
+### 👥 Roles disponíveis
+
+| Role | Responsabilidade |
+|------|------------------|
+| `admin` | Administrador do sistema. Acesso irrestrito (bypass interno do `RoleChecker`). Único papel autorizado a gerenciar usuários. |
+| `gerente_comercial` | Gestão de vendas e relacionamento. Acompanha dashboard, clientes (incluindo visão 360), pedidos e suporte. Pode exportar dados em CSV. |
+| `analista_crm` | Análise de comportamento do cliente. Foco em clientes (incluindo visão 360), suporte e pedidos. Não exporta dados sensíveis. |
+| `analista_operacoes` | Acompanhamento operacional de pedidos e catálogo. Vê dashboard, clientes (sem 360), pedidos e produtos. |
+| `gerente_produtos` | Dono do catálogo. Único papel (fora `admin`) que cria/edita/remove produtos. Pode exportar dados de produtos. |
+| `operador_suporte` | Atendimento de tickets. Acessa suporte, clientes, pedidos e produtos (leitura) para contextualizar atendimentos. Não vê dashboard. |
+
+### 📊 Matriz de permissões
+
+Legenda: ✅ acesso · — sem acesso
+
+| Recurso | `admin` | `gerente_comercial` | `analista_crm` | `analista_operacoes` | `gerente_produtos` | `operador_suporte` |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `GET /dashboard/kpis` | ✅ | ✅ | ✅ | ✅ | ✅ | — |
+| `GET /clientes` (listar / buscar / histórico) | ✅ | ✅ | ✅ | ✅ | — | ✅ |
+| `GET /clientes/360/{id}` | ✅ | ✅ | ✅ | — | — | — |
+| `GET /pedidos` (listar / count) | ✅ | ✅ | ✅ | ✅ | — | ✅ |
+| `GET /produtos` / `GET /produtos/metricas` | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| `POST` / `PUT` / `DELETE /produtos` | ✅ | — | — | — | ✅ | — |
+| `GET /suporte/*` | ✅ | ✅ | ✅ | — | — | ✅ |
+| `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | — | — | ✅ | — |
+| `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `POST /auth/register` (cadastro público de novo usuário) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+> `POST /auth/register` permanece **público** (qualquer pessoa pode se cadastrar) porque é a forma usada pela tela `/register` do frontend. A role criada é sempre `operador_suporte`; promoção para outras roles depende de intervenção manual de um `admin`.
+
+### 🌱 Usuários seed por role
+
+Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. A senha de cada um segue o padrão **primeiro nome + `123`** (ex.: `lucas123`, `ana123`).
+
+| Role | E-mail |
+|------|--------|
+| `admin` | `admin@stackovergol.com` |
+| `gerente_comercial` | `lucasbarros@stackovergol.com` |
+| `analista_crm` | `anajulia@stackovergol.com` |
+| `analista_operacoes` | `gabrielsilva@stackovergol.com` |
+| `gerente_produtos` | `heloisacunha@stackovergol.com` |
+| `operador_suporte` | `arthurmendes@stackovergol.com` |
+
 ---
 
 ### 👤 Clientes — `/clientes`
