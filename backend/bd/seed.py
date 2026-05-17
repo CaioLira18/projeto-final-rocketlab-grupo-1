@@ -51,21 +51,29 @@ def parse_bool(val):
 
 
 def parse_datetime_obj(val):
-    """Converte data e hora operacionais (com T ou milissegundos) em datetime."""
+    """Converte strings em datetime."""
     if pd.isna(val) or val is None or val == "":
         return None
+
     try:
         val_str = str(val).strip()
+
         if "T" in val_str:
             val_str = val_str.replace("T", " ")
+
         if "." in val_str:
             val_str = val_str.split(".")[0]
-        
+
+        if "/" in val_str:
+            return datetime.strptime(val_str, "%d/%m/%Y %H:%M:%S")
+
         if " " in val_str:
             return datetime.strptime(val_str, "%Y-%m-%d %H:%M:%S")
-        else:
-            return datetime.strptime(val_str, "%Y-%m-%d")
-    except Exception:
+
+        return datetime.strptime(val_str, "%Y-%m-%d")
+
+    except Exception as e:
+        print(f"Erro ao converter datetime: {val} -> {e}")
         return None
 
 
