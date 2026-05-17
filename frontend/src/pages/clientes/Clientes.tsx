@@ -350,20 +350,20 @@ export function Clientes() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-100">
+                <tr className="bg-gray-50 border-b border-gray-100">
                   {TABLE_COLS.map(col => (
-                    <th key={col} className="px-4 py-3 text-caption font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                    <th key={col} className="px-6 py-4 text-caption font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-100">
                 {isLoading ? (
                   Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                    <tr key={i} className="border-b border-gray-50">
+                    <tr key={i}>
                       {Array.from({ length: TABLE_COLS.length }).map((_, j) => (
-                        <td key={j} className="px-4 py-3">
+                        <td key={j} className="px-6 py-4">
                           <div className="h-4 bg-gray-100 rounded animate-pulse w-24" />
                         </td>
                       ))}
@@ -371,35 +371,35 @@ export function Clientes() {
                   ))
                 ) : clientes.length === 0 ? (
                   <tr>
-                    <td colSpan={TABLE_COLS.length} className="px-4 py-12 text-center text-body-2 text-gray-400">
+                    <td colSpan={TABLE_COLS.length} className="px-6 py-12 text-center text-body-2 text-gray-400">
                       Nenhum cliente encontrado para os filtros aplicados.
                     </td>
                   </tr>
                 ) : (
                   clientes.map(c => (
-                    <tr key={c.id_cliente} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs text-gray-500">{c.id_cliente}</td>
-                      <td className="px-4 py-3 text-body-2 font-semibold text-dark whitespace-nowrap">
+                    <tr key={c.id_cliente} className="hover:bg-gray-50/50 transition-colors duration-150 text-body-2 text-gray-700">
+                      <td className="px-6 py-4 font-mono text-xs text-gray-500">{c.id_cliente}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
                         {c.nome_cliente} {c.sobrenome_cliente}
                       </td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600">{c.email_cliente}</td>
-                      <td className="px-4 py-3 text-body-2 text-gray-500 whitespace-nowrap">{c.telefone_cliente}</td>
-                      <td className="px-4 py-3 text-body-2 text-gray-500 text-center">
+                      <td className="px-6 py-4 text-gray-600">{c.email_cliente}</td>
+                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{c.telefone_cliente}</td>
+                      <td className="px-6 py-4 text-gray-500 text-center">
                         {c.ramal_cliente ?? <span className="text-gray-300">-</span>}
                       </td>
-                      <td className="px-4 py-3"><GenderBadge g={c.genero_cliente} /></td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600 text-center">{c.idade ?? "-"}</td>
-                      <td className="px-4 py-3 text-body-2 text-gray-500 whitespace-nowrap">
+                      <td className="px-6 py-4"><GenderBadge g={c.genero_cliente} /></td>
+                      <td className="px-6 py-4 text-gray-600 text-center">{c.idade ?? "-"}</td>
+                      <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
                         {formatDate(c.data_nascimento_cliente)}
                       </td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600">{c.cidade_cliente}</td>
-                      <td className="px-4 py-3">
+                      <td className="px-6 py-4 text-gray-600">{c.cidade_cliente}</td>
+                      <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-600">
                           {c.estado_cliente}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-body-2 text-gray-500">{c.pais_cliente}</td>
-                      <td className="px-4 py-3">
+                      <td className="px-6 py-4 text-gray-500">{c.pais_cliente}</td>
+                      <td className="px-6 py-4">
                         {c.origem_cliente && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-secondary-50 text-secondary-700">
                             {c.origem_cliente}
@@ -408,7 +408,7 @@ export function Clientes() {
                       </td>
 
                       {/* ── Ações ── */}
-                      <td className="px-4 py-3">
+                      <td className="px-6 py-4">
                         <button
                           onClick={() =>
                             setModal360({
@@ -417,7 +417,7 @@ export function Clientes() {
                             })
                           }
                           title="Ver visão 360"
-                          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-colors"
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200 cursor-pointer"
                         >
                           <Eye className="w-4 h-4" />
                         </button>

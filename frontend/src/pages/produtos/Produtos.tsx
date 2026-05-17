@@ -315,15 +315,14 @@ function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTabl
           {products.map((prod) => (
             <tr
               key={prod.id_produto}
-              className="hover:bg-gray-50/50 transition-colors duration-150 text-body-2 text-gray-700"
-            >
-              <td className="px-6 py-4.5 font-semibold text-gray-500 font-mono tracking-tight">{prod.id_produto}</td>
-              <td className="px-6 py-4.5 font-semibold text-gray-900">{prod.nome_produto}</td>
-              <td className="px-6 py-4.5 text-gray-500">{prod.categoria_produto}</td>
-              <td className="px-6 py-4.5 font-medium text-gray-900">{formatCurrency(prod.preco_produto)}</td>
-              <td className="px-6 py-4.5 font-medium text-gray-700">{prod.estoque_produto ?? 0}</td>
-              <td className="px-6 py-4.5 font-medium text-gray-700">{formatNumber(prod.quantidade_vendida || 0)}</td>
-              <td className="px-6 py-4.5">
+              className="hover:bg-gray-50/50 transition-colors duration-150 text-body-2 text-gray-700">
+              <td className="px-6 py-4 font-semibold text-gray-500 font-mono tracking-tight">{prod.id_produto}</td>
+              <td className="px-6 py-4 font-semibold text-gray-900">{prod.nome_produto}</td>
+              <td className="px-6 py-4 text-gray-500">{prod.categoria_produto}</td>
+              <td className="px-6 py-4 font-medium text-gray-900">{formatCurrency(prod.preco_produto)}</td>
+              <td className="px-6 py-4 font-medium text-gray-700">{prod.estoque_produto ?? 0}</td>
+              <td className="px-6 py-4 font-medium text-gray-700">{formatNumber(prod.quantidade_vendida || 0)}</td>
+              <td className="px-6 py-4">
                 {prod.nota_media !== null && prod.nota_media !== undefined ? (
                   <span className="inline-flex items-center gap-1 font-semibold text-gray-800">
                     {prod.nota_media.toFixed(1)}
@@ -333,7 +332,7 @@ function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTabl
                   <span className="text-gray-400 font-semibold bg-gray-100 px-2 py-0.5 rounded-md text-caption">N/A</span>
                 )}
               </td>
-              <td className="px-6 py-4.5 text-right">
+              <td className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-1.5">
                   <button
                     onClick={() => onViewDetails(prod)}

@@ -265,20 +265,20 @@ export function Pedidos() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-100">
+                <tr className="bg-gray-50 border-b border-gray-100">
                   {["Pedido ID", "Cliente", "Produto", "Data do Pedido", "Previsão de Entrega", "Valor", "Status"].map(h => (
-                    <th key={h} className="px-4 py-3 text-caption font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                    <th key={h} className="px-6 py-4 text-caption font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-100">
                 {isLoading ? (
                   Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                    <tr key={i} className="border-b border-gray-50">
+                    <tr key={i}>
                       {Array.from({ length: 7 }).map((_, j) => (
-                        <td key={j} className="px-4 py-3">
+                        <td key={j} className="px-6 py-4">
                           <div className="h-4 bg-gray-100 rounded animate-pulse w-24" />
                         </td>
                       ))}
@@ -286,24 +286,24 @@ export function Pedidos() {
                   ))
                 ) : pedidos.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-12 text-center text-body-2 text-gray-400">
+                    <td colSpan={7} className="px-6 py-12 text-center text-body-2 text-gray-400">
                       Nenhum pedido encontrado para os filtros aplicados.
                     </td>
                   </tr>
                 ) : (
                   pedidos.map(pedido => (
-                    <tr key={pedido.id_pedido} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3">
-                        <span className="text-body-2 font-semibold text-gray-700">
+                    <tr key={pedido.id_pedido} className="hover:bg-gray-50/50 transition-colors duration-150 text-body-2 text-gray-700">
+                      <td className="px-6 py-4">
+                        <span className="font-semibold text-gray-700">
                           #{pedido.id_pedido.slice(0, 8).toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_cliente ?? "-"}</td>
-                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_produto ?? "-"}</td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600">{formatDate(pedido.data_pedido as unknown as string)}</td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600">{formatDate(pedido.data_prevista_entrega as unknown as string)}</td>
-                      <td className="px-4 py-3 text-body-2 font-semibold text-dark">{formatCurrency(pedido.valor_pedido)}</td>
-                      <td className="px-4 py-3"><StatusBadge status={pedido.status_pedido} /></td>
+                      <td className="px-6 py-4 text-gray-700">{pedido.nome_cliente ?? "-"}</td>
+                      <td className="px-6 py-4 text-gray-700">{pedido.nome_produto ?? "-"}</td>
+                      <td className="px-6 py-4 text-gray-600">{formatDate(pedido.data_pedido as unknown as string)}</td>
+                      <td className="px-6 py-4 text-gray-600">{formatDate(pedido.data_prevista_entrega as unknown as string)}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">{formatCurrency(pedido.valor_pedido)}</td>
+                      <td className="px-6 py-4"><StatusBadge status={pedido.status_pedido} /></td>
                     </tr>
                   ))
                 )}
