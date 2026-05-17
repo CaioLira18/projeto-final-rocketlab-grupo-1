@@ -10,9 +10,9 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  Rocket,
 } from "lucide-react"
 import { useAuth } from "@/context"
-import { Button, Logo } from "@/components/ui"
 import { cn } from "@/utils/cn"
 
 const ROLE_LABELS: Record<string, string> = {
@@ -142,10 +142,7 @@ export function NavBar() {
           )}
         </div>
 
-        <Button
-          variant="ghost"
-          intent="error"
-          leftIcon={<LogOut />}
+        <button
           onClick={logout}
           className={cn(
             "flex items-center justify-center gap-2 rounded-lg text-body-2 font-medium text-error-300 hover:text-white hover:bg-error/10 border border-transparent hover:border-error-400/20 transition-all duration-200",

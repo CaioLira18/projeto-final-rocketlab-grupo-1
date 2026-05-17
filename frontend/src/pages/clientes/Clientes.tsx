@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { Users, UserPlus, Search, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
+import { Users, Search, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
 import { apiFetch } from "@/services"
 import { Button } from "@/components/ui"
 import Cliente360Modal from "./components/Cliente360Modal"

@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   DollarSign,
   RefreshCw,
-  Sparkles,
   ArrowUpRight,
   Layers,
   MapPin,

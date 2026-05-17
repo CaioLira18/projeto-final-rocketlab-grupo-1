@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import {
   X, User, ShoppingBag, Headphones, Star, Activity,
-  TrendingUp, Clock, Package, TicketCheck, MessageSquare,
+  TrendingUp, Clock, Package, TicketCheck,
   ShoppingCart, Eye, CheckCircle, XCircle, RefreshCw,
   Calendar, MapPin, Phone, Mail, Globe,
 } from "lucide-react"
