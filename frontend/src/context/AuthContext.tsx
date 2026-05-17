@@ -12,11 +12,18 @@ interface LoginResponse {
   token_type: string
 }
 
+interface RegisterPayload {
+  username: string
+  email: string
+  password: string
+}
+
 interface AuthContextType {
   user: Usuario | null
   isAuthenticated: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
+  register: (payload: RegisterPayload) => Promise<void>
   logout: () => void
 }
 
@@ -60,6 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // Registra um novo usuário usando a role padrão (operador_suporte definido no backend).
+  // Não autentica automaticamente; o fluxo redireciona para o login após sucesso.
+  const register = async ({ username, email, password }: RegisterPayload) => {
+    await apiFetch<Usuario>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ username, email, password }),
+    })
+  }
+
   const logout = () => {
     localStorage.removeItem("token")
     setUser(null)
@@ -72,6 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         isLoading,
         login,
+        register,
         logout,
       }}
     >
