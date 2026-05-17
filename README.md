@@ -392,5 +392,4 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 
 ## 🔗 Links Úteis
 
-- [📄 Documentação Completa — Fluxo de Dados](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing)
 - [📁 Google Drive do Projeto](https://drive.google.com/drive/folders/1Xl3bOmaR3oNsEva4D6Q_mMzl0KPIyVu6?usp=sharing)
