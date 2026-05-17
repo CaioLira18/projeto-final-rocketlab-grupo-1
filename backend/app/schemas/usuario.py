@@ -5,6 +5,7 @@ from typing import Optional
 class UsuarioBase(BaseModel):
     username: str
     email: str
+    role: str = "operador_suporte"
 
 
 class UsuarioCreate(UsuarioBase):

@@ -99,7 +99,7 @@
 
 ## 📊 Arquitetura e Fluxo de Dados
 
-A documentação completa e detalhada do fluxo de engenharia de dados (incluindo tratamento de colunas, modelagem e decisões técnicas) pode ser acessada na aba [Links Úteis](#-links-úteis).
+A documentação completa e detalhada do fluxo de engenharia de dados (incluindo tratamento de colunas, modelagem e decisões técnicas) está disponível em formato de arquivo pdf no repositório [Documentação Fluxo de Dados](https://github.com/CaioLira18/projeto-final-rocketlab-grupo-1/blob/90809d76200dff698bc9b25e354883304463a485/Documenta%C3%A7%C3%A3o%20Fluxo%20de%20Dados.pdf).
 
 O pipeline foi construído seguindo a **Arquitetura Medalhão**, garantindo governança, qualidade e alta performance no processamento analítico:
 
@@ -385,11 +385,11 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 
 | Nome | GitHub |
 |------|--------|
+| André Castro | [@andrecastrom06](https://github.com/andrecastrom06) |
 | Caio Ferreira | [@CaioLira18](https://github.com/CaioLira18) |
 
 ---
 
 ## 🔗 Links Úteis
 
-- [📄 Documentação Completa — Fluxo de Dados](https://docs.google.com/document/d/18yvL57PG_jbHkyGUdaTNTt7RniZP6ozEwQV4HjiGE98/edit?usp=sharing)
 - [📁 Google Drive do Projeto](https://drive.google.com/drive/folders/1Xl3bOmaR3oNsEva4D6Q_mMzl0KPIyVu6?usp=sharing)
