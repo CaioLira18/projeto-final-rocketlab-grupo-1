@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { apiFetch } from "@/services"
+import { Button } from "@/components/ui"
 import type { DashboardKPIs } from "@/types"
 import {
   TrendingUp,
@@ -146,13 +147,9 @@ export const Home = () => {
         </div>
         <h2 className="text-h2 font-heading text-gray-900 mb-2">Erro de Carregamento</h2>
         <p className="text-body-2 text-gray-500 max-w-md mb-6">{error}</p>
-        <button
-          onClick={() => fetchKPIs()}
-          className="px-5 py-2.5 bg-primary text-white text-caption font-semibold rounded-xl flex items-center gap-2 hover:bg-primary-400 transition-all shadow-sm cursor-pointer"
-        >
-          <RefreshCw className="h-4 w-4" />
+        <Button intent="primary" leftIcon={<RefreshCw />} onClick={() => fetchKPIs()}>
           Tentar Novamente
-        </button>
+        </Button>
       </div>
     )
   }
@@ -170,14 +167,15 @@ export const Home = () => {
             Acompanhamento integrado de vendas, receita consolidada, distribuição geográfica e segmentação de clientes.
           </p>
         </div>
-        <button
-          onClick={() => fetchKPIs(true)}
+        <Button
+          variant="ghost"
+          className="border border-gray-100 shadow-sm"
+          leftIcon={<RefreshCw className={refreshing ? "animate-spin text-primary" : "text-gray-400"} />}
           disabled={refreshing}
-          className="px-4 py-2.5 bg-white border border-gray-100 text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 hover:shadow-sm text-caption font-semibold rounded-xl flex items-center gap-2 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+          onClick={() => fetchKPIs(true)}
         >
-          <RefreshCw className={`h-4 w-4 text-gray-400 ${refreshing ? "animate-spin text-primary" : ""}`} />
           {refreshing ? "Sincronizando..." : "Sincronizar"}
-        </button>
+        </Button>
       </div>
 
       {/* Grid de KPIs Básicos (Cartões Premium) */}
