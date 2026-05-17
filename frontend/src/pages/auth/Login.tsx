@@ -118,9 +118,9 @@ export function Login() {
               disabled={isSubmitting}
               autoComplete="current-password"
               labelAction={
-                <span 
-                  onClick={() => alert("Funcionalidade de recuperação de senha em desenvolvimento.")}
-                  className="text-caption font-semibold text-action hover:underline cursor-pointer transition-all duration-200"
+                <span
+                  title="Entre em contato com o administrador do sistema"
+                  className="text-caption font-semibold text-gray-400 cursor-default"
                 >
                   Esqueci minha senha
                 </span>
