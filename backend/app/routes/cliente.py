@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/", summary="Lista clientes com filtros e paginação")
 def listar_clientes(
     id_cliente: Optional[str] = Query(None),
     nome: Optional[str] = Query(None),
@@ -38,6 +38,17 @@ def listar_clientes(
     limit: int = Query(50, ge=1, le=500),
     db: Session = Depends(get_db),
 ):
+    """
+    Lista clientes da base com filtros opcionais (nome, e-mail, gênero, estado,
+    origem, faixa de idade, ramal etc.) e paginação por `skip`/`limit`.
+
+    O parâmetro `busca` aplica match parcial em `nome`, `sobrenome` e `email`
+    simultaneamente, usado pelo campo de busca livre do frontend. Os filtros
+    de lista (`cidade`, `estado`, `genero`, `origem`) aceitam múltiplos valores.
+
+    Retorna `{ clientes: [...], total: N }`, onde `total` reflete a contagem
+    com os filtros aplicados (independente de paginação).
+    """
     clientes = list_clientes(
         db=db,
         id_cliente=id_cliente,
@@ -119,8 +130,13 @@ def listar_clientes(
     }
 
 
-@router.get("/teste")
+@router.get("/teste", summary="Diagnóstico interno do banco de clientes", include_in_schema=False)
 def teste(db: Session = Depends(get_db)):
+    """
+    Rota de diagnóstico: imprime a URL do banco conectado e retorna o primeiro
+    cliente cadastrado. Usada apenas em troubleshooting; oculta do schema
+    público.
+    """
     print(db.bind.url)
 
     from app.models import Cliente as ClienteModel
@@ -130,30 +146,32 @@ def teste(db: Session = Depends(get_db)):
     return cliente.__dict__
 
 
-@router.get("/{cliente_id}", response_model=ClienteResponse)
+@router.get("/{cliente_id}", response_model=ClienteResponse, summary="Busca um cliente pelo ID")
 def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    """
+    Retorna os dados cadastrais de um cliente específico (camada Silver).
+    Retorna 404 se o `cliente_id` não existir.
+    """
     return get_cliente_by_id(db, cliente_id)
 
 
-@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
+@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse, summary="Histórico de pedidos do cliente")
 def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
+    """
+    Retorna o histórico de pedidos do cliente: lista de pedidos com produto,
+    valor, status e datas. Usado pela tela de detalhe do cliente.
+    """
     return get_cliente_historico(db, cliente_id)
 
-# ── NOVA ROTA 360 — deve ficar ANTES de /{cliente_id} ─────────────────────
-@router.get("/360/{cliente_id}", response_model=Cliente360Response)
+# ROTA 360 - deve ficar ANTES de /{cliente_id} para o roteamento do FastAPI
+@router.get("/360/{cliente_id}", response_model=Cliente360Response, summary="Visão 360 do cliente (camada Gold)")
 def buscar_cliente_360(
     cliente_id: str,
     db: Session = Depends(get_db_gold),   # usa o banco gold
 ):
+    """
+    Retorna a visão 360 do cliente consolidada na camada Gold: LTV, recência,
+    NPS médio, ticket médio, total de tickets de suporte, engajamento digital
+    e demais métricas agregadas. Alimenta o modal de visão 360 do frontend.
+    """
     return get_cliente_360(db, cliente_id)
- 
- 
-# ── rotas existentes ───────────────────────────────────────────────────────
-@router.get("/{cliente_id}", response_model=ClienteResponse)
-def buscar_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    return get_cliente_by_id(db, cliente_id)
- 
- 
-@router.get("/{cliente_id}/historico", response_model=ClienteHistoricoResponse)
-def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
-    return get_cliente_historico(db, cliente_id)

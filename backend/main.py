@@ -32,11 +32,15 @@ app.include_router(chat_router)
 
 
 
-@app.get("/")
+@app.get("/", tags=["Sistema"], summary="Boas-vindas da API")
 def read_root():
+    """Endpoint público que retorna uma mensagem de boas-vindas. Útil para
+    verificar rapidamente se a API está respondendo na raiz."""
     return {"message": "Welcome to the RocketLab API!"}
 
 
-@app.get("/health")
+@app.get("/health", tags=["Sistema"], summary="Health check da API")
 def health_check():
+    """Health check usado para liveness/readiness probes. Retorna sempre
+    `{"status": "ok"}` quando o processo está respondendo."""
     return {"status": "ok"}

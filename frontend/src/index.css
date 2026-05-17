@@ -11,7 +11,7 @@
   --font-heading: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono:    ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 
-  /*   Escala tipográfica (Heading — IBM Plex Sans)   */
+  /*   Escala tipográfica (Heading - IBM Plex Sans)   */
   /* Heading 1 → 32px / Bold / lh 40px / ls -0.02em */
   --text-h1: 32px;
   --text-h1--line-height: 40px;
@@ -29,7 +29,7 @@
   --text-h3--line-height: 28px;
   --text-h3--font-weight: 600;
 
-  /*   Escala tipográfica (Body — Inter)   */
+  /*   Escala tipográfica (Body - Inter)   */
   /* Sub title 1 → 18px / Medium / lh 24px */
   --text-subtitle-1: 18px;
   --text-subtitle-1--line-height: 24px;
@@ -82,7 +82,7 @@
   --color-gray-800: #1F2937;
   --color-gray-900: #111827;
 
-  /* Primário — Marinho */
+  /* Primário - Marinho */
   --color-primary: #1A2B4C;
   --color-primary-50: #F0F4F8;
   --color-primary-100: #D9E2EC;
@@ -91,7 +91,7 @@
   --color-primary-400: #162541;
   --color-primary-500: #0E192B;
 
-  /* Secundário — Agente IA (Roxo) */
+  /* Secundário - Agente IA (Roxo) */
   --color-secondary: #7C3AED;
   --color-secondary-50: #F5F3FF;
   --color-secondary-100: #EDE9FE;

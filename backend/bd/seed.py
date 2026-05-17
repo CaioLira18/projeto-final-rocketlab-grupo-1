@@ -6,9 +6,7 @@ os bancos de dados SQLite do projeto (app_silver.db e app_gold.db) a partir
 dos arquivos CSV processados no pipeline de dados.
 """
 
-# ==============================================================================
-# 1. SETUP DE IMPORTS & CONFIGURAÇÃO DO AMBIENTE
-# ==============================================================================
+# ----------1. SETUP DE IMPORTS & CONFIGURAÇÃO DO AMBIENTE----------
 import os
 import sys
 import time
@@ -30,9 +28,7 @@ from app.models import (
 )
 
 
-# ==============================================================================
-# 2. FUNÇÕES AUXILIARES DE TRATAMENTO DE DADOS
-# ==============================================================================
+# ----------2. FUNÇÕES AUXILIARES DE TRATAMENTO DE DADOS----------
 def parse_date_obj(val):
     """Converte valores brutos de data em objetos datetime.date estruturados."""
     if pd.isna(val) or val is None or val == "":
@@ -101,9 +97,7 @@ def calculate_faixa_preco(price):
         return None
 
 
-# ==============================================================================
-# 3. MOTOR DE SEEDING POR BLOCOS (BULK INSERT)
-# ==============================================================================
+# ----------3. MOTOR DE SEEDING POR BLOCOS (BULK INSERT)----------
 def bulk_insert_in_chunks(db: Session, Model, records: list, batch_size=10000):
     """Insere registros no banco em blocos gerenciáveis de forma ultra veloz."""
     total = len(records)
@@ -119,9 +113,7 @@ def bulk_insert_in_chunks(db: Session, Model, records: list, batch_size=10000):
     print(f"Inserção na tabela '{Model.__tablename__}' concluída em {elapsed:.2f} segundos!")
 
 
-# ==============================================================================
-# 4. SCRIPT PRINCIPAL DE POPULAÇÃO DOS BANCOS (SEED)
-# ==============================================================================
+# ----------4. SCRIPT PRINCIPAL DE POPULAÇÃO DOS BANCOS (SEED)----------
 def seed_database():
     """Gerencia a criação e carga de dados nos dois bancos de dados independentes."""
     from bd.database import SessionGold
@@ -319,7 +311,7 @@ def seed_database():
             df_gold = pd.read_csv(filepath, encoding="utf-8-sig")
             df_gold.columns = [col.replace("\ufeff", "").strip() for col in df_gold.columns]
             
-            # 🔍 BLOCO CORRIGIDO: Usa o import global diretamente
+            # BLOCO CORRIGIDO: Usa o import global diretamente
             if tablename == "dm_cliente_360":
                 # Pega apenas as colunas mapeadas no SQLAlchemy usando o Cliente360 já importado globalmente
                 colunas_validas = [c.name for c in Cliente360.__table__.columns]
@@ -355,16 +347,16 @@ def seed_database():
         )
         db.add(default_admin)
         db.commit()
-        print("👤 Usuário administrador criado com sucesso!")
-        print("   👉 Username: admin")
-        print("   👉 Email: admin@stackovergol.com")
-        print("   👉 Senha: admin123")
+        print("Usuario administrador criado com sucesso!")
+        print("   Username: admin")
+        print("   Email: admin@stackovergol.com")
+        print("   Senha: admin123")
 
         elapsed_total = time.time() - global_start
-        print(f"\n🎉 Sucesso! Ambos os bancos de dados populados em {elapsed_total:.2f} segundos!")
+        print(f"\nSucesso! Ambos os bancos de dados populados em {elapsed_total:.2f} segundos!")
 
     except Exception as e:
-        print(f"\n❌ Erro durante a população do banco de dados: {e}")
+        print(f"\nErro durante a populacao do banco de dados: {e}")
         db.rollback()
     finally:
         # Libera e encerra as sessões com segurança

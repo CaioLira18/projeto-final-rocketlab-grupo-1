@@ -38,7 +38,7 @@ const ORIGENS  = ["Web", "App", "Indicação"]
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function formatDate(value: string | null | undefined) {
-  if (!value) return "—"
+  if (!value) return "-"
   const [year, month, day] = value.split("-")
   return `${day}/${month}/${year}`
 }
@@ -230,7 +230,7 @@ export function Clientes() {
             <div>
               <p className="text-caption text-gray-500 font-medium">{title}</p>
               <p className={`text-h2 font-bold font-heading mt-1 ${valueClass}`}>
-                {value > 0 ? value.toLocaleString("pt-BR") : "—"}
+                {value > 0 ? value.toLocaleString("pt-BR") : "-"}
               </p>
             </div>
             <div className={`p-3 rounded-full ${iconClass}`}>
@@ -247,7 +247,7 @@ export function Clientes() {
         <div className="p-4 flex flex-wrap gap-3 border-b border-gray-100">
 
           {/* Busca Por ID Filtrando Instantaneamente */}
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-55">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
@@ -259,7 +259,7 @@ export function Clientes() {
           </div>
 
           {/* Busca por Nome/E-mail Filtrando Instantaneamente */}
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-55">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
@@ -308,7 +308,7 @@ export function Clientes() {
               onChange={e => setIdadeMin(e.target.value)}
               className="w-16 bg-transparent text-center outline-none placeholder-gray-400 text-dark [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
             />
-            <span className="text-gray-300 text-xs">—</span>
+            <span className="text-gray-300 text-xs">-</span>
             <input
               type="number" min={0} max={120} placeholder="até"
               value={idadeMax}
@@ -385,10 +385,10 @@ export function Clientes() {
                       <td className="px-4 py-3 text-body-2 text-gray-600">{c.email_cliente}</td>
                       <td className="px-4 py-3 text-body-2 text-gray-500 whitespace-nowrap">{c.telefone_cliente}</td>
                       <td className="px-4 py-3 text-body-2 text-gray-500 text-center">
-                        {c.ramal_cliente ?? <span className="text-gray-300">—</span>}
+                        {c.ramal_cliente ?? <span className="text-gray-300">-</span>}
                       </td>
                       <td className="px-4 py-3"><GenderBadge g={c.genero_cliente} /></td>
-                      <td className="px-4 py-3 text-body-2 text-gray-600 text-center">{c.idade ?? "—"}</td>
+                      <td className="px-4 py-3 text-body-2 text-gray-600 text-center">{c.idade ?? "-"}</td>
                       <td className="px-4 py-3 text-body-2 text-gray-500 whitespace-nowrap">
                         {formatDate(c.data_nascimento_cliente)}
                       </td>

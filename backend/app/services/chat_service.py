@@ -47,7 +47,7 @@ ALLOWED_TABLES: set[str] = {
 
 # Tokens SQL que nunca devem aparecer em uma query do agente.
 # Mesmo com a guarda "começa com SELECT", subqueries ou CTEs maliciosas
-# poderiam embutir esses comandos — bloqueamos por busca textual.
+# poderiam embutir esses comandos - bloqueamos por busca textual.
 _FORBIDDEN_SQL_TOKENS: tuple[str, ...] = (
     "INSERT", "UPDATE", "DELETE", "DROP", "ALTER",
     "CREATE", "ATTACH", "DETACH", "PRAGMA",

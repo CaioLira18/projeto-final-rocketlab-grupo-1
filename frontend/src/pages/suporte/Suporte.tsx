@@ -58,7 +58,7 @@ const formatDatetime = (d: string | null) => {
 // ── subcomponentes ─────────────────────────────────────────────────────────
 function LoadingState() {
   return (
-    <div className="min-h-[300px] flex flex-col items-center justify-center space-y-4">
+    <div className="min-h-75 flex flex-col items-center justify-center space-y-4">
       <Loader2 className="h-10 w-10 text-secondary animate-spin" />
       <p className="text-body-2 text-gray-500">Carregando tickets de suporte...</p>
     </div>
@@ -67,7 +67,7 @@ function LoadingState() {
 
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
-    <div className="min-h-[300px] flex flex-col items-center justify-center p-6 bg-error-50 rounded-xl border border-error-100 max-w-2xl mx-auto text-center space-y-4">
+    <div className="min-h-75 flex flex-col items-center justify-center p-6 bg-error-50 rounded-xl border border-error-100 max-w-2xl mx-auto text-center space-y-4">
       <AlertCircle className="h-12 w-12 text-error" />
       <div>
         <h3 className="text-h3 text-error-500 font-bold">Falha na Comunicação</h3>
@@ -124,7 +124,7 @@ function SelectFiltro({ opcoes, valor, onChange, placeholder }: { opcoes: string
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center justify-between gap-2 min-w-[160px] px-3 py-2 rounded-lg border text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-100
+        className={`flex items-center justify-between gap-2 min-w-40 px-3 py-2 rounded-lg border text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-100
           ${open ? "border-primary bg-primary-50/30" : "border-gray-200 bg-white hover:border-gray-300"}
           ${valor ? "text-primary font-medium" : "text-gray-500"}`}
       >
@@ -342,7 +342,7 @@ export function Suporte() {
             <KPICard title="Total de Tickets" value={formatNumber(kpis.abertos + kpis.resolvidos)} icon={Headphones} iconBg="bg-primary-50" iconColor="text-primary" />
             <KPICard title="Tickets Abertos" value={formatNumber(kpis.abertos)} icon={Clock} iconBg="bg-warning-50" iconColor="text-warning" />
             <KPICard title="Tickets Resolvidos" value={formatNumber(kpis.resolvidos)} icon={CheckCircle} iconBg="bg-success-50" iconColor="text-success" />
-            <KPICard title="Tempo Médio" value={kpis.tempoMedio !== null ? `${kpis.tempoMedio}h` : "—"} icon={Clock} iconBg="bg-secondary-50" iconColor="text-secondary" />
+            <KPICard title="Tempo Médio" value={kpis.tempoMedio !== null ? `${kpis.tempoMedio}h` : "-"} icon={Clock} iconBg="bg-secondary-50" iconColor="text-secondary" />
           </div>
 
           {/* ── Barra de filtros ── */}
@@ -420,7 +420,7 @@ export function Suporte() {
 
             {modoIdExato && (
               <p className="text-xs text-primary bg-primary-50/50 border border-primary-100 rounded-lg px-3 py-1.5">
-                Buscando por ID exato do ticket — outros filtros desativados.{" "}
+                Buscando por ID exato do ticket - outros filtros desativados.{" "}
                 <button onClick={() => handleInputChange("ticketId", "")} className="underline font-medium">Limpar ID</button>
               </p>
             )}
@@ -455,18 +455,18 @@ export function Suporte() {
                           <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.ticket_id}</td>
                           <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.id_cliente}</td>
                           <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.nome_cliente}</td>
-                          <td className="px-6 py-4 text-gray-600 whitespace-nowrap">{t.nome_produto ?? <span className="text-gray-300">—</span>}</td>
+                          <td className="px-6 py-4 text-gray-600 whitespace-nowrap">{t.nome_produto ?? <span className="text-gray-300">-</span>}</td>
                           <td className="px-6 py-4">
-                            {t.categoria_produto ? <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-600">{t.categoria_produto}</span> : <span className="text-gray-300">—</span>}
+                            {t.categoria_produto ? <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-600">{t.categoria_produto}</span> : <span className="text-gray-300">-</span>}
                           </td>
                           <td className="px-6 py-4">
-                            {t.tipo_problema ? <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-secondary-50 text-secondary-700">{t.tipo_problema}</span> : <span className="text-gray-300">—</span>}
+                            {t.tipo_problema ? <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-secondary-50 text-secondary-700">{t.tipo_problema}</span> : <span className="text-gray-300">-</span>}
                           </td>
                           <td className="px-6 py-4"><StatusBadge status={t.status} /></td>
-                          <td className="px-6 py-4 text-gray-600 whitespace-nowrap">{t.agente_suporte ?? <span className="text-gray-300">—</span>}</td>
-                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{formatDatetime(t.data_abertura) ?? <span className="text-gray-300">—</span>}</td>
-                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{formatDatetime(t.data_resolucao) ?? <span className="text-gray-300">—</span>}</td>
-                          <td className="px-6 py-4 text-gray-600 text-center">{t.tempo_resolucao_horas ?? <span className="text-gray-300">—</span>}</td>
+                          <td className="px-6 py-4 text-gray-600 whitespace-nowrap">{t.agente_suporte ?? <span className="text-gray-300">-</span>}</td>
+                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{formatDatetime(t.data_abertura) ?? <span className="text-gray-300">-</span>}</td>
+                          <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{formatDatetime(t.data_resolucao) ?? <span className="text-gray-300">-</span>}</td>
+                          <td className="px-6 py-4 text-gray-600 text-center">{t.tempo_resolucao_horas ?? <span className="text-gray-300">-</span>}</td>
                         </tr>
                       ))}
                     </tbody>

@@ -13,18 +13,18 @@ const STATUS_MAP: Record<string, { label: string; className: string }> = {
 }
 
 function formatCurrency(value: number | null) {
-  if (value == null) return "—"
+  if (value == null) return "-"
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
 }
 
 function formatDate(value: string | null) {
-  if (!value) return "—"
+  if (!value) return "-"
   const [year, month, day] = value.split("-")
   return `${day}/${month}/${year}`
 }
 
 function StatusBadge({ status }: { status: string | null }) {
-  if (!status) return <span className="text-gray-400">—</span>
+  if (!status) return <span className="text-gray-400">-</span>
   const config = STATUS_MAP[status] ?? { label: status, className: "bg-gray-100 text-gray-500 border border-gray-200" }
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-caption font-semibold ${config.className}`}>
@@ -170,7 +170,7 @@ export function Pedidos() {
       </div>
 
       {/*KPI cards*/}
-      <div className="grid grid-cols-1 sm: grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpiCards.map((card) => {
           const Icon = card.icon
           return (
@@ -194,7 +194,7 @@ export function Pedidos() {
 
         {/*Filtros*/}
         <div className="p-4 flex flex-wrap gap-3 border-b border-gray-100">
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-55">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
@@ -298,8 +298,8 @@ export function Pedidos() {
                           #{pedido.id_pedido.slice(0, 8).toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_cliente ?? "—"}</td>
-                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_produto ?? "—"}</td>
+                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_cliente ?? "-"}</td>
+                      <td className="px-4 py-3 text-body-2 text-dark">{pedido.nome_produto ?? "-"}</td>
                       <td className="px-4 py-3 text-body-2 text-gray-600">{formatDate(pedido.data_pedido as unknown as string)}</td>
                       <td className="px-4 py-3 text-body-2 text-gray-600">{formatDate(pedido.data_prevista_entrega as unknown as string)}</td>
                       <td className="px-4 py-3 text-body-2 font-semibold text-dark">{formatCurrency(pedido.valor_pedido)}</td>

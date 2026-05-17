@@ -2,9 +2,7 @@ import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Any
 
-# ==============================================================================
-# FUNÇÕES DE HIGIENIZAÇÃO (PADRÃO CAMADA SILVER DO DATABRICKS)
-# ==============================================================================
+# ----------FUNÇÕES DE HIGIENIZAÇÃO (PADRÃO CAMADA SILVER DO DATABRICKS)----------
 
 def clean_nome_produto(v: Any) -> Optional[str]:
     if v is None:
