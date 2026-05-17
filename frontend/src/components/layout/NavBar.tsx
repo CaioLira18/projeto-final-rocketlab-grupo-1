@@ -6,10 +6,10 @@ import {
   ShoppingCart,
   LifeBuoy,
   LogOut,
-  Rocket,
   Sparkles,
 } from "lucide-react"
 import { useAuth } from "@/context"
+import { Button, Logo } from "@/components/ui"
 import { cn } from "@/utils/cn"
 
 export function NavBar() {
@@ -27,17 +27,13 @@ export function NavBar() {
   return (
     <aside className="w-64 bg-primary text-white flex flex-col justify-between border-r border-primary-400 h-screen sticky top-0 select-none">
       <div className="p-6">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="bg-secondary p-2 rounded-lg text-white">
-            <Rocket className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-subtitle-1 text-white font-heading font-bold tracking-tight">
-              Stack OverGol
-            </h2>
-            <p className="text-caption text-gray-400">CRM RocketLab</p>
-          </div>
-        </div>
+        <NavLink
+          to="/"
+          aria-label="Ir para o Dashboard"
+          className="flex items-center justify-center mb-8 rounded-lg transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+        >
+          <Logo className="h-9 w-auto text-white" />
+        </NavLink>
 
         <nav className="space-y-1.5">
           {navItems.map((item) => {
@@ -82,13 +78,15 @@ export function NavBar() {
           </div>
         </div>
 
-        <button
+        <Button
+          variant="ghost"
+          intent="error"
+          leftIcon={<LogOut />}
           onClick={logout}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-body-2 font-medium text-error-300 hover:text-white hover:bg-error/10 border border-transparent hover:border-error-400/20 transition-all duration-200"
+          className="w-full text-error-300 font-medium hover:text-white hover:bg-error/10 border border-transparent hover:border-error-400/20"
         >
-          <LogOut className="h-4 w-4" />
-          <span>Sair da conta</span>
-        </button>
+          Sair da conta
+        </Button>
       </div>
     </aside>
   )
