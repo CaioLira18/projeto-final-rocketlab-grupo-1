@@ -98,7 +98,7 @@ def login_json(user_in: UsuarioLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="E-mail ou senha incorretos",
         )
-    access_token = create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username, "role": user.role})
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -110,3 +110,24 @@ def obter_perfil(current_user: Usuario = Depends(get_current_user)):
     verificar se o token ainda é válido.
     """
     return current_user
+
+
+class RoleChecker:
+    """
+    Dependência do FastAPI para verificar se o usuário autenticado possui
+    alguma das roles permitidas para o recurso.
+    """
+    def __init__(self, allowed_roles: list[str]):
+        self.allowed_roles = allowed_roles
+
+    def __call__(self, current_user: Usuario = Depends(get_current_user)) -> Usuario:
+        # Se for administrador do sistema (role 'admin'), tem acesso total irrestrito
+        if current_user.role == "admin":
+            return current_user
+            
+        if current_user.role not in self.allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Permissão negada. Apenas usuários com as seguintes roles podem acessar este recurso: {', '.join(self.allowed_roles)}",
+            )
+        return current_user

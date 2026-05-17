@@ -4,6 +4,7 @@ import { apiFetch } from "@/services"
 interface Usuario {
   username: string
   is_active: boolean
+  role: string
 }
 
 interface LoginResponse {

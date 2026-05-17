@@ -331,26 +331,82 @@ def seed_database():
             df_gold.to_sql(tablename, engine_gold, if_exists="append", index=False, chunksize=20000)
             print(f"Tabela Gold '{tablename}' populada com sucesso em {time.time() - start_gold:.2f} segundos!")
 
-        # 4. CRIAÇÃO DO USUÁRIO ADMINISTRADOR PADRÃO (SISTEMA OPERACIONAL)
-        print("\nCriando usuário administrador padrão para testes...")
+        # 4. CRIAÇÃO DOS USUÁRIOS PADRÃO COM DIFERENTES ROLES (PERMISSÕES)
+        print("\nCriando usuários padrão com diferentes roles para testes...")
         from app.models.usuario import Usuario
         from app.services.auth_service import get_password_hash
 
         db.query(Usuario).delete()
         db.commit()
 
+        # Usuário Administrador Geral
         default_admin = Usuario(
             username="admin",
             email="admin@stackovergol.com",
             hashed_password=get_password_hash("admin123"),
+            role="admin",
             is_active=True
         )
         db.add(default_admin)
+
+        # 1. Gerente Comercial
+        gerente_comercial = Usuario(
+            username="lucas_barros",
+            email="lucasbarros@stackovergol.com",
+            hashed_password=get_password_hash("lucas123"),
+            role="gerente_comercial",
+            is_active=True
+        )
+        db.add(gerente_comercial)
+
+        # 2. Analista de CRM
+        analista_crm = Usuario(
+            username="ana_julia",
+            email="anajulia@stackovergol.com",
+            hashed_password=get_password_hash("ana123"),
+            role="analista_crm",
+            is_active=True
+        )
+        db.add(analista_crm)
+
+        # 3. Analista de Operações
+        analista_operacoes = Usuario(
+            username="gabriel_silva",
+            email="gabrielsilva@stackovergol.com",
+            hashed_password=get_password_hash("gabriel123"),
+            role="analista_operacoes",
+            is_active=True
+        )
+        db.add(analista_operacoes)
+
+        # 4. Gerente de Produtos
+        gerente_produtos = Usuario(
+            username="heloisa_cunha",
+            email="heloisacunha@stackovergol.com",
+            hashed_password=get_password_hash("heloisa123"),
+            role="gerente_produtos",
+            is_active=True
+        )
+        db.add(gerente_produtos)
+
+        # 5. Operador de Suporte
+        operador_suporte = Usuario(
+            username="arthur_mendes",
+            email="arthurmendes@stackovergol.com",
+            hashed_password=get_password_hash("arthur123"),
+            role="operador_suporte",
+            is_active=True
+        )
+        db.add(operador_suporte)
+
         db.commit()
-        print("Usuario administrador criado com sucesso!")
-        print("   Username: admin")
-        print("   Email: admin@stackovergol.com")
-        print("   Senha: admin123")
+        print("Usuários criados com sucesso!")
+        print("   1. Admin -> Email: admin@stackovergol.com | Senha: admin123 | Role: admin")
+        print("   2. Gerente Comercial -> Email: lucasbarros@stackovergol.com | Senha: lucas123 | Role: gerente_comercial")
+        print("   3. Analista de CRM -> Email: anajulia@stackovergol.com | Senha: ana123 | Role: analista_crm")
+        print("   4. Analista de Operações -> Email: gabrielsilva@stackovergol.com | Senha: gabriel123 | Role: analista_operacoes")
+        print("   5. Gerente de Produtos -> Email: heloisacunha@stackovergol.com | Senha: heloisa123 | Role: gerente_produtos")
+        print("   6. Operador de Suporte -> Email: arthurmendes@stackovergol.com | Senha: arthur123 | Role: operador_suporte")
 
         elapsed_total = time.time() - global_start
         print(f"\nSucesso! Ambos os bancos de dados populados em {elapsed_total:.2f} segundos!")

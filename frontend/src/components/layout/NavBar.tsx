@@ -12,6 +12,15 @@ import {
 import { useAuth } from "@/context"
 import { cn } from "@/utils/cn"
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: "Administrador",
+  gerente_comercial: "Gerente Comercial",
+  analista_crm: "Analista de CRM",
+  analista_operacoes: "Analista de Operações",
+  gerente_produtos: "Gerente de Produtos",
+  operador_suporte: "Operador de Suporte",
+}
+
 export function NavBar() {
   const { user, logout } = useAuth()
 
@@ -78,7 +87,9 @@ export function NavBar() {
           </div>
           <div className="overflow-hidden">
             <p className="text-body-2-bold text-white truncate">{user?.username || "Usuário"}</p>
-            <p className="text-caption text-gray-400 truncate">Sessão Ativa</p>
+            <p className="text-caption text-gray-400 truncate">
+              {ROLE_LABELS[user?.role || ""] || user?.role || "Sessão Ativa"}
+            </p>
           </div>
         </div>
 
