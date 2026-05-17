@@ -359,7 +359,7 @@ export function Suporte() {
                   className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 disabled:opacity-40"
                 />
               </div>
-              <Button size="lg" intent="secondary" leftIcon={<Download className="h-5 w-5" />} onClick={exportCSV}>
+              <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={exportCSV}>
                 Exportar CSV
               </Button>
             </div>

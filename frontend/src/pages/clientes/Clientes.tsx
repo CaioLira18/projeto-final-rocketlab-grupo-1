@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Users, UserPlus, Search, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
 import { apiFetch } from "@/services"
+import { Button } from "@/components/ui"
 import Cliente360Modal from "./components/Cliente360Modal"
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
@@ -334,13 +335,9 @@ export function Clientes() {
           </label>
 
           {/* Exportar */}
-          <button
-            onClick={handleExportCSV}
-            className="h-10 px-4 flex items-center gap-2 rounded-lg border border-action text-body-2 font-semibold text-action hover:bg-gray-50 transition-colors"
-          >
-            <Download className="w-4 h-4" />
+          <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
             Exportar CSV
-          </button>
+          </Button>
         </div>
 
         {/* Conteúdo */}

@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { ShoppingCart, CheckCircle, XCircle, RefreshCw, Search, Download, ChevronLeft, ChevronRight } from "lucide-react"
 import { apiFetch } from "@/services"
+import { Button } from "@/components/ui"
 import { type Pedido } from "@/types"
 
 // Helpers para formatação ---
@@ -249,13 +250,9 @@ export function Pedidos() {
             <option value="Móveis">Móveis</option>
           </select>
 
-          <button
-            onClick={handleExportCSV}
-            className="h-10 px-4 flex items-center gap-2 rounded-lg border border-action text-body-2 font-semibold text-action bg-hover:bg-gray-50 transition-colors"
-          >
-            <Download className="w-4 h-4" />
+          <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
             Exportar CSV
-          </button>
+          </Button>
       </div>
 
       {/*Conteúdo*/}

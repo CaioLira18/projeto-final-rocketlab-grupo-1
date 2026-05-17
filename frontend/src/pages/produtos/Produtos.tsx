@@ -15,11 +15,12 @@ import {
 } from "lucide-react"
 import { apiFetch } from "@/services"
 import type { ProdutoMetricas } from "@/types"
+import { Button } from "@/components/ui"
+
 import { ProductCardKPI } from "./components/ProductCardKPI"
 import { ProductFormModal } from "./components/ProductFormModal"
 import { ProductDeleteModal } from "./components/ProductDeleteModal"
 import ProductDetailsModal from "./components/ProductDetailsModal"
-import { Button } from "@/components/ui"
 
 // ----------------- HELPERS DE FORMATAÇÃO -----------------
 const formatCurrency = (value?: number) => {
@@ -335,27 +336,15 @@ function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTabl
               </td>
               <td className="px-6 py-4.5 text-right">
                 <div className="flex items-center justify-end gap-1.5">
-                  <button
-                    onClick={() => onViewDetails(prod)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200 cursor-pointer"
-                    title="Visualizar Detalhes"
-                  >
-                    <Eye className="h-4.5 w-4.5 text-primary" />
-                  </button>
-                  <button
-                    onClick={() => onEdit(prod)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200 cursor-pointer"
-                    title="Editar Produto"
-                  >
-                    <Pencil className="h-4.5 w-4.5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(prod)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-error hover:bg-error-50 transition-all duration-200 cursor-pointer"
-                    title="Excluir Produto"
-                  >
-                    <Trash2 className="h-4.5 w-4.5 text-error-400" />
-                  </button>
+                  <Button size="sm" variant="ghost" intent="primary" title="Visualizar Detalhes" onClick={() => onViewDetails(prod)}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" intent="primary" title="Editar Produto" onClick={() => onEdit(prod)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" intent="error" title="Excluir Produto" onClick={() => onDelete(prod)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </td>
             </tr>

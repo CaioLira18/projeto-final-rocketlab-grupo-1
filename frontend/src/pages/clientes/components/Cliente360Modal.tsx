@@ -6,6 +6,7 @@ import {
   Calendar, MapPin, Phone, Mail, Globe,
 } from "lucide-react"
 import { apiFetch } from "@/services"
+import { Button } from "@/components/ui"
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 interface Cliente360 {
@@ -337,12 +338,9 @@ export function Cliente360Modal({ clienteId, nomeCliente, onClose }: Cliente360M
         {/* Footer */}
         {!loading && !error && (
           <div className="bg-white border-t border-gray-100 px-6 py-3 shrink-0 flex justify-end">
-            <button
-              onClick={onClose}
-              className="h-9 px-5 rounded-lg border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
-            >
+            <Button variant="outlined" intent="secondary" onClick={onClose}>
               Fechar
-            </button>
+            </Button>
           </div>
         )}
       </div>

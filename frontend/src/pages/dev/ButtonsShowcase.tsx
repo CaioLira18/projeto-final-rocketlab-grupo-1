@@ -7,8 +7,8 @@ function ButtonsShowcase() {
 
             {/* Cabeçalho */}
             <header className="text-center mb-10">
-                <h1 className="text-primary">Stack OverGol</h1>
-                <p className="text-body-2 text-gray-500">Melhor CRM do RocketLab</p>
+                <h1 className="text-primary">v commerce</h1>
+                <p className="text-body-2 text-gray-500">Desenvolvido pela equipe StackOverGol</p>
             </header>
 
 

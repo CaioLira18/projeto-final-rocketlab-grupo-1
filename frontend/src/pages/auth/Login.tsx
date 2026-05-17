@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context"
-import { Button, Input } from "@/components/ui"
+import { Button, Input, Logo } from "@/components/ui"
 
 export function Login() {
   const { login } = useAuth()
@@ -45,9 +45,7 @@ export function Login() {
     <div className="min-h-screen flex flex-col md:flex-row bg-[#F8FAFC] select-none">
       
       <div className="w-full md:w-1/2 bg-[#0B1120] text-white p-8 md:p-10 flex flex-col justify-between min-h-85 md:min-h-screen">
-        <div className="text-subtitle-1 font-heading font-bold tracking-wide">
-          Stack OverGol
-        </div>
+        <Logo className="h-8 w-auto text-white" />
 
         <div className="max-w-120 my-auto space-y-4">
           <h1 className="text-h1 md:text-[40px] font-heading font-bold leading-tight">
@@ -60,7 +58,7 @@ export function Login() {
         </div>
 
         <div className="text-caption text-gray-500">
-          © 2026 Stack OverGol
+          © 2026 v commerce · StackOverGol
         </div>
       </div>
 
