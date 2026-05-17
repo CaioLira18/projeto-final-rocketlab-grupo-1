@@ -16,6 +16,7 @@ import {
 import { apiFetch } from "@/services"
 import type { ProdutoMetricas } from "@/types"
 import { Button } from "@/components/ui"
+import { usePermission } from "@/hooks"
 
 import { ProductCardKPI } from "./components/ProductCardKPI"
 import { ProductFormModal } from "./components/ProductFormModal"
@@ -37,6 +38,9 @@ const formatNumber = (value: number) => {
 
 // ----------------- COMPONENTE PRINCIPAL -----------------
 export function Produtos() {
+  const { can } = usePermission()
+  const podeEscrever = can("produtos.write")
+
   const [produtos, setProdutos] = useState<ProdutoMetricas[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -128,13 +132,14 @@ export function Produtos() {
           />
 
           {/* Barra de Filtros e Ação */}
-          <FiltersBar 
-            searchTerm={searchTerm} 
-            setSearchTerm={setSearchTerm} 
+          <FiltersBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            canCreate={podeEscrever}
             onNewProduct={() => {
               setSelectedProductForForm(null)
               setIsFormOpen(true)
-            }} 
+            }}
           />
 
           {/* Tabela de Produtos */}
@@ -143,8 +148,9 @@ export function Produtos() {
               <EmptyState searchTerm={searchTerm} />
             ) : (
               <>
-                <ProductTable 
+                <ProductTable
                   products={paginatedProdutos}
+                  canWrite={podeEscrever}
                   onViewDetails={(prod) => {
                     setSelectedProductForDetails(prod)
                     setIsDetailsOpen(true)
@@ -253,7 +259,14 @@ function KPICardsSection({ totalActive, totalSold, avgRating }: { totalActive: n
   )
 }
 
-function FiltersBar({ searchTerm, setSearchTerm, onNewProduct }: { searchTerm: string; setSearchTerm: (val: string) => void; onNewProduct: () => void }) {
+interface FiltersBarProps {
+  searchTerm: string
+  setSearchTerm: (val: string) => void
+  canCreate: boolean
+  onNewProduct: () => void
+}
+
+function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct }: FiltersBarProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
       <div className="relative flex-1 max-w-md">
@@ -269,14 +282,16 @@ function FiltersBar({ searchTerm, setSearchTerm, onNewProduct }: { searchTerm: s
         />
       </div>
 
-      <Button
-        size="lg"
-        intent="primary"
-        leftIcon={<Plus className="h-5 w-5" />}
-        onClick={onNewProduct}
-      >
-        Novo produto
-      </Button>
+      {canCreate && (
+        <Button
+          size="lg"
+          intent="primary"
+          leftIcon={<Plus className="h-5 w-5" />}
+          onClick={onNewProduct}
+        >
+          Novo produto
+        </Button>
+      )}
     </div>
   )
 }
@@ -291,12 +306,13 @@ function EmptyState({ searchTerm }: { searchTerm: string }) {
 
 interface ProductTableProps {
   products: ProdutoMetricas[]
+  canWrite: boolean
   onViewDetails: (prod: ProdutoMetricas) => void
   onEdit: (prod: ProdutoMetricas) => void
   onDelete: (prod: ProdutoMetricas) => void
 }
 
-function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTableProps) {
+function ProductTable({ products, canWrite, onViewDetails, onEdit, onDelete }: ProductTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
@@ -338,12 +354,16 @@ function ProductTable({ products, onViewDetails, onEdit, onDelete }: ProductTabl
                   <Button size="sm" variant="ghost" intent="primary" title="Visualizar Detalhes" onClick={() => onViewDetails(prod)}>
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="ghost" intent="primary" title="Editar Produto" onClick={() => onEdit(prod)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" intent="error" title="Excluir Produto" onClick={() => onDelete(prod)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  {canWrite && (
+                    <>
+                      <Button size="sm" variant="ghost" intent="primary" title="Editar Produto" onClick={() => onEdit(prod)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="ghost" intent="error" title="Excluir Produto" onClick={() => onDelete(prod)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
                 </div>
               </td>
             </tr>

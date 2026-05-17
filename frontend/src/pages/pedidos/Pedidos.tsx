@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react"
 import { ShoppingCart, CheckCircle, XCircle, RefreshCw, Search, Download, ChevronLeft, ChevronRight } from "lucide-react"
 import { apiFetch } from "@/services"
 import { Button } from "@/components/ui"
+import { usePermission } from "@/hooks"
 import { type Pedido } from "@/types"
 
 // Helpers para formatação ---
@@ -49,6 +50,9 @@ const PAGE_SIZE = 8
 
 // Componente  principal ---
 export function Pedidos() {
+  const { can } = usePermission()
+  const podeExportar = can("export.run")
+
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [kpis, setKpis] = useState<CountResponse>({ total: 0, aprovados: 0, recusados: 0, reembolsados: 0 })
   const [isLoading, setIsLoading] = useState(true)
@@ -250,9 +254,11 @@ export function Pedidos() {
             <option value="Móveis">Móveis</option>
           </select>
 
-          <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
-            Exportar CSV
-          </Button>
+          {podeExportar && (
+            <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
+              Exportar CSV
+            </Button>
+          )}
       </div>
 
       {/*Conteúdo*/}

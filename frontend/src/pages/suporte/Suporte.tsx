@@ -13,6 +13,7 @@ import {
   Download,
 } from "lucide-react"
 import { Button } from "@/components/ui"
+import { usePermission } from "@/hooks"
 
 const API_BASE = "http://localhost:8000"
 const PER_PAGE = 20
@@ -165,6 +166,9 @@ function SelectFiltro({ opcoes, valor, onChange, placeholder }: { opcoes: string
 
 // ── componente principal ───────────────────────────────────────────────────
 export function Suporte() {
+  const { can } = usePermission()
+  const podeExportar = can("export.run")
+
   const [tickets, setTickets] = useState<SuporteTicket[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -361,9 +365,11 @@ export function Suporte() {
                   className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 disabled:opacity-40"
                 />
               </div>
-              <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={exportCSV}>
-                Exportar CSV
-              </Button>
+              {podeExportar && (
+                <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={exportCSV}>
+                  Exportar CSV
+                </Button>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">

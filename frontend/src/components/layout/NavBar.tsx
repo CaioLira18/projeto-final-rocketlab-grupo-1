@@ -10,9 +10,10 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
-  Rocket,
 } from "lucide-react"
 import { useAuth } from "@/context"
+import { usePermission, type Capability } from "@/hooks"
+import { Button, Logo } from "@/components/ui"
 import { cn } from "@/utils/cn"
 
 const ROLE_LABELS: Record<string, string> = {
@@ -24,8 +25,19 @@ const ROLE_LABELS: Record<string, string> = {
   operador_suporte: "Operador de Suporte",
 }
 
+// Capacidade necessária para cada item do menu. Mantido em sincronia com a matriz de permissões.
+const NAV_ITEM_CAPABILITY: Record<string, Capability> = {
+  "/": "dashboard.view",
+  "/clientes": "clientes.read",
+  "/produtos": "produtos.read",
+  "/pedidos": "pedidos.read",
+  "/suporte": "suporte.read",
+  "/ai-agent": "chat.use",
+}
+
 export function NavBar() {
   const { user, logout } = useAuth()
+  const { can } = usePermission()
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem("sidebar-collapsed")
     return saved ? JSON.parse(saved) : false
@@ -37,7 +49,7 @@ export function NavBar() {
     localStorage.setItem("sidebar-collapsed", JSON.stringify(nextState))
   }
 
-  const navItems = [
+  const allNavItems = [
     { to: "/", label: "Dashboard", icon: LayoutDashboard },
     { to: "/clientes", label: "Clientes", icon: Users },
     { to: "/produtos", label: "Produtos", icon: Package },
@@ -45,6 +57,9 @@ export function NavBar() {
     { to: "/suporte", label: "Suporte", icon: LifeBuoy },
     { to: "/ai-agent", label: "Agente IA", icon: Sparkles, accentIcon: true },
   ]
+
+  // Esconde do menu lateral as áreas que a role corrente não pode acessar.
+  const navItems = allNavItems.filter((item) => can(NAV_ITEM_CAPABILITY[item.to]))
 
   return (
     <aside
@@ -65,25 +80,18 @@ export function NavBar() {
           </button>
         </div>
 
-        {/* Logotipo da Marca */}
-        <div
+        {/* Logotipo da marca, clicável e leva ao Dashboard */}
+        <NavLink
+          to="/"
+          end
+          aria-label="Ir para o Dashboard"
           className={cn(
-            "flex items-center gap-3 mb-8 transition-all duration-300",
-            isCollapsed ? "justify-center" : ""
+            "flex items-center justify-center mb-8 rounded-lg transition-opacity duration-200 hover:opacity-80",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary",
           )}
         >
-          <div className="bg-secondary p-2 rounded-lg text-white shrink-0 shadow-md shadow-secondary/10">
-            <Rocket className="h-6 w-6" />
-          </div>
-          {!isCollapsed && (
-            <div className="animate-fade-in whitespace-nowrap">
-              <h2 className="text-subtitle-1 text-white font-heading font-bold tracking-tight">
-                Stack OverGol
-              </h2>
-              <p className="text-caption text-gray-400">CRM RocketLab</p>
-            </div>
-          )}
-        </div>
+          <Logo compact={isCollapsed} className={isCollapsed ? "h-8 w-8" : "h-9 w-auto"} />
+        </NavLink>
 
         <nav className="space-y-2">
           {navItems.map((item) => {
@@ -142,17 +150,19 @@ export function NavBar() {
           )}
         </div>
 
-        <button
+        <Button
+          variant="ghost"
+          intent="error"
+          leftIcon={!isCollapsed ? <LogOut /> : undefined}
           onClick={logout}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-lg text-body-2 font-medium text-error-300 hover:text-white hover:bg-error/10 border border-transparent hover:border-error-400/20 transition-all duration-200",
-            isCollapsed ? "w-12 h-10 mx-auto px-0" : "w-full px-4 py-2.5"
-          )}
           title={isCollapsed ? "Sair da conta" : undefined}
+          className={cn(
+            "text-error-300 font-medium hover:text-white hover:bg-error/10 border border-transparent hover:border-error-400/20 transition-all duration-200",
+            isCollapsed ? "w-12 h-10 mx-auto px-0" : "w-full",
+          )}
         >
-          <LogOut className="h-4 w-4 shrink-0" />
-          {!isCollapsed && <span>Sair da conta</span>}
-        </button>
+          {isCollapsed ? <LogOut className="h-4 w-4" /> : "Sair da conta"}
+        </Button>
       </div>
     </aside>
   )
