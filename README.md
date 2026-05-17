@@ -385,6 +385,7 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 |------|--------|
 | André Castro | [@andrecastrom06](https://github.com/andrecastrom06) |
 | Caio Ferreira | [@CaioLira18](https://github.com/CaioLira18) |
+| Karina Lima | [@karinalimaklo](https://github.com/karinalimaklo) |
 
 ---
 
