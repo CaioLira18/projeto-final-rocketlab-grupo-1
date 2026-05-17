@@ -197,11 +197,9 @@ POST /auth/login
 | `email` | string | Filtro por e-mail |
 | `cidade` / `estado` / `pais` | string/lista | Filtro geográfico |
 | `genero` | lista | Filtro por gênero |
-| `origem` | lista | Canal de origem do cliente |
 | `idade_min` / `idade_max` | int | Faixa etária |
 | `ramal` / `sem_ramal` | string/bool | Filtro por ramal |
 | `busca` | string | Busca geral (nome, sobrenome, email) |
-| `ano_cadastro` | lista int | Filtra pelo ano de cadastro |
 | `skip` / `limit` | int | Paginação (padrão: 0 / 50, máx: 500) |
 
 ---
