@@ -10,12 +10,12 @@ from app.services import (
     update_produto,
     delete_produto,
 )
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_produtos_read, require_produtos_write
 
 router = APIRouter(
     prefix="/produtos",
     tags=["Produtos"],
-    dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(require_produtos_read)]
 )
 
 
@@ -209,7 +209,13 @@ def buscar_produto(produto_id: str, db: Session = Depends(get_db)):
     return produto
 
 
-@router.post("/", response_model=ProdutoResponse, status_code=201, summary="Adiciona um novo produto")
+@router.post(
+    "/",
+    response_model=ProdutoResponse,
+    status_code=201,
+    summary="Adiciona um novo produto",
+    dependencies=[Depends(require_produtos_write)],
+)
 def adicionar_produto(prod_in: ProdutoCreate, db: Session = Depends(get_db)):
     """
     Cria um novo produto na camada Silver. As métricas Gold associadas só
@@ -218,7 +224,12 @@ def adicionar_produto(prod_in: ProdutoCreate, db: Session = Depends(get_db)):
     return create_produto(db, prod_in)
 
 
-@router.put("/{produto_id}", response_model=ProdutoResponse, summary="Edita um produto existente")
+@router.put(
+    "/{produto_id}",
+    response_model=ProdutoResponse,
+    summary="Edita um produto existente",
+    dependencies=[Depends(require_produtos_write)],
+)
 def editar_produto(produto_id: str, prod_in: ProdutoUpdate, db: Session = Depends(get_db)):
     """
     Atualiza os dados cadastrais de um produto existente. Aceita atualizações
@@ -227,7 +238,11 @@ def editar_produto(produto_id: str, prod_in: ProdutoUpdate, db: Session = Depend
     return update_produto(db, produto_id, prod_in)
 
 
-@router.delete("/{produto_id}", summary="Remove um produto")
+@router.delete(
+    "/{produto_id}",
+    summary="Remove um produto",
+    dependencies=[Depends(require_produtos_write)],
+)
 def remover_produto(produto_id: str, db: Session = Depends(get_db)):
     """
     Remove um produto da camada Silver. A remoção é hard delete; os registros
@@ -236,4 +251,3 @@ def remover_produto(produto_id: str, db: Session = Depends(get_db)):
     """
     delete_produto(db, produto_id)
     return {"message": "Produto removido com sucesso", "id_produto": produto_id}
-

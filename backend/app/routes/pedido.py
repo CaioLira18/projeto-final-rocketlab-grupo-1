@@ -8,12 +8,12 @@ from bd.database import get_db
 from app.models import Pedidos
 from app.schemas import PedidoListItem, PedidoCountResponse
 from app.services import list_pedidos
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_pedidos
 
 router = APIRouter(
     prefix="/pedidos",
     tags=["Pedidos"],
-    dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(require_pedidos)]
 )
 
 @router.get("/count", response_model=PedidoCountResponse, summary="Contagem de pedidos por status")

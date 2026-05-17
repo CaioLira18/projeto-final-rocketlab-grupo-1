@@ -4,10 +4,15 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from bd.database import get_db
+from app.routes.dependencies import require_export
 import csv
 import io
 
-router = APIRouter(prefix="/export", tags=["Export"])
+router = APIRouter(
+    prefix="/export",
+    tags=["Export"],
+    dependencies=[Depends(require_export)],
+)
 
 
 @router.get("/clientes", summary="Exporta todos os clientes em CSV")

@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 from bd.database import get_db_gold
 from app.schemas import DashboardKPIsOut
 from app.services import calculate_dashboard_kpis
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_dashboard
 
 router = APIRouter(
     prefix="/dashboard",
     tags=["Dashboard"],
-    dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(require_dashboard)]
 )
 
 
