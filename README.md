@@ -442,6 +442,11 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 | André Castro | [@andrecastrom06](https://github.com/andrecastrom06) |
 | Caio Ferreira | [@CaioLira18](https://github.com/CaioLira18) |
 | Karina Lima | [@karinalimaklo](https://github.com/karinalimaklo) |
+| Matheus Velame | [@MatheusVelame](https://github.com/MatheusVelame) |
+| Daniel Mendonça | [@danielrmendonca](https://github.com/danielrmendonca) |
+| Pedro Henrique | [@hsspedro](https://github.com/hsspedro) |
+| Maria Eduarda | [@mariasoaresm](https://github.com/mariasoaresm) |
+| Victória Queiroz | [@victoriaxq](https://github.com/victoriaxq) |
 
 ---
 
