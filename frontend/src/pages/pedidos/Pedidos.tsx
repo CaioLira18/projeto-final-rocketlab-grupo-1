@@ -269,7 +269,7 @@ export function Pedidos() {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  {["Pedido ID", "Cliente", "Produto", "Data do Pedido", "Previsão de Entrega", "Valor", "Status"].map(h => (
+                  {["Pedido ID", "Cliente", "Produto", "Data do Pedido", "Valor", "Status"].map(h => (
                     <th key={h} className="px-6 py-4 text-caption font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -289,7 +289,7 @@ export function Pedidos() {
                   ))
                 ) : pedidos.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-body-2 text-gray-400">
+                    <td colSpan={6} className="px-6 py-12 text-center text-body-2 text-gray-400">
                       Nenhum pedido encontrado para os filtros aplicados.
                     </td>
                   </tr>
@@ -304,7 +304,6 @@ export function Pedidos() {
                       <td className="px-6 py-4 text-gray-700">{pedido.nome_cliente ?? "-"}</td>
                       <td className="px-6 py-4 text-gray-700">{pedido.nome_produto ?? "-"}</td>
                       <td className="px-6 py-4 text-gray-600">{formatDate(pedido.data_pedido as unknown as string)}</td>
-                      <td className="px-6 py-4 text-gray-600">{formatDate(pedido.data_prevista_entrega as unknown as string)}</td>
                       <td className="px-6 py-4 font-semibold text-gray-900">{formatCurrency(pedido.valor_pedido)}</td>
                       <td className="px-6 py-4"><StatusBadge status={pedido.status_pedido} /></td>
                     </tr>
