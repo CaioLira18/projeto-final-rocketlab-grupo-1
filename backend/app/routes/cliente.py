@@ -6,13 +6,13 @@ from app.services.cliente360_service import get_cliente_360
 from bd.database import get_db, get_db_gold
 from app.schemas import ClienteResponse, ClienteHistoricoResponse, Cliente360Response
 from app.services import list_clientes, get_cliente_by_id, get_cliente_historico
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_clientes_read, require_cliente_360
 
 
 router = APIRouter(
     prefix="/clientes",
     tags=["Clientes"],
-    dependencies=[Depends(get_current_user)],
+    dependencies=[Depends(require_clientes_read)],
     redirect_slashes=False,
 )
 
@@ -164,7 +164,12 @@ def buscar_historico_cliente(cliente_id: str, db: Session = Depends(get_db)):
     return get_cliente_historico(db, cliente_id)
 
 # ROTA 360 - deve ficar ANTES de /{cliente_id} para o roteamento do FastAPI
-@router.get("/360/{cliente_id}", response_model=Cliente360Response, summary="Visão 360 do cliente (camada Gold)")
+@router.get(
+    "/360/{cliente_id}",
+    response_model=Cliente360Response,
+    summary="Visão 360 do cliente (camada Gold)",
+    dependencies=[Depends(require_cliente_360)],
+)
 def buscar_cliente_360(
     cliente_id: str,
     db: Session = Depends(get_db_gold),   # usa o banco gold

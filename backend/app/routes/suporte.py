@@ -7,7 +7,7 @@ from datetime import datetime
 from bd.database import get_db
 from app.models import DimProduto, FatoSuporte, Pedidos
 from app.schemas.suporte import SuporteMetricasProduto, SuporteTicketItem
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_suporte
 from app.services.suporte_service import (
     build_suporte_base_query,
     map_row_to_ticket_schema,
@@ -17,7 +17,7 @@ from app.services.suporte_service import (
 router = APIRouter(
     prefix="/suporte",
     tags=["Suporte"],
-    dependencies=[Depends(get_current_user)]
+    dependencies=[Depends(require_suporte)]
 )
 
 @router.get("/resumo", summary="Resumo agregado dos tickets de suporte")

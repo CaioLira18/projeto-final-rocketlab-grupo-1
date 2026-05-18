@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react"
 import { Users, Search, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
 import { apiFetch } from "@/services"
 import { Button } from "@/components/ui"
+import { usePermission } from "@/hooks"
 import Cliente360Modal from "./components/Cliente360Modal"
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
@@ -115,6 +116,10 @@ function Pagination({
 
 // ── Componente principal ───────────────────────────────────────────────────
 export function Clientes() {
+  const { can } = usePermission()
+  const podeExportar = can("export.run")
+  const podeVer360 = can("clientes.view360")
+
   const [clientes, setClientes]   = useState<Cliente[]>([])
   const [total, setTotal]         = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -334,10 +339,12 @@ export function Clientes() {
             Sem ramal
           </label>
 
-          {/* Exportar */}
-          <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
-            Exportar CSV
-          </Button>
+          {/* Exportar (apenas roles com permissão export.run) */}
+          {podeExportar && (
+            <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
+              Exportar CSV
+            </Button>
+          )}
         </div>
 
         {/* Conteúdo */}
@@ -404,20 +411,22 @@ export function Clientes() {
                         )}
                       </td>
 
-                      {/* ── Ações ── */}
+                      {/* ── Ações (visão 360 restrita a clientes.view360) ── */}
                       <td className="px-6 py-4">
-                        <button
-                          onClick={() =>
-                            setModal360({
-                              id: c.id_cliente,
-                              nome: `${c.nome_cliente} ${c.sobrenome_cliente}`.trim(),
-                            })
-                          }
-                          title="Ver visão 360"
-                          className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200 cursor-pointer"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                        {podeVer360 && (
+                          <button
+                            onClick={() =>
+                              setModal360({
+                                id: c.id_cliente,
+                                nome: `${c.nome_cliente} ${c.sobrenome_cliente}`.trim(),
+                              })
+                            }
+                            title="Ver visão 360"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-50 transition-all duration-200 cursor-pointer"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))

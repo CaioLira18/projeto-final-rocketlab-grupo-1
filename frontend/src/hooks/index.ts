@@ -1,2 +1,3 @@
 /* Custom hooks. useAuth, usePagination, useAPI, etc. */
-export { }
+export { usePermission } from "./usePermission"
+export type { Capability } from "./usePermission"
