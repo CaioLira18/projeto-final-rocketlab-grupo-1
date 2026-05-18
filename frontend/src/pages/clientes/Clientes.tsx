@@ -4,8 +4,9 @@ import { apiFetch } from "@/services"
 import { Button } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import Cliente360Modal from "./components/Cliente360Modal"
+import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
-// ── Tipos ──────────────────────────────────────────────────────────────────
+// ── Tipos
 interface Cliente {
   id_cliente: string
   nome_cliente: string
@@ -119,6 +120,7 @@ export function Clientes() {
   const { can } = usePermission()
   const podeExportar = can("export.run")
   const podeVer360 = can("clientes.view360")
+  const toast = useToast()
 
   const [clientes, setClientes]   = useState<Cliente[]>([])
   const [total, setTotal]         = useState(0)
@@ -193,6 +195,7 @@ export function Clientes() {
   useEffect(() => { setPage(1) }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
 
   const handleExportCSV = async () => {
+    const id = toast.loading("Preparando exportação...")
     try {
       const token = localStorage.getItem("token")
       const res = await fetch(
@@ -206,8 +209,9 @@ export function Clientes() {
       a.download = `clientes_${new Date().toISOString().slice(0, 10)}.csv`
       a.click()
       URL.revokeObjectURL(url)
+      toast.update(id, "success", "CSV exportado com sucesso!")
     } catch {
-      alert("Erro ao exportar CSV.")
+      toast.update(id, "error", "Erro ao exportar CSV.")
     }
   }
 
@@ -456,6 +460,8 @@ export function Clientes() {
           onClose={() => setModal360(null)}
         />
       )}
+
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
     </div>
   )
 }
