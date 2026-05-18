@@ -45,7 +45,7 @@ interface CountResponse {
   reembolsados: number
 }
 
-const PAGE_SIZE = 8
+const PAGE_SIZE = 20
 
 
 // Componente  principal ---
@@ -336,7 +336,7 @@ export function Pedidos() {
                   <button
                     key={p}
                     onClick={() => setPage(p as number)}
-                    className={`w-8 h-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-colors ${
+                    className={`w-12 h-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-colors ${
                       page === p ? "bg-gray-700 text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"
                     }`}
                   >

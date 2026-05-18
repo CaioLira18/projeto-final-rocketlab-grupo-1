@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, Boolean, select
+from sqlalchemy import Column, Integer, String, Float, Date, Boolean, select, func
 from sqlalchemy.orm import column_property
 from bd.database import Base
 from .cliente import Cliente
@@ -19,7 +19,7 @@ class Pedidos(Base):
     ja_tratada = Column(Boolean, default=False)
 
     nome_cliente = column_property(
-        select(Cliente.nome_cliente)
+        select(Cliente.nome_cliente + " " + func.coalesce(Cliente.sobrenome_cliente, ""))
         .where(Cliente.id_cliente == id_cliente)
         .correlate_except(Cliente)
         .scalar_subquery()
