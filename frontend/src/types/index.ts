@@ -143,7 +143,6 @@ export interface Pedido {
   valor_pedido: number | null
   metodo_pagamento: string | null
   status_pedido: string | null
-  data_prevista_entrega: string | null
 }
 
 /* Suporte */
