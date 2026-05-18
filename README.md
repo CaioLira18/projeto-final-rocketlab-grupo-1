@@ -447,6 +447,7 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 | Pedro Henrique | [@hsspedro](https://github.com/hsspedro) |
 | Maria Eduarda | [@mariasoaresm](https://github.com/mariasoaresm) |
 | Victória Queiroz | [@victoriaxq](https://github.com/victoriaxq) |
+| João Pedro Carvalho | [@jppatriotacarvalho](https://github.com/jppatriotacarvalho) |
 
 ---
 
