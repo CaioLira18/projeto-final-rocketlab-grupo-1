@@ -61,7 +61,6 @@ _TABLE_REF_RE = re.compile(r"\b(?:FROM|JOIN)\s+([a-zA-Z_][a-zA-Z0-9_]*)", re.IGN
 # como atalhos clicáveis na tela inicial do chat.
 SUGGESTED_QUESTIONS: list[str] = [
     "Qual é a saúde financeira geral da empresa?",
-    "Quem são os clientes VIP?",
     "Quantos clientes estão em risco de churn?",
     "Qual categoria de produto gera mais receita?",
     "Como evoluiu o ticket médio nos últimos 12 meses?",

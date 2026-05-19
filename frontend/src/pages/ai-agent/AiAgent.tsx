@@ -14,7 +14,6 @@ const SESSION_KEY = 'chat_session_id'
 // Em condições normais a lista vem do backend, mantendo a fonte da verdade lá.
 const FALLBACK_SUGGESTED_QUESTIONS = [
   'Qual é a saúde financeira geral da empresa?',
-  'Quem são os clientes VIP?',
   'Quantos clientes estão em risco de churn?',
   'Qual categoria de produto gera mais receita?',
   'Como evoluiu o ticket médio nos últimos 12 meses?',
