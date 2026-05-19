@@ -366,6 +366,7 @@ function ProductTable({ products, canWrite, onViewDetails, onEdit, onDelete }: P
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">SKU</th>
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Produto</th>
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Categoria</th>
+            <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Status</th>
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Preço</th>
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Estoque</th>
             <th className="px-6 py-4 text-caption text-gray-400 font-semibold uppercase tracking-wider">Vendas</th>
@@ -381,6 +382,15 @@ function ProductTable({ products, canWrite, onViewDetails, onEdit, onDelete }: P
               <td className="px-6 py-4 font-semibold text-gray-500 font-mono tracking-tight">{prod.id_produto}</td>
               <td className="px-6 py-4 font-semibold text-gray-900">{prod.nome_produto}</td>
               <td className="px-6 py-4 text-gray-500">{prod.categoria_produto}</td>
+              <td className="px-6 py-4 text-sm">
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                  prod.produto_ativo
+                    ? "bg-success-50 text-success"
+                    : "bg-error-50 text-error"
+                }`}>
+                  {prod.produto_ativo ? "Ativo" : "Inativo"}
+                </span>
+              </td>
               <td className="px-6 py-4 font-medium text-gray-900">{formatCurrency(prod.preco_produto)}</td>
               <td className="px-6 py-4 font-medium text-gray-700">{prod.estoque_produto ?? 0}</td>
               <td className="px-6 py-4 font-medium text-gray-700">{formatNumber(prod.quantidade_vendida || 0)}</td>

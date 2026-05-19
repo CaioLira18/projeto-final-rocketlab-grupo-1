@@ -228,11 +228,6 @@ function ProductTabsNavigation({
 }
 
 function SalesTab({ product }: { product: ProdutoMetricas }) {
-  const totalLogistica = (product.pedidos_entregues || 0) + (product.pedidos_cancelados || 0) + (product.pedidos_reembolsados || 0)
-  const pctEntregue = totalLogistica > 0 ? ((product.pedidos_entregues || 0) / totalLogistica) * 100 : 0
-  const pctCancelado = totalLogistica > 0 ? ((product.pedidos_cancelados || 0) / totalLogistica) * 100 : 0
-  const pctReembolsado = totalLogistica > 0 ? ((product.pedidos_reembolsados || 0) / totalLogistica) * 100 : 0
-
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -283,45 +278,28 @@ function SalesTab({ product }: { product: ProdutoMetricas }) {
         </div>
       </div>
 
-      {/* Logística refinada */}
+      {/* Logística refinada focada em Reembolsos */}
       <div className="border border-gray-100 rounded-2xl p-5 bg-gray-50/30 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-caption font-bold text-gray-700 uppercase tracking-wider">Logística e Desempenho de Entrega</h3>
-          <span className="text-caption text-gray-400">Total: {formatNumber(totalLogistica)} ocorrências</span>
+          <span className="text-caption text-gray-400 font-semibold bg-gray-100 px-2 py-0.5 rounded-md">Pós-Venda</span>
         </div>
-        
-        {totalLogistica > 0 ? (
-          <div className="w-full bg-gray-100 h-2.5 rounded-full flex overflow-hidden">
-            <div className="bg-success h-full transition-all duration-500" style={{ width: `${pctEntregue}%` }} />
-            <div className="bg-error h-full transition-all duration-500" style={{ width: `${pctCancelado}%` }} />
-            <div className="bg-warning h-full transition-all duration-500" style={{ width: `${pctReembolsado}%` }} />
-          </div>
-        ) : null}
 
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
-            <span className="text-caption text-gray-400 font-medium">Entregues</span>
-            <span className="text-subtitle-1 font-bold text-success flex items-center gap-1.5 mt-1">
-              <CheckCircle2 className="h-4.5 w-4.5 shrink-0" />
-              {formatNumber(product.pedidos_entregues)}
-            </span>
-            {totalLogistica > 0 && <span className="text-[10px] text-gray-400 font-semibold mt-0.5">({pctEntregue.toFixed(1)}% do total)</span>}
+        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-warning-50 text-warning-400 rounded-xl">
+              <AlertTriangle className="h-6 w-6" />
+            </div>
+            <div>
+              <span className="text-caption text-gray-400 block font-medium">Pedidos Reembolsados</span>
+              <span className="text-[11px] text-gray-500 mt-0.5">Solicitações de reembolso processadas e aprovadas pelo pós-venda.</span>
+            </div>
           </div>
-          <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
-            <span className="text-caption text-gray-400 font-medium">Cancelados</span>
-            <span className="text-subtitle-1 font-bold text-error flex items-center gap-1.5 mt-1">
-              <XCircle className="h-4.5 w-4.5 shrink-0" />
-              {formatNumber(product.pedidos_cancelados)}
-            </span>
-            {totalLogistica > 0 && <span className="text-[10px] text-gray-400 font-semibold mt-0.5">({pctCancelado.toFixed(1)}% do total)</span>}
-          </div>
-          <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between">
-            <span className="text-caption text-gray-400 font-medium">Reembolsos</span>
-            <span className="text-subtitle-1 font-bold text-warning flex items-center gap-1.5 mt-1">
-              <AlertTriangle className="h-4.5 w-4.5 shrink-0" />
+          <div className="text-right shrink-0">
+            <span className="text-h3 font-bold text-warning-500 block">
               {formatNumber(product.pedidos_reembolsados)}
             </span>
-            {totalLogistica > 0 && <span className="text-[10px] text-gray-400 font-semibold mt-0.5">({pctReembolsado.toFixed(1)}% do total)</span>}
+            <span className="text-[10px] text-gray-400 font-semibold block mt-0.5">unidades</span>
           </div>
         </div>
       </div>
