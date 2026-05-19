@@ -435,6 +435,30 @@ Acesse a documentação interativa em: **http://localhost:8000/docs**
 
 ---
 
+## 🧪 Testes Automatizados
+
+O backend possui uma suíte de testes automatizados utilizando Pytest e TestClient do FastAPI, cobrindo endpoints principais, validações de schemas e regras de negócio.
+
+Os testes foram organizados por domínio dentro da pasta `backend/tests`:
+
+- `test_produtos.py`
+- `test_clientes.py`
+- `test_pedidos.py`
+- `test_suporte.py`
+- `test_geral.py`
+
+O arquivo `conftest.py` centraliza a configuração do ambiente de testes, incluindo banco SQLite em memória, overrides de dependências e seed de dados para execução isolada.
+
+### ▶️ Como executar os testes
+
+```bash
+cd backend
+pip install -r requirements.txt
+python -m pytest -v tests
+```
+
+---
+
 ## 👥 Membros do Grupo
 
 | Nome | GitHub |
