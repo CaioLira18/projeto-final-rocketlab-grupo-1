@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 import { useAuth } from "@/context"
 import { Button, Input, Logo } from "@/components/ui"
+import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
 interface LoginLocationState {
   registered?: boolean
@@ -13,6 +14,7 @@ export function Login() {
   const navigate = useNavigate()
   const location = useLocation()
   const locationState = (location.state ?? null) as LoginLocationState | null
+  const toast = useToast()
 
   const [email, setEmail] = useState(locationState?.email ?? "")
   const [password, setPassword] = useState("")
@@ -119,8 +121,9 @@ export function Login() {
               autoComplete="current-password"
               labelAction={
                 <span
-                  title="Entre em contato com o administrador do sistema"
-                  className="text-caption font-semibold text-gray-400 cursor-default"
+                  onClick={() => toast.success("Entre em contato com o administrador do sistema pelo e-mail admin@stackovergol.com para recuperar sua senha.", 6000)}
+                  title="Clique para saber como recuperar sua senha"
+                  className="text-caption font-semibold text-gray-400 hover:text-action cursor-pointer hover:underline transition-all duration-200"
                 >
                   Esqueci minha senha
                 </span>
@@ -158,6 +161,7 @@ export function Login() {
         </div>
       </div>
 
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
     </div>
   )
 }
