@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui"
 import { usePermission } from "@/hooks"
+import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
 const API_BASE = "http://localhost:8000"
 const PER_PAGE = 20
@@ -168,6 +169,7 @@ function SelectFiltro({ opcoes, valor, onChange, placeholder }: { opcoes: string
 export function Suporte() {
   const { can } = usePermission()
   const podeExportar = can("export.run")
+  const toast = useToast()
 
   const [tickets, setTickets] = useState<SuporteTicket[]>([])
   const [total, setTotal] = useState(0)
@@ -289,6 +291,7 @@ export function Suporte() {
   }
 
   const exportCSV = async () => {
+    const id = toast.loading("Preparando exportação...")
     try {
       const token = localStorage.getItem("token")
       if (!token) throw new Error("Token não encontrado.")
@@ -304,8 +307,9 @@ export function Suporte() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+      toast.update(id, "success", "CSV exportado com sucesso!")
     } catch (e: any) {
-      alert(e.message ?? "Erro ao exportar CSV")
+      toast.update(id, "error", e.message ?? "Erro ao exportar CSV")
     }
   }
 
@@ -512,6 +516,8 @@ export function Suporte() {
           </div>
         </>
       )}
+
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
     </div>
   )
 }

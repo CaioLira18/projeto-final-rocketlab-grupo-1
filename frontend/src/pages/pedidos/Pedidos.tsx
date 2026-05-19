@@ -4,6 +4,7 @@ import { apiFetch } from "@/services"
 import { Button } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import { type Pedido } from "@/types"
+import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
 // Helpers para formatação ---
 
@@ -52,6 +53,7 @@ const PAGE_SIZE = 8
 export function Pedidos() {
   const { can } = usePermission()
   const podeExportar = can("export.run")
+  const toast = useToast()
 
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [kpis, setKpis] = useState<CountResponse>({ total: 0, aprovados: 0, recusados: 0, reembolsados: 0 })
@@ -120,6 +122,7 @@ export function Pedidos() {
 
   //Exportar CSV
   const handleExportCSV = async () => {
+    const id = toast.loading("Preparando exportação...")
     try {
       const token = localStorage.getItem("token")
       const res = await fetch(
@@ -133,8 +136,9 @@ export function Pedidos() {
       a.download = "pedidos.csv"
       a.click()
       URL.revokeObjectURL(url)
+      toast.update(id, "success", "CSV exportado com sucesso!")
     } catch {
-      alert("Erro ao exportar CSV.")
+      toast.update(id, "error", "Erro ao exportar CSV.")
     }
   }
 
@@ -162,7 +166,6 @@ export function Pedidos() {
   ]
 
 
-  //Render
   return (
     <div className="space-y-6">
 
@@ -259,10 +262,10 @@ export function Pedidos() {
               Exportar CSV
             </Button>
           )}
-      </div>
+        </div>{/* fim filtros */}
 
-      {/*Conteúdo*/}
-      {error ? (
+        {/*Conteúdo*/}
+        {error ? (
           <div className="p-8 text-center text-error text-body-2">{error}</div>
         ) : (
           <div className="overflow-x-auto">
@@ -315,7 +318,7 @@ export function Pedidos() {
         )}
 
         {/*Paginação*/}
-                {!isLoading && !error && total > 0 && (
+        {!isLoading && !error && total > 0 && (
           <div className="px-4 py-3 flex items-center justify-between border-t border-gray-100">
             <span className="text-caption text-gray-500">
               Mostrando {((page - 1) * PAGE_SIZE) + 1}–{Math.min(page * PAGE_SIZE, total)} de {total.toLocaleString("pt-BR")} pedidos
@@ -355,6 +358,8 @@ export function Pedidos() {
             </div>
           </div>
         )}
+
+        <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
       </div>
     </div>
   )
