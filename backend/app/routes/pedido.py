@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import func, case
+from sqlalchemy import func, case, or_
 from typing import Optional, List
 from datetime import date
 
@@ -25,6 +25,7 @@ def contar_pedidos(
     data_fim: Optional[date] = Query(None),
     categoria_produto: Optional[str] = Query(None),
     id_pedido: Optional[str] = Query(None),
+    busca: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -42,6 +43,13 @@ def contar_pedidos(
         func.sum(case((Pedidos.status_pedido == "Reembolsado", 1), else_=0)).label("reembolsados"),
     )
 
+    if busca:
+        query = query.filter(
+            or_(
+                Pedidos.nome_cliente.ilike(f"%{busca}%"),
+                Pedidos.nome_produto.ilike(f"%{busca}%")
+            )
+        )
     if nome_cliente:
         query = query.filter(Pedidos.nome_cliente.ilike(f"%{nome_cliente}%"))
     if nome_produto:
@@ -82,6 +90,7 @@ def listar_pedidos(
     cidade: Optional[str] = Query(None, description="Cidade do cliente"),
     nome_cliente: Optional[str] = Query(None, description="Busca pelo nome do cliente"),
     nome_produto: Optional[str] = Query(None, description="Busca pelo nome do produto"),
+    busca: Optional[str] = Query(None, description="Busca por cliente ou produto"),
     order_by: str = Query("data_pedido", enum=["data_pedido", "valor_pedido", "quantidade_produto", 
                                                "nome_cliente", "nome_produto", "status_pedido"], 
                                                description="Campo para ordenação"),
@@ -106,6 +115,7 @@ def listar_pedidos(
         status=status, metodo_pagamento=metodo_pagamento, categoria_produto=categoria_produto,
         estado=estado, cidade=cidade,
         nome_cliente=nome_cliente, nome_produto=nome_produto,
+        busca=busca,
         order_by=order_by, order_dir=order_dir,
         skip=skip, limite=limite
     )

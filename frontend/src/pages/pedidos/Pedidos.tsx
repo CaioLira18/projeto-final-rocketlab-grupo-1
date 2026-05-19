@@ -93,13 +93,7 @@ export function Pedidos() {
   const fetchCounts = useCallback(async () => {
     try {
       const params = new URLSearchParams()
-      if (busca) {
-        if (busca.includes("-") || (/^[a-f0-9]+$/i.test(busca) && busca.length >= 8)) {
-          params.set("id_pedido", busca)
-        } else {
-          params.set("nome_cliente", busca)
-        }
-      }
+      if (busca)           params.set("busca", busca)
       if (statusFiltro)    params.set("status", statusFiltro)
       if (dataInicio)      params.set("data_inicio", dataInicio)
       if (dataFim)         params.set("data_fim", dataFim)
@@ -118,13 +112,7 @@ export function Pedidos() {
       const skip = (page - 1) * PAGE_SIZE
 
       const params = new URLSearchParams({ skip: String(skip), limite: String(PAGE_SIZE) })
-      if (busca) {
-        if (busca.includes("-") || (/^[a-f0-9]+$/i.test(busca) && busca.length >= 8)) {
-          params.set("id_pedido", busca)
-        } else {
-          params.set("nome_cliente", busca)
-        }
-      }
+      if (busca)           params.set("busca", busca)
       if (statusFiltro) params.set("status", statusFiltro)
       if (dataInicio)   params.set("data_inicio", dataInicio)
       if (dataFim)      params.set("data_fim", dataFim)
@@ -244,7 +232,7 @@ export function Pedidos() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             <input
               type="text"
-              placeholder="Buscar por pedido ou cliente..."
+              placeholder="Buscar por cliente ou produto..."
               value={buscaInput}
               onChange={e => setBuscaInput(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") setBusca(buscaInput) }}

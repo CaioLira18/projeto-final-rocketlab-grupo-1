@@ -10,6 +10,7 @@ def list_pedidos(
     status=None, metodo_pagamento=None, categoria_produto=None,
     estado=None, cidade=None,
     nome_cliente=None, nome_produto=None,
+    busca=None,
     order_by="data_pedido", order_dir="desc",
     skip=0, limite=50
 ):
@@ -40,6 +41,14 @@ def list_pedidos(
         query = query.filter(Pedidos.metodo_pagamento == metodo_pagamento)
     if categoria_produto:
         query = query.filter(Pedidos.categoria_produto == categoria_produto)
+    if busca:
+        from sqlalchemy import or_
+        query = query.filter(
+            or_(
+                Pedidos.nome_cliente.ilike(f"%{busca}%"),
+                Pedidos.nome_produto.ilike(f"%{busca}%")
+            )
+        )
     if nome_cliente:
         query = query.filter(Pedidos.nome_cliente.ilike(f"%{nome_cliente}%"))
     if nome_produto:
