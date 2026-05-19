@@ -151,18 +151,19 @@ A separação entre `routes/chat.py` (camada HTTP/sessão) e `services/chat_serv
 A `GEMINI_API_KEY` gratuita do Google AI Studio tem limites diários por modelo. Quando a quota do modelo padrão esgota, dá pra trocar editando a linha em `backend/app/services/chat_service.py`:
 
 ```python
-model = GeminiModel("gemini-2.5-flash")   # <- trocar o nome aqui
+model = GoogleModel("gemini-3.1-flash-lite", provider=GoogleProvider(api_key=api_key))   # <- trocar o nome aqui
 ```
 
-Os três modelos abaixo são confirmados pela API key free e atendem ao agente sem mudança de código:
+Os modelos abaixo são confirmados pela API key free e atendem ao agente sem mudança de código:
 
 | Identificador | Quando usar | Trade-off |
 |---|---|---|
-| `gemini-2.5-flash` | **Padrão.** Melhor qualidade de raciocínio para text-to-SQL. | Quota diária menor - esgota primeiro em uso intenso. |
-| `gemini-2.5-flash-lite` | Quando a quota do `2.5-flash` acabou. | Respostas um pouco mais simples, mas ainda gera SQL correto para perguntas comuns. |
-| `gemini-2.0-flash` | Plano B se ambos os 2.5 falharem. | Geração mais literal - pode ignorar nuances do prompt. Quota separada das versões 2.5. |
+| `gemini-3.1-flash-lite` | **Padrão.** Cota gratuita de 500 RPD - a mais generosa entre os modelos lite. | Respostas um pouco mais simples que os modelos full, mas suficiente para text-to-SQL em perguntas comuns. |
+| `gemini-2.5-flash` | Quando quiser melhor qualidade de raciocínio em perguntas complexas. | Quota diária bem menor - esgota rápido em uso intenso. |
+| `gemini-2.5-flash-lite` | Plano B se a quota do 3.1 acabar. | Cota de apenas 20 RPD na free tier. |
+| `gemini-2.0-flash` | Plano C se todos os 2.5/3.1 falharem. | Geração mais literal - pode ignorar nuances do prompt. Quota separada das versões 2.5/3.1. |
 
-A troca do `2.5-flash` para `2.5-flash-lite` costuma resolver imediatamente problema de limite de uso.
+A troca do `3.1-flash-lite` para o `2.5-flash` costuma melhorar a qualidade quando o agente trava em perguntas mais elaboradas.
 
 ---
 

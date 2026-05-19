@@ -25,7 +25,8 @@ import os
 import re
 import sqlite3
 from pydantic_ai import Agent
-from pydantic_ai.models.gemini import GeminiModel
+from pydantic_ai.models.google import GoogleModel
+from pydantic_ai.providers.google import GoogleProvider
 
 # ----------CAMINHO DO BANCO DE DADOS----------
 # Por padrão, usa o banco Gold gerado pela parte de dados em backend/bd/.
@@ -61,7 +62,6 @@ _TABLE_REF_RE = re.compile(r"\b(?:FROM|JOIN)\s+([a-zA-Z_][a-zA-Z0-9_]*)", re.IGN
 # como atalhos clicáveis na tela inicial do chat.
 SUGGESTED_QUESTIONS: list[str] = [
     "Qual é a saúde financeira geral da empresa?",
-    "Quem são os clientes VIP?",
     "Quantos clientes estão em risco de churn?",
     "Qual categoria de produto gera mais receita?",
     "Como evoluiu o ticket médio nos últimos 12 meses?",
@@ -95,7 +95,7 @@ def _get_table_names() -> str:
 
 def _create_agent() -> Agent:
     """
-    Constrói e retorna o agente PydanticAI configurado com Gemini 2.5 Flash.
+    Constrói e retorna o agente PydanticAI configurado com Gemini 3.1 Flash Lite.
 
     Esta função é chamada UMA VEZ quando o módulo é importado. O agente criado é reutilizado em todas as conversas (padrão singleton).
     Evitando re-inicialização a cada requisição.
@@ -106,10 +106,13 @@ def _create_agent() -> Agent:
     table_names = _get_table_names()
 
     # ----------MODELO DE IA----------
-    # Gemini 2.5 Flash, pode ser trocado para o lite.
-    # A chave da API vem da variável de ambiente GEMINI_API_KEY.
-    # A chave é lida automaticamente da variável de ambiente GEMINI_API_KEY
-    model = GeminiModel("gemini-2.5-flash")
+    # Gemini 3.1 Flash Lite: cota gratuita de 500 RPD (vs 20 RPD do 2.5 Flash Lite).
+    # ID confirmado via ListModels na conta do projeto.
+    # GoogleModel usa o SDK oficial google-genai (substitui o GeminiModel legado).
+    # Passamos a chave explicitamente para manter compatibilidade com a env var
+    # GEMINI_API_KEY já presente no .env do projeto (o padrão novo seria GOOGLE_API_KEY).
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    model = GoogleModel("gemini-3.1-flash-lite", provider=GoogleProvider(api_key=api_key))
 
     # ----------PROMPT DO SISTEMA----------
     # O system prompt é a "instrução permanente" enviada ao modelo em toda conversa. Ele define:

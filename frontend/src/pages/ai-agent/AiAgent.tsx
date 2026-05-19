@@ -14,7 +14,6 @@ const SESSION_KEY = 'chat_session_id'
 // Em condições normais a lista vem do backend, mantendo a fonte da verdade lá.
 const FALLBACK_SUGGESTED_QUESTIONS = [
   'Qual é a saúde financeira geral da empresa?',
-  'Quem são os clientes VIP?',
   'Quantos clientes estão em risco de churn?',
   'Qual categoria de produto gera mais receita?',
   'Como evoluiu o ticket médio nos últimos 12 meses?',
@@ -111,11 +110,15 @@ export function AiAgent() {
         body: JSON.stringify({ session_id: sessionId.current, message: trimmed }),
       })
       setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: data.response }])
-    } catch {
-      // Erro de rede ou 500: mostra mensagem genérica como bubble do assistant
+    } catch (err) {
+      const rawMsg = err instanceof Error ? err.message : ''
+      const isUserFriendly = rawMsg && !rawMsg.startsWith('HTTP ') && rawMsg !== 'Failed to fetch'
+      const errorMsg = isUserFriendly
+        ? rawMsg
+        : 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente.'
       setMessages(prev => [
         ...prev,
-        { id: crypto.randomUUID(), role: 'assistant', content: 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente.' },
+        { id: crypto.randomUUID(), role: 'assistant', content: errorMsg },
       ])
     } finally {
       setIsLoading(false)
