@@ -35,7 +35,7 @@ _BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..
 _DB_PATH = os.getenv("GOLD_DB_PATH", os.path.join(_BACKEND_DIR, "bd", "app_gold.db"))
 
 # ----------TABELAS PERMITIDAS (WHITELIST)----------
-# Restringe o que o agente pode consultar no banco Gold.
+# Proteção contra prompt injection, restringe o que o agente pode consultar no banco Gold.
 # Camada extra de defesa: mesmo que o modelo invente uma tabela ou tente acessar
 # algo fora do escopo de CRM/BI, a query é rejeitada antes de chegar ao SQLite.
 ALLOWED_TABLES: set[str] = {
