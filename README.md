@@ -1,4 +1,4 @@
-# Stack OverGol — VCommerce CRM360
+# Stack OverGol - VCommerce CRM360
 
 > Plataforma de CRM analítico e-commerce com pipeline de dados em Arquitetura Medalhão, API REST em FastAPI e agente de IA integrado.
 
@@ -51,10 +51,11 @@
 │   │       ├── produto_service.py
 │   │       └── suporte_service.py
 │   ├── 📁 bd/
-│   │   ├── 📁 alembic/
 │   │   ├── app_gold.db
 │   │   ├── app_silver.db
 │   │   ├── database.py
+│   │   ├── download_from_databricks.py
+│   │   ├── upload_to_databricks.py
 │   │   └── seed.py
 │   ├── 📁 data/
 │   │   ├── 📁 gold/
@@ -73,7 +74,6 @@
 │   │       └── silver_suporte_tickets.csv
 │   ├── 📁 tests/
 │   ├── .env.example
-│   ├── alembic.ini
 │   ├── main.py
 │   └── requirements.txt
 ├── 📁 data-engineering/
@@ -145,7 +145,7 @@ A etapa final exporta os dados modelados para um banco SQLite local, entregando 
 
 ---
 
-## 🔌 API — Endpoints
+## 🔌 API - Endpoints
 
 A API é construída com **FastAPI** e organizada em módulos por domínio. Todas as rotas (exceto `/auth/register` e `/auth/login`) requerem autenticação via **Bearer Token JWT**.
 
@@ -153,7 +153,7 @@ Base URL: `http://localhost:8000`
 
 ---
 
-### 🔐 Autenticação — `/auth`
+### 🔐 Autenticação - `/auth`
 
 | Método | Endpoint | Descrição | Auth |
 |--------|----------|-----------|------|
@@ -203,18 +203,18 @@ A matriz do frontend (capacidades) **deve permanecer em sincronia** com a matriz
 
 ### 📊 Matriz de permissões
 
-Legenda: ✅ acesso · — sem acesso
+Legenda: ✅ acesso · - sem acesso
 
 | Recurso | `admin` | `gerente_comercial` | `analista_crm` | `analista_operacoes` | `gerente_produtos` | `operador_suporte` |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `GET /dashboard/kpis` | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| `GET /clientes` (listar / buscar / histórico) | ✅ | ✅ | ✅ | ✅ | — | ✅ |
-| `GET /clientes/360/{id}` | ✅ | ✅ | ✅ | — | — | — |
-| `GET /pedidos` (listar / count) | ✅ | ✅ | ✅ | ✅ | — | ✅ |
-| `GET /produtos` / `GET /produtos/metricas` | ✅ | ✅ | — | ✅ | ✅ | ✅ |
-| `POST` / `PUT` / `DELETE /produtos` | ✅ | — | — | — | ✅ | — |
-| `GET /suporte/*` | ✅ | ✅ | ✅ | — | — | ✅ |
-| `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | — | — | ✅ | — |
+| `GET /dashboard/kpis` | ✅ | ✅ | ✅ | ✅ | ✅ | - |
+| `GET /clientes` (listar / buscar / histórico) | ✅ | ✅ | ✅ | ✅ | - | ✅ |
+| `GET /clientes/360/{id}` | ✅ | ✅ | ✅ | - | - | - |
+| `GET /pedidos` (listar / count) | ✅ | ✅ | ✅ | ✅ | - | ✅ |
+| `GET /produtos` / `GET /produtos/metricas` | ✅ | ✅ | - | ✅ | ✅ | ✅ |
+| `POST` / `PUT` / `DELETE /produtos` | ✅ | - | - | - | ✅ | - |
+| `GET /suporte/*` | ✅ | ✅ | ✅ | - | - | ✅ |
+| `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | - | - | ✅ | - |
 | `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | `POST /auth/register` (cadastro público de novo usuário) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
@@ -235,7 +235,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 👤 Clientes — `/clientes`
+### 👤 Clientes - `/clientes`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -260,7 +260,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 📦 Pedidos — `/pedidos`
+### 📦 Pedidos - `/pedidos`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -285,7 +285,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 🛍️ Produtos — `/produtos`
+### 🛍️ Produtos - `/produtos`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -309,7 +309,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 🎧 Suporte — `/suporte`
+### 🎧 Suporte - `/suporte`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -334,7 +334,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 📈 Dashboard — `/dashboard`
+### 📈 Dashboard - `/dashboard`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -348,7 +348,7 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 
 ---
 
-### 🤖 Agente IA — `/chat`
+### 🤖 Agente IA - `/chat`
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -369,7 +369,7 @@ O histórico de conversa é mantido em memória por `session_id`, permitindo con
 
 ---
 
-### 📤 Exportação — `/export`
+### 📤 Exportação - `/export`
 
 | Método | Endpoint | Arquivo gerado |
 |--------|----------|----------------|
@@ -399,7 +399,7 @@ O projeto utiliza dois bancos SQLite:
 | Camada | Tecnologia |
 |--------|------------|
 | Backend | Python · FastAPI · SQLAlchemy · PyJWT |
-| Banco de dados | SQLite (Silver + Gold) · Alembic (migrações) |
+| Banco de dados | SQLite (Silver + Gold) · schema recriado via `Base.metadata.create_all` no seed |
 | Engenharia de dados | Apache Spark · Delta Lake · Apache Airflow |
 | Agente IA | PydanticAI · Gemini API |
 | Frontend | React · TypeScript · Vite |
