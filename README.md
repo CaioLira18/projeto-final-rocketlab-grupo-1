@@ -406,32 +406,58 @@ O projeto utiliza dois bancos SQLite:
 
 ---
 
-## 🚀 Como rodar
+## 🚀 Como rodar (Via Docker)
 
-```bash
-# 1. Clonar o repositório e entrar na pasta do backend
-cd backend
+A aplicação está totalmente containerizada com **Docker** e **Docker Compose**, simplificando o processo de inicialização e garantindo uniformidade entre a equipe.
 
-# 2. Criar e ativar o ambiente virtual
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate     # Windows
+### Passo a Passo
 
-# 3. Instalar dependências
-pip install -r requirements.txt
+1.  **Configurar variáveis de ambiente:**
+    Copie o arquivo de variáveis de exemplo no diretório do backend (se ainda não tiver feito):
+    ```bash
+    cp backend/.env.example backend/.env
+    ```
+    *(Edite o arquivo `backend/.env` com suas chaves de API, como `GEMINI_API_KEY` e credenciais `Databricks`).*
 
-# 4. Configurar variáveis de ambiente
-cp .env.example .env
-# Edite o .env com suas chaves (SECRET_KEY, GEMINI_API_KEY, etc.)
+2.  **Construir e iniciar os containers:**
+    Na raiz do projeto (onde está o arquivo `docker-compose.yml`), inicialize o frontend e o backend:
+    ```bash
+    docker compose up --build
+    ```
 
-# 5. Popular o banco de dados
-python bd/seed.py
+3.  **Popular o Banco de Dados (Seed):**
+    Com os containers rodando de forma saudável, execute o seed para criar os bancos SQLite internos e criar todos os perfis e usuários de teste:
+    ```bash
+    docker compose exec backend python bd/seed.py
+    ```
 
-# 6. Subir a API
-uvicorn main:app --reload
-```
+---
 
-Acesse a documentação interativa em: **http://localhost:8000/docs**
+### ☁️ Sincronização com o Databricks (Fluxo Medalhão)
+
+A nossa arquitetura de dados utiliza uma via de mão dupla com o **Databricks** (Unity Catalog Volumes) para processamentos analíticos robustos. Todos os scripts são executados de forma limpa dentro do container do backend:
+
+*   **Upload (Silver ➡️ Landing Zone Databricks):**
+    Extrai os dados locais limpos (tabelas Silver do `app_silver.db`) e realiza o envio para a Landing Zone no Databricks. Na nuvem, o Spark processa as agregações complexas e regras de negócio:
+    ```bash
+    docker compose exec backend python bd/upload_to_databricks.py
+    ```
+
+*   **Download (Gold Databricks ➡️ Gold Local Analítico):**
+    Baixa os arquivos finais processados no Databricks (tabelas Gold como a visão `dm_cliente_360` com LTV, NPS etc.) e reconstrói localmente o seu banco analítico `app_gold.db`. Isso garante dados atualizados e performance instantânea para o Dashboard e o Chat:
+    ```bash
+    docker compose exec backend python bd/download_from_databricks.py
+    ```
+
+---
+
+### 🌐 Endereços de Acesso
+
+*   **Frontend (React/Vite):** [http://localhost:5173](http://localhost:5173)
+*   **Backend (FastAPI):** [http://localhost:8000](http://localhost:8000)
+*   **Documentação Swagger:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+
 
 ---
 
