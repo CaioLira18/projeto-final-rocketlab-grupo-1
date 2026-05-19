@@ -11,12 +11,14 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
-  Eye
+  Eye,
+  Download
 } from "lucide-react"
 import { apiFetch } from "@/services"
 import type { ProdutoMetricas } from "@/types"
 import { Button } from "@/components/ui"
 import { usePermission } from "@/hooks"
+import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
 import { ProductCardKPI } from "./components/ProductCardKPI"
 import { ProductFormModal } from "./components/ProductFormModal"
@@ -40,6 +42,8 @@ const formatNumber = (value: number) => {
 export function Produtos() {
   const { can } = usePermission()
   const podeEscrever = can("produtos.write")
+  const podeExportar = can("export.run")
+  const toast = useToast()
 
   const [produtos, setProdutos] = useState<ProdutoMetricas[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -61,6 +65,27 @@ export function Produtos() {
   // Estados para Modal de Detalhes Avançados
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [selectedProductForDetails, setSelectedProductForDetails] = useState<ProdutoMetricas | null>(null)
+
+  const handleExportCSV = async () => {
+    const id = toast.loading("Preparando exportação...")
+    try {
+      const token = localStorage.getItem("token")
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL ?? "http://localhost:8000"}/export/produtos`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement("a")
+      a.href     = url
+      a.download = `produtos_${new Date().toISOString().slice(0, 10)}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      toast.update(id, "success", "CSV exportado com sucesso!")
+    } catch {
+      toast.update(id, "error", "Erro ao exportar CSV.")
+    }
+  }
 
   const loadProdutos = async () => {
     setIsLoading(true)
@@ -140,6 +165,8 @@ export function Produtos() {
               setSelectedProductForForm(null)
               setIsFormOpen(true)
             }}
+            canExport={podeExportar}
+            onExport={handleExportCSV}
           />
 
           {/* Tabela de Produtos */}
@@ -200,6 +227,8 @@ export function Produtos() {
         onClose={() => setIsDetailsOpen(false)}
         product={selectedProductForDetails}
       />
+
+      <ToastContainer toasts={toast.toasts} onClose={toast.remove} />
     </div>
   )
 }
@@ -264,9 +293,11 @@ interface FiltersBarProps {
   setSearchTerm: (val: string) => void
   canCreate: boolean
   onNewProduct: () => void
+  canExport: boolean
+  onExport: () => void
 }
 
-function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct }: FiltersBarProps) {
+function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct, canExport, onExport }: FiltersBarProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
       <div className="relative flex-1 max-w-md">
@@ -282,16 +313,30 @@ function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct }: Filt
         />
       </div>
 
-      {canCreate && (
-        <Button
-          size="lg"
-          intent="primary"
-          leftIcon={<Plus className="h-5 w-5" />}
-          onClick={onNewProduct}
-        >
-          Novo produto
-        </Button>
-      )}
+      <div className="flex items-center gap-3">
+        {canExport && (
+          <Button
+            size="lg"
+            variant="outlined"
+            intent="action"
+            leftIcon={<Download className="h-5 w-5" />}
+            onClick={onExport}
+          >
+            Exportar CSV
+          </Button>
+        )}
+
+        {canCreate && (
+          <Button
+            size="lg"
+            intent="primary"
+            leftIcon={<Plus className="h-5 w-5" />}
+            onClick={onNewProduct}
+          >
+            Novo produto
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
