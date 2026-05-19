@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Sincroniza o código local para Hot Reloading
+      - ./backend:/app
+      # Evita que o venv do host se misture com as dependências do container
+      - /app/venv
+      # Sincroniza e persiste a pasta do banco SQLite local bidirecionalmente
+      - ./backend/bd:/app/bd
+    environment:
+      - ENVIRONMENT=development
+      - GOLD_DB_PATH=/app/bd/app_gold.db
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      # Sincroniza o código do frontend para Hot Reloading
+      - ./frontend:/app
+      # Protege os node_modules do container contra incompatibilidades com o host
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend

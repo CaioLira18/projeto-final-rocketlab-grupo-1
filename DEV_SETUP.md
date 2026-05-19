@@ -33,7 +33,52 @@ projeto-final-rocketlab-grupo-1/
 
 ---
 
-## 💻 Como Rodar o Projeto Localmente
+## 🐳 Rodando o Projeto com Docker (Recomendado)
+
+Para facilitar a colaboração e garantir total consistência de ambiente entre toda a equipe, o projeto está containerizado utilizando **Docker** e **Docker Compose**. Com isso, não é necessário gerenciar ambientes virtuais de Python ou instalações manuais de Node.js locais.
+
+### Pré-requisitos
+Certifique-se de possuir instalado em seu sistema operacional:
+*   [Docker](https://docs.docker.com/get-docker/)
+*   [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Passo a Passo
+
+1.  **Configurar variáveis de ambiente:**
+    Copie o arquivo de exemplo de variáveis no diretório do backend (se ainda não tiver feito):
+    ```bash
+    cp backend/.env.example backend/.env
+    ```
+    *(Edite o `.env` para inserir suas chaves como `GEMINI_API_KEY` do chatbot ou credenciais do `Databricks`).*
+
+2.  **Construir e iniciar os containers:**
+    Na raiz do projeto (onde está o arquivo `docker-compose.yml`), execute:
+    ```bash
+    docker compose up --build
+    ```
+
+3.  **Acessar a aplicação:**
+    Após o build inicial, os containers estarão rodando e sincronizados em tempo real (Hot Reload ativo):
+    *   **Frontend (React/Vite):** [http://localhost:5173](http://localhost:5173)
+    *   **Backend (FastAPI):** [http://localhost:8000](http://localhost:8000)
+    *   **Documentação Swagger:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+### 🗄️ Executando Scripts e Seeds no Docker
+
+Os bancos de dados SQLite da camada Silver e Gold são mantidos e sincronizados bidirecionalmente entre o container e sua máquina através de volumes locais mapeados na pasta `backend/bd/`.
+
+Para rodar o script de **seed** para popular o banco de dados dentro do container ativo, execute:
+```bash
+docker compose exec backend python bd/seed.py
+```
+Esta ação povoa o banco na hora e atualiza os arquivos físicos na sua máquina automaticamente.
+
+---
+
+## 💻 Como Rodar o Projeto Localmente (Sem Docker)
+
 
 ### 1. Inicializando o Backend (FastAPI)
 
@@ -114,8 +159,23 @@ Nosso backend possui uma comunicação de via de mão dupla através da API REST
    DATABRICKS_DEST_DIR="/Volumes/stack_overgol/default/landing/"
    DATABRICKS_GOLD_DIR="/Volumes/stack_overgol/default/gold/"
    ```
-4. No seu terminal, dentro da pasta `backend` (com o ambiente virtual ativado), você pode rodar os scripts de integração manualmente:
-   - Para enviar dados para o retratamento: `python bd/upload_to_databricks.py`
-   - Para receber e atualizar o banco analítico (Gold): `python bd/download_from_databricks.py`
+4. Você pode rodar os scripts de integração manualmente de duas formas:
+
+   **Opção A: Via Docker (Recomendado)**
+   Na raiz do projeto, execute os comandos diretamente no container em execução:
+   *   Para enviar dados da Silver para o Databricks (Upload):
+       ```bash
+       docker compose exec backend python bd/upload_to_databricks.py
+       ```
+   *   Para baixar a Gold consolidada do Databricks (Download):
+       ```bash
+       docker compose exec backend python bd/download_from_databricks.py
+       ```
+
+   **Opção B: Via Terminal Local (Sem Docker)**
+   Dentro da pasta `backend`, com o ambiente virtual ativado:
+   *   Para enviar dados para o retratamento: `python bd/upload_to_databricks.py`
+   *   Para receber e atualizar o banco analítico (Gold): `python bd/download_from_databricks.py`
+
 
 ---
