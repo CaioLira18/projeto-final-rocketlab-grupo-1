@@ -211,14 +211,20 @@ export function Produtos() {
       <ProductFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        onSaveSuccess={loadProdutos}
+        onSaveSuccess={() => {
+          loadProdutos()
+          toast.success(selectedProductForForm ? "Produto atualizado com sucesso!" : "Produto cadastrado com sucesso!")
+        }}
         product={selectedProductForForm}
       />
 
       <ProductDeleteModal
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
-        onDeleteSuccess={loadProdutos}
+        onDeleteSuccess={() => {
+          loadProdutos()
+          toast.success("Produto removido com sucesso!")
+        }}
         product={selectedProductForDelete}
       />
 
