@@ -190,7 +190,7 @@ export function Clientes() {
 
   const fetchKpi = useCallback(async () => {
     try {
-      const params = buildParams({ limit: "1" })           // ← usa os filtros ativos
+      const params = buildParams({ limit: "1" })
       const data = await apiFetch<{ total: number } | Cliente[]>(`/clientes/?${params}`)
       setKpiTotal(Array.isArray(data) ? data.length : data.total ?? 0)
     } catch { }
