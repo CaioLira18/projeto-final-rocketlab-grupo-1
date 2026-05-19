@@ -29,15 +29,15 @@ interface Cliente {
 const PAGE_SIZE = 20
 
 const ESTADOS = [
-  "Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal",
-  "Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso Do Sul",
-  "Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí",
-  "Rio De Janeiro","Rio Grande Do Norte","Rio Grande Do Sul","Rondônia",
-  "Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins",
+  "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
+  "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso Do Sul",
+  "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí",
+  "Rio De Janeiro", "Rio Grande Do Norte", "Rio Grande Do Sul", "Rondônia",
+  "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins",
 ]
 
-const GENEROS  = ["Masculino", "Feminino", "Não Informado"]
-const ORIGENS  = ["Web", "App", "Indicação"]
+const GENEROS = ["Masculino", "Feminino", "Não Informado"]
+const ORIGENS = ["Web", "App", "Indicação"]
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function formatDate(value: string | null | undefined) {
@@ -48,9 +48,9 @@ function formatDate(value: string | null | undefined) {
 
 function GenderBadge({ g }: { g: string }) {
   const cls =
-    g === "Feminino"  ? "bg-pink-50 text-pink-600" :
-    g === "Masculino" ? "bg-blue-50 text-blue-600"  :
-                        "bg-gray-100 text-gray-500"
+    g === "Feminino" ? "bg-pink-50 text-pink-600" :
+      g === "Masculino" ? "bg-blue-50 text-blue-600" :
+        "bg-gray-100 text-gray-500"
   return (
     <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${cls}`}>
       {g === "Feminino" ? "F" : g === "Masculino" ? "M" : "?"}
@@ -101,9 +101,8 @@ function Pagination({
             <button
               key={p}
               onClick={() => onPage(p as number)}
-              className={`w-8 h-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-colors ${
-                page === p ? "bg-gray-700 text-white border border-gray-700 shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"
-              }`}
+              className={`w-8 h-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-colors ${page === p ? "bg-gray-700 text-white border border-gray-700 shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                }`}
             >
               {p}
             </button>
@@ -129,20 +128,20 @@ export function Clientes() {
   const podeVer360 = can("clientes.view360")
   const toast = useToast()
 
-  const [clientes, setClientes]   = useState<Cliente[]>([])
-  const [total, setTotal]         = useState(0)
+  const [clientes, setClientes] = useState<Cliente[]>([])
+  const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]         = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   // Filtros simplificados para busca reativa instantânea
-  const [busca, setBusca]               = useState("")
-  const [id_cliente, setId_cliente]     = useState("")
+  const [busca, setBusca] = useState("")
+  const [id_cliente, setId_cliente] = useState("")
   const [statusGenero, setStatusGenero] = useState("")
-  const [estado, setEstado]             = useState("")
-  const [origem, setOrigem]             = useState("")
-  const [idadeMin, setIdadeMin]         = useState("")
-  const [idadeMax, setIdadeMax]         = useState("")
-  const [semRamal, setSemRamal]         = useState(false)
+  const [estado, setEstado] = useState("")
+  const [origem, setOrigem] = useState("")
+  const [idadeMin, setIdadeMin] = useState("")
+  const [idadeMax, setIdadeMax] = useState("")
+  const [semRamal, setSemRamal] = useState(false)
 
   // Paginação
   const [page, setPage] = useState(1)
@@ -157,29 +156,29 @@ export function Clientes() {
   const buildParams = useCallback((extra: Record<string, string> = {}) => {
     const params = new URLSearchParams(extra)
     if (busca.trim()) params.set("busca", busca.trim())
-    if (id_cliente)   params.set("id_cliente", id_cliente)
+    if (id_cliente) params.set("id_cliente", id_cliente)
     if (statusGenero) params.set("genero", statusGenero)
-    if (estado)       params.set("estado", estado)
-    if (origem)       params.set("origem", origem)
-    if (idadeMin)     params.set("idade_min", idadeMin)
-    if (idadeMax)     params.set("idade_max", idadeMax)
-    if (semRamal)     params.set("sem_ramal", "true")
+    if (estado) params.set("estado", estado)
+    if (origem) params.set("origem", origem)
+    if (idadeMin) params.set("idade_min", idadeMin)
+    if (idadeMax) params.set("idade_max", idadeMax)
+    if (semRamal) params.set("sem_ramal", "true")
     return params
-  }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal]) 
+  }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
 
   const fetchClientes = useCallback(async () => {
     setIsLoading(true)
     setError(null)
     try {
       const params = buildParams({
-        skip:  String((page - 1) * PAGE_SIZE),
+        skip: String((page - 1) * PAGE_SIZE),
         limit: String(PAGE_SIZE),
       })
       const data = await apiFetch<{ clientes: Cliente[]; total: number } | Cliente[]>(
         `/clientes/?${params}`
       )
-      const lista  = Array.isArray(data) ? data : data.clientes ?? []
-      const tot    = Array.isArray(data) ? lista.length : data.total ?? lista.length
+      const lista = Array.isArray(data) ? data : data.clientes ?? []
+      const tot = Array.isArray(data) ? lista.length : data.total ?? lista.length
       setClientes(lista)
       setTotal(tot)
     } catch {
@@ -191,14 +190,15 @@ export function Clientes() {
 
   const fetchKpi = useCallback(async () => {
     try {
-      const data = await apiFetch<{ total: number } | Cliente[]>("/clientes/?limit=1")
+      const params = buildParams({ limit: "1" })           // ← usa os filtros ativos
+      const data = await apiFetch<{ total: number } | Cliente[]>(`/clientes/?${params}`)
       setKpiTotal(Array.isArray(data) ? data.length : data.total ?? 0)
-    } catch {}
-  }, [])
+    } catch { }
+  }, [buildParams])
 
   useEffect(() => { fetchKpi() }, [fetchKpi])
   useEffect(() => { fetchClientes() }, [fetchClientes])
-  
+
   useEffect(() => { setPage(1) }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
 
   const handleExportCSV = async () => {
@@ -210,9 +210,9 @@ export function Clientes() {
         { headers: { Authorization: `Bearer ${token}` } }
       )
       const blob = await res.blob()
-      const url  = URL.createObjectURL(blob)
-      const a    = document.createElement("a")
-      a.href     = url
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
       a.download = `clientes_${new Date().toISOString().slice(0, 10)}.csv`
       a.click()
       URL.revokeObjectURL(url)
@@ -223,12 +223,12 @@ export function Clientes() {
   }
 
   const kpiCards = [
-    { title: "Total de Clientes", value: kpiTotal, icon: Users,    iconClass: "text-primary bg-primary-50",  valueClass: "text-dark"    },
+    { title: "Total de Clientes", value: kpiTotal, icon: Users, iconClass: "text-primary bg-primary-50", valueClass: "text-dark" },
   ]
 
   const TABLE_COLS = [
-    "ID do Cliente","Nome","E-mail","Telefone","Ramal",
-    "Gênero","Idade","Dt. Nascimento","Cidade","Estado","País","Origem","Ações",
+    "ID do Cliente", "Nome", "E-mail", "Telefone", "Ramal",
+    "Gênero", "Idade", "Dt. Nascimento", "Cidade", "Estado", "País", "Origem", "Ações",
   ]
 
   return (
