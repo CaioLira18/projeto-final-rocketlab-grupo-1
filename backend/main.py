@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import cliente_router, produto_router, pedido_router, dashboard_router, auth_router, suporte_router, export_router, chat_router
 
 app = FastAPI(
-    title="RocketLab API",
-    description="Backend for the final project",
+    title="v commerce CRM API",
+    description="Backend do CRM v commerce, desenvolvido pela equipe StackOverGol.",
     version="1.0.0",
     swagger_ui_parameters={"tryItOutEnabled": True},
 )
@@ -34,9 +34,12 @@ app.include_router(chat_router)
 
 @app.get("/", tags=["Sistema"], summary="Boas-vindas da API")
 def read_root():
-    """Endpoint público que retorna uma mensagem de boas-vindas. Útil para
-    verificar rapidamente se a API está respondendo na raiz."""
-    return {"message": "Welcome to the RocketLab API!"}
+    """Endpoint público que retorna uma mensagem de boas-vindas em pt-BR."""
+    return {
+        "mensagem": "Bem-vindo à API do CRM v commerce, desenvolvido pela equipe StackOverGol.",
+        "documentacao": "/docs",
+        "health": "/health",
+    }
 
 
 @app.get("/health", tags=["Sistema"], summary="Health check da API")
