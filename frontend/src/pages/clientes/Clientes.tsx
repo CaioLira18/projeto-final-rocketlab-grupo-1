@@ -143,6 +143,28 @@ export function Clientes() {
   const [idadeMax, setIdadeMax] = useState("")
   const [semRamal, setSemRamal] = useState(false)
 
+  const filtrosAtivos = [
+    busca.trim(),
+    id_cliente.trim(),
+    statusGenero,
+    estado,
+    origem,
+    idadeMin,
+    idadeMax,
+    semRamal ? "true" : "",
+  ].filter(Boolean).length
+
+  const limparFiltros = () => {
+    setBusca("")
+    setId_cliente("")
+    setStatusGenero("")
+    setEstado("")
+    setOrigem("")
+    setIdadeMin("")
+    setIdadeMax("")
+    setSemRamal(false)
+  }
+
   // Paginação
   const [page, setPage] = useState(1)
   const totalPages = Math.ceil(total / PAGE_SIZE) || 1
@@ -356,6 +378,15 @@ export function Clientes() {
               Exportar CSV
             </Button>
           )}
+
+          {filtrosAtivos > 0 && (
+            <button
+              onClick={limparFiltros}
+              className="text-caption text-gray-400 hover:text-error underline underline-offset-2 self-center cursor-pointer transition-colors duration-150"
+            >
+              Limpar todos os filtros ({filtrosAtivos})
+            </button>
+          )}
         </div>
 
         {/* Conteúdo */}
@@ -386,8 +417,16 @@ export function Clientes() {
                   ))
                 ) : clientes.length === 0 ? (
                   <tr>
-                    <td colSpan={TABLE_COLS.length} className="px-6 py-12 text-center text-body-2 text-gray-400">
-                      Nenhum cliente encontrado para os filtros aplicados.
+                    <td colSpan={TABLE_COLS.length} className="px-6 py-12 text-center text-body-2 text-gray-400 space-y-2">
+                      <p>Nenhum cliente encontrado para os filtros aplicados.</p>
+                      {filtrosAtivos > 0 && (
+                        <button
+                          onClick={limparFiltros}
+                          className="text-sm text-action hover:underline font-semibold cursor-pointer"
+                        >
+                          Limpar todos os filtros e tentar novamente
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ) : (

@@ -167,12 +167,13 @@ export function Produtos() {
             }}
             canExport={podeExportar}
             onExport={handleExportCSV}
+            onClear={() => setSearchTerm("")}
           />
 
           {/* Tabela de Produtos */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             {filteredProdutos.length === 0 ? (
-              <EmptyState searchTerm={searchTerm} />
+              <EmptyState searchTerm={searchTerm} onClear={() => setSearchTerm("")} />
             ) : (
               <>
                 <ProductTable
@@ -301,56 +302,73 @@ interface FiltersBarProps {
   onNewProduct: () => void
   canExport: boolean
   onExport: () => void
+  onClear: () => void
 }
 
-function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct, canExport, onExport }: FiltersBarProps) {
+function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct, canExport, onExport, onClear }: FiltersBarProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-      <div className="relative flex-1 max-w-md">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
-          <Search className="h-5 w-5" />
-        </span>
-        <input
-          type="text"
-          placeholder="Buscar produto..."
-          className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+    <div className="space-y-2 w-full">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <div className="relative flex-1 max-w-md">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
+            <Search className="h-5 w-5" />
+          </span>
+          <input
+            type="text"
+            placeholder="Buscar produto..."
+            className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
-      <div className="flex items-center gap-3">
-        {canExport && (
-          <Button
-            size="lg"
-            variant="outlined"
-            intent="action"
-            leftIcon={<Download className="h-5 w-5" />}
-            onClick={onExport}
-          >
-            Exportar CSV
-          </Button>
-        )}
+        <div className="flex items-center gap-3">
+          {canExport && (
+            <Button
+              size="lg"
+              variant="outlined"
+              intent="action"
+              leftIcon={<Download className="h-5 w-5" />}
+              onClick={onExport}
+            >
+              Exportar CSV
+            </Button>
+          )}
 
-        {canCreate && (
-          <Button
-            size="lg"
-            intent="primary"
-            leftIcon={<Plus className="h-5 w-5" />}
-            onClick={onNewProduct}
-          >
-            Novo produto
-          </Button>
-        )}
+          {canCreate && (
+            <Button
+              size="lg"
+              intent="primary"
+              leftIcon={<Plus className="h-5 w-5" />}
+              onClick={onNewProduct}
+            >
+              Novo produto
+            </Button>
+          )}
+        </div>
       </div>
+      {searchTerm && (
+        <button
+          onClick={onClear}
+          className="text-caption text-gray-400 hover:text-error underline underline-offset-2 ml-2 transition-all duration-150 cursor-pointer"
+        >
+          Limpar todos os filtros (1)
+        </button>
+      )}
     </div>
   )
 }
 
-function EmptyState({ searchTerm }: { searchTerm: string }) {
+function EmptyState({ searchTerm, onClear }: { searchTerm: string; onClear: () => void }) {
   return (
-    <div className="p-12 text-center text-gray-400 font-medium">
-      Nenhum produto encontrado para "{searchTerm}"
+    <div className="p-12 text-center text-gray-400 font-medium space-y-2">
+      <p>Nenhum produto encontrado para "{searchTerm}"</p>
+      <button
+        onClick={onClear}
+        className="text-sm text-action hover:underline font-semibold cursor-pointer"
+      >
+        Limpar busca e tentar novamente
+      </button>
     </div>
   )
 }

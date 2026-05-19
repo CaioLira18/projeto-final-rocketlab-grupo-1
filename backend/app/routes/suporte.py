@@ -23,6 +23,7 @@ router = APIRouter(
 @router.get("/resumo", summary="Resumo agregado dos tickets de suporte")
 def resumo_suporte(
     id_cliente: Optional[str] = Query(None),
+    ticket_id: Optional[str] = Query(None),
     tipo_problema: Optional[str] = Query(None),
     agente_suporte: Optional[str] = Query(None),
     status: Optional[str] = Query(None),
@@ -41,7 +42,9 @@ def resumo_suporte(
     q = db.query(FatoSuporte)
 
     if id_cliente:
-        q = q.filter(FatoSuporte.id_cliente == id_cliente)
+        q = q.filter(FatoSuporte.id_cliente.ilike(f"%{id_cliente}%"))
+    if ticket_id:
+        q = q.filter(FatoSuporte.ticket_id.ilike(f"%{ticket_id}%"))
     if tipo_problema:
         q = q.filter(FatoSuporte.tipo_problema.ilike(f"%{tipo_problema}%"))
     if agente_suporte:
@@ -74,6 +77,7 @@ def listar_tickets(
     response: Response,
     id_produto: Optional[str] = Query(None, description="Filtrar por ID do produto"),
     id_cliente: Optional[str] = Query(None, description="Filtrar por ID do cliente"),
+    ticket_id: Optional[str] = Query(None, description="Filtrar por ID do ticket"),
     tipo_problema: Optional[str] = Query(None, description="Filtrar por tipo de problema"),
     nome_cliente: Optional[str] = Query(None, description="Filtrar por nome do cliente"),
     agente_suporte: Optional[str] = Query(None, description="Filtrar por agente de suporte"),
@@ -100,7 +104,9 @@ def listar_tickets(
         if id_produto:
             q = q.filter(Pedidos.id_produto == id_produto)
         if id_cliente:
-            q = q.filter(FatoSuporte.id_cliente == id_cliente)
+            q = q.filter(FatoSuporte.id_cliente.ilike(f"%{id_cliente}%"))
+        if ticket_id:
+            q = q.filter(FatoSuporte.ticket_id.ilike(f"%{ticket_id}%"))
         if tipo_problema:
             q = q.filter(FatoSuporte.tipo_problema.ilike(f"%{tipo_problema}%"))
         if nome_cliente:

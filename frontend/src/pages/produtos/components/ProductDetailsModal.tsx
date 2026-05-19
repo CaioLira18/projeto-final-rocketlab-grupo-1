@@ -8,9 +8,8 @@ import {
   Calendar, 
   Clock, 
   AlertTriangle, 
-  CheckCircle2, 
-  XCircle,
   TrendingDown,
+
   Layers,
   Scale,
   Award,
