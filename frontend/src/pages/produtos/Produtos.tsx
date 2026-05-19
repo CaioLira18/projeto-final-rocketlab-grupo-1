@@ -52,7 +52,7 @@ export function Produtos() {
 
   // Estado para controle de paginação
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const itemsPerPage = 20
 
   // Estados para Modal de Cadastro / Edição
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -518,9 +518,9 @@ function ProductPagination({
             <button
               key={`page-${page}`}
               onClick={() => onPageChange(page as number)}
-              className={`h-8 w-8 rounded-lg text-caption font-semibold transition-all duration-150 cursor-pointer ${currentPage === page
-                ? "bg-primary text-white shadow-sm"
-                : "text-gray-500 hover:bg-gray-100 active:bg-gray-200"
+              className={`h-8 w-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-all duration-150 cursor-pointer ${currentPage === page
+                ? "bg-primary text-white border border-primary shadow-sm"
+                : "border border-gray-200 text-gray-500 hover:bg-gray-100 active:bg-gray-200"
                 }`}
             >
               {page}

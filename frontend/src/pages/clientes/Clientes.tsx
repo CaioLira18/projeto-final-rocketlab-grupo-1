@@ -61,15 +61,22 @@ function GenderBadge({ g }: { g: string }) {
 function Pagination({
   page, totalPages, total, pageSize, onPage
 }: { page: number; totalPages: number; total: number; pageSize: number; onPage: (p: number) => void }) {
-  const pages: (number | "...")[] = []
-  if (totalPages <= 5) {
-    for (let i = 1; i <= totalPages; i++) pages.push(i)
-  } else {
-    pages.push(1)
-    if (page > 3) pages.push("...")
-    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) pages.push(i)
-    if (page < totalPages - 2) pages.push("...")
-    pages.push(totalPages)
+  const getPageNumbers = () => {
+    const pages: (number | "...")[] = []
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i)
+    } else {
+      pages.push(1)
+      let start = Math.max(2, page - 1)
+      let end = Math.min(totalPages - 1, page + 1)
+      if (page <= 3) end = 4
+      else if (page >= totalPages - 2) start = totalPages - 3
+      if (start > 2) pages.push("...")
+      for (let i = start; i <= end; i++) pages.push(i)
+      if (end < totalPages - 1) pages.push("...")
+      pages.push(totalPages)
+    }
+    return pages
   }
 
   return (
@@ -87,15 +94,15 @@ function Pagination({
           <ChevronLeft className="w-4 h-4" />
         </button>
 
-        {pages.map((p, i) =>
+        {getPageNumbers().map((p, i) =>
           p === "..." ? (
-            <span key={`e-${i}`} className="w-8 h-8 flex items-center justify-center text-caption text-gray-400">...</span>
+            <span key={`e-${i}`} className="w-8 h-8 flex items-center justify-center text-caption text-gray-400 font-bold select-none">...</span>
           ) : (
             <button
               key={p}
               onClick={() => onPage(p as number)}
               className={`w-8 h-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-colors ${
-                page === p ? "bg-gray-700 text-white" : "border border-gray-200 text-gray-600 hover:bg-gray-50"
+                page === p ? "bg-gray-700 text-white border border-gray-700 shadow-sm" : "border border-gray-200 text-gray-600 hover:bg-gray-50"
               }`}
             >
               {p}
