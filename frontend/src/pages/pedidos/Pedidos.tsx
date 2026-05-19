@@ -62,11 +62,28 @@ export function Pedidos() {
 
   //Filtros
   const [busca, setBusca] = useState("")
-  const  [buscaInput, setBuscaInput] = useState("")
+  const [buscaInput, setBuscaInput] = useState("")
   const [statusFiltro, setStatusFiltro] = useState("")
   const [dataInicio, setDataInicio] = useState("")
   const [dataFim, setDataFim] = useState("")
   const [categoriaFiltro, setCategoriaFiltro] = useState("")
+
+  const filtrosAtivos = [
+    busca.trim(),
+    statusFiltro,
+    dataInicio,
+    dataFim,
+    categoriaFiltro,
+  ].filter(Boolean).length
+
+  const limparFiltros = () => {
+    setBuscaInput("")
+    setBusca("")
+    setStatusFiltro("")
+    setDataInicio("")
+    setDataFim("")
+    setCategoriaFiltro("")
+  }
 
   //Paginação
   const [page, setPage] = useState(1)
@@ -76,7 +93,13 @@ export function Pedidos() {
   const fetchCounts = useCallback(async () => {
     try {
       const params = new URLSearchParams()
-      if (busca)           params.set("nome_cliente", busca)
+      if (busca) {
+        if (busca.includes("-") || (/^[a-f0-9]+$/i.test(busca) && busca.length >= 8)) {
+          params.set("id_pedido", busca)
+        } else {
+          params.set("nome_cliente", busca)
+        }
+      }
       if (statusFiltro)    params.set("status", statusFiltro)
       if (dataInicio)      params.set("data_inicio", dataInicio)
       if (dataFim)         params.set("data_fim", dataFim)
@@ -96,7 +119,7 @@ export function Pedidos() {
 
       const params = new URLSearchParams({ skip: String(skip), limite: String(PAGE_SIZE) })
       if (busca) {
-        if (busca.includes("-") || /^[a-f0-9]+$/i.test(busca)) {
+        if (busca.includes("-") || (/^[a-f0-9]+$/i.test(busca) && busca.length >= 8)) {
           params.set("id_pedido", busca)
         } else {
           params.set("nome_cliente", busca)
@@ -115,6 +138,17 @@ export function Pedidos() {
       setIsLoading(false)
     }
   }, [page, busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
+
+  // Debounce para buscaInput -> busca (filtro reativo instantâneo)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setBusca(buscaInput)
+    }, 300)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [buscaInput])
 
   useEffect(() => { fetchCounts() }, [fetchCounts])
   useEffect(() => { fetchPedidos() }, [fetchPedidos])
@@ -265,6 +299,15 @@ export function Pedidos() {
             <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
               Exportar CSV
             </Button>
+          )}
+
+          {filtrosAtivos > 0 && (
+            <button
+              onClick={limparFiltros}
+              className="text-caption text-gray-400 hover:text-error underline underline-offset-2 self-center cursor-pointer transition-colors duration-150"
+            >
+              Limpar todos os filtros ({filtrosAtivos})
+            </button>
           )}
         </div>{/* fim filtros */}
 
