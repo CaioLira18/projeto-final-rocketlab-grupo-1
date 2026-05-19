@@ -110,11 +110,15 @@ export function AiAgent() {
         body: JSON.stringify({ session_id: sessionId.current, message: trimmed }),
       })
       setMessages(prev => [...prev, { id: crypto.randomUUID(), role: 'assistant', content: data.response }])
-    } catch {
-      // Erro de rede ou 500: mostra mensagem genérica como bubble do assistant
+    } catch (err) {
+      const rawMsg = err instanceof Error ? err.message : ''
+      const isUserFriendly = rawMsg && !rawMsg.startsWith('HTTP ') && rawMsg !== 'Failed to fetch'
+      const errorMsg = isUserFriendly
+        ? rawMsg
+        : 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente.'
       setMessages(prev => [
         ...prev,
-        { id: crypto.randomUUID(), role: 'assistant', content: 'Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente.' },
+        { id: crypto.randomUUID(), role: 'assistant', content: errorMsg },
       ])
     } finally {
       setIsLoading(false)

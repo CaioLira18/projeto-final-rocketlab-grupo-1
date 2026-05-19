@@ -1,6 +1,7 @@
 import traceback
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from pydantic_ai.exceptions import ModelHTTPError
 
 from app.services.chat_service import agent, SUGGESTED_QUESTIONS
 from app.routes.auth import get_current_user
@@ -39,10 +40,41 @@ async def chat(req: ChatRequest, _=Depends(get_current_user)):
     try:
         result = await agent.run(req.message, message_history=history)
         _sessions[req.session_id] = list(result.all_messages())
-        return ChatResponse(response=result.data)
+        return ChatResponse(response=result.output)
+    except ModelHTTPError as e:
+        traceback.print_exc()
+        # body pode ser dict, str ou None: serializamos para sempre conseguir buscar padrões
+        body_str = str(e.body) if e.body is not None else ""
+        is_quota = e.status_code == 429 or "RESOURCE_EXHAUSTED" in body_str
+        if is_quota:
+            # Cota diária (RPD): só renova após reset diário do Google, ~24h
+            is_daily = "PerDay" in body_str or "free_tier_requests" in body_str
+            if is_daily:
+                detail = (
+                    "O limite diário gratuito da API de IA foi atingido. "
+                    "O agente voltará a responder após a renovação da cota (geralmente em até 24h). (429)"
+                )
+            else:
+                # Limite por minuto (RPM): aguardar alguns segundos resolve
+                detail = (
+                    "Muitas perguntas em pouco tempo: o limite por minuto da API de IA foi atingido. "
+                    "Aguarde alguns instantes e tente novamente. (429)"
+                )
+            raise HTTPException(status_code=429, detail=detail)
+        # 503 UNAVAILABLE: sobrecarga momentânea do modelo no lado do Google.
+        # Não consome cota e geralmente resolve em segundos; mensagem específica ajuda o usuário a saber que basta tentar de novo.
+        if e.status_code == 503 or "UNAVAILABLE" in body_str:
+            raise HTTPException(
+                status_code=503,
+                detail="A API de IA está com alta demanda no momento. Tente novamente em alguns instantes. (503)",
+            )
+        raise HTTPException(
+            status_code=500,
+            detail="Ocorreu um erro ao se comunicar com a API de IA. Tente novamente mais tarde.",
+        )
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Ocorreu um erro interno ao processar sua pergunta. Tente novamente.")
 
 
 @router.get("/suggestions", response_model=SuggestionsResponse, summary="Lista perguntas sugeridas")
