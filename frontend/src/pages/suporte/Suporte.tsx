@@ -498,9 +498,9 @@ export function Suporte() {
                       </button>
                       {getPageNumbers().map((page, idx) =>
                         page === "..." ? (
-                          <span key={`e-${idx}`} className="px-2 text-gray-400 font-bold text-caption">...</span>
+                          <span key={`e-${idx}`} className="px-2 text-gray-400 font-bold text-caption flex items-center justify-center">...</span>
                         ) : (
-                          <button key={`p-${page}`} onClick={() => setPagina(page as number)} className={`h-8 w-8 rounded-lg text-caption font-semibold ${pagina === page ? "bg-primary text-white shadow-sm" : "text-gray-500 hover:bg-gray-100"}`}>
+                          <button key={`p-${page}`} onClick={() => setPagina(page as number)} className={`h-8 w-8 flex items-center justify-center rounded-lg text-caption font-semibold transition-all duration-150 cursor-pointer ${pagina === page ? "bg-primary text-white border border-primary shadow-sm" : "border border-gray-200 text-gray-500 hover:bg-gray-100"}`}>
                             {page}
                           </button>
                         )
