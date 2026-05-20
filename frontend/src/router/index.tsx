@@ -7,7 +7,7 @@ import { Pedidos } from "@/pages/pedidos"
 import { Suporte } from "@/pages/suporte"
 import { Clientes } from "@/pages/clientes"
 import { AiAgent } from "@/pages/ai-agent"
-import { Login, Register } from "@/pages/auth"
+import { Login, Register, Unauthorized } from "@/pages/auth"
 import { AuthProvider, useAuth } from "@/context"
 import { usePermission, type Capability } from "@/hooks"
 import ButtonsShowcase from "@/pages/dev/ButtonsShowcase"
@@ -43,15 +43,15 @@ const FALLBACK_ROUTES: Array<{ path: string; capability: Capability }> = [
 // Renderiza a Home (Dashboard) para quem tem permissão e redireciona os demais para a primeira área acessível.
 function HomeOrFallback() {
   const { can } = usePermission()
-  if (can("dashboard.view")) return <Home />
+  if (can("dashboard.view")) return <Navigate to="/dashboard" replace />
   const target = FALLBACK_ROUTES.find((route) => can(route.capability))
-  return <Navigate to={target?.path ?? "/login"} replace />
+  return <Navigate to={target?.path ?? "/unauthorized"} replace />
 }
 
 // Gate por capacidade aplicado a uma rota individual. Roles sem permissão são redirecionadas para a Home.
 function RequireCapability({ capability, children }: { capability: Capability; children: ReactNode }) {
   const { can } = usePermission()
-  if (!can(capability)) return <Navigate to="/" replace />
+  if (!can(capability)) return <Navigate to="/unauthorized" replace />
   return <>{children}</>
 }
 
@@ -65,6 +65,10 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
+    path: "/unauthorized",
+    element: <Unauthorized />,
+  },
+  {
     path: "/botoes-teste",
     element: <ButtonsShowcase />,
   },
@@ -76,6 +80,7 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
           { path: "/", element: <HomeOrFallback /> },
+          { path: "/dashboard", element: <RequireCapability capability="dashboard.view"><Home /></RequireCapability> },
           { path: "/clientes", element: <RequireCapability capability="clientes.read"><Clientes /></RequireCapability> },
           { path: "/produtos", element: <RequireCapability capability="produtos.read"><Produtos /></RequireCapability> },
           { path: "/pedidos", element: <RequireCapability capability="pedidos.read"><Pedidos /></RequireCapability> },

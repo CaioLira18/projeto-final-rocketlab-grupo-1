@@ -27,7 +27,7 @@ const ROLE_LABELS: Record<string, string> = {
 
 // Capacidade necessária para cada item do menu. Mantido em sincronia com a matriz de permissões.
 const NAV_ITEM_CAPABILITY: Record<string, Capability> = {
-  "/": "dashboard.view",
+  "/dashboard": "dashboard.view",
   "/clientes": "clientes.read",
   "/produtos": "produtos.read",
   "/pedidos": "pedidos.read",
@@ -50,7 +50,7 @@ export function NavBar() {
   }
 
   const allNavItems = [
-    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/clientes", label: "Clientes", icon: Users },
     { to: "/produtos", label: "Produtos", icon: Package },
     { to: "/pedidos", label: "Pedidos", icon: ShoppingCart },
@@ -82,7 +82,7 @@ export function NavBar() {
 
         {/* Logotipo da marca, clicável e leva ao Dashboard */}
         <NavLink
-          to="/"
+          to="/dashboard"
           end
           aria-label="Ir para o Dashboard"
           className={cn(
@@ -100,7 +100,7 @@ export function NavBar() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === "/"}
+                end={item.to === "/dashboard"}
                 className={({ isActive }) => cn(
                   "flex items-center rounded-lg text-body-2 font-medium transition-all duration-200 group relative",
                   isCollapsed ? "justify-center px-0 w-12 h-12 mx-auto" : "gap-3 px-4 py-3",
