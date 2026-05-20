@@ -26,6 +26,7 @@ def contar_pedidos(
     categoria_produto: Optional[str] = Query(None),
     id_pedido: Optional[str] = Query(None),
     busca: Optional[str] = Query(None),
+    sem_preco: Optional[bool] = Query(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -64,6 +65,8 @@ def contar_pedidos(
         query = query.filter(Pedidos.categoria_produto == categoria_produto)
     if id_pedido:
         query = query.filter(Pedidos.id_pedido.ilike(f"%{id_pedido}%"))
+    if sem_preco:
+        query = query.filter((Pedidos.valor_pedido == None) | (Pedidos.valor_pedido == 0))
 
     result = query.one()
     return {
@@ -91,6 +94,7 @@ def listar_pedidos(
     nome_cliente: Optional[str] = Query(None, description="Busca pelo nome do cliente"),
     nome_produto: Optional[str] = Query(None, description="Busca pelo nome do produto"),
     busca: Optional[str] = Query(None, description="Busca por cliente ou produto"),
+    sem_preco: Optional[bool] = Query(None, description="Filtrar pedidos sem preço"),
     order_by: str = Query("data_pedido", enum=["data_pedido", "valor_pedido", "quantidade_produto", 
                                                "nome_cliente", "nome_produto", "status_pedido"], 
                                                description="Campo para ordenação"),
@@ -115,7 +119,7 @@ def listar_pedidos(
         status=status, metodo_pagamento=metodo_pagamento, categoria_produto=categoria_produto,
         estado=estado, cidade=cidade,
         nome_cliente=nome_cliente, nome_produto=nome_produto,
-        busca=busca,
+        busca=busca, sem_preco=sem_preco,
         order_by=order_by, order_dir=order_dir,
         skip=skip, limite=limite
     )

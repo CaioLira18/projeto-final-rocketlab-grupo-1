@@ -67,6 +67,7 @@ export function Pedidos() {
   const [dataInicio, setDataInicio] = useState("")
   const [dataFim, setDataFim] = useState("")
   const [categoriaFiltro, setCategoriaFiltro] = useState("")
+  const [semPreco, setSemPreco] = useState(false)
 
   const filtrosAtivos = [
     busca.trim(),
@@ -74,6 +75,7 @@ export function Pedidos() {
     dataInicio,
     dataFim,
     categoriaFiltro,
+    semPreco ? "true" : "",
   ].filter(Boolean).length
 
   const limparFiltros = () => {
@@ -83,6 +85,7 @@ export function Pedidos() {
     setDataInicio("")
     setDataFim("")
     setCategoriaFiltro("")
+    setSemPreco(false)
   }
 
   //Paginação
@@ -98,12 +101,13 @@ export function Pedidos() {
       if (dataInicio)      params.set("data_inicio", dataInicio)
       if (dataFim)         params.set("data_fim", dataFim)
       if (categoriaFiltro) params.set("categoria_produto", categoriaFiltro)
+      if (semPreco)        params.set("sem_preco", "true")
 
       const data = await apiFetch<CountResponse>(`/pedidos/count?${params}`)
       setKpis(data)
       setTotal(data.total)
     } catch {}
-  }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
+  }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro, semPreco])
 
   const fetchPedidos = useCallback(async () => {
     setIsLoading(true)
@@ -117,6 +121,7 @@ export function Pedidos() {
       if (dataInicio)   params.set("data_inicio", dataInicio)
       if (dataFim)      params.set("data_fim", dataFim)
       if (categoriaFiltro) params.set("categoria_produto", categoriaFiltro)
+      if (semPreco)        params.set("sem_preco", "true")
       const pageData = await apiFetch<Pedido[]>(`/pedidos/?${params}`)
 
       setPedidos(pageData)
@@ -125,7 +130,7 @@ export function Pedidos() {
     } finally {
       setIsLoading(false)
     }
-  }, [page, busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
+  }, [page, busca, statusFiltro, dataInicio, dataFim, categoriaFiltro, semPreco])
 
   // Debounce para buscaInput -> busca (filtro reativo instantâneo)
   useEffect(() => {
@@ -140,7 +145,7 @@ export function Pedidos() {
 
   useEffect(() => { fetchCounts() }, [fetchCounts])
   useEffect(() => { fetchPedidos() }, [fetchPedidos])
-  useEffect(() => { setPage(1) }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro])
+  useEffect(() => { setPage(1) }, [busca, statusFiltro, dataInicio, dataFim, categoriaFiltro, semPreco])
 
   //Exportar CSV
   const handleExportCSV = async () => {
@@ -282,6 +287,17 @@ export function Pedidos() {
             <option value="Brinquedos">Brinquedos</option>
             <option value="Móveis">Móveis</option>
           </select>
+
+          {/* Sem preço */}
+          <label className="flex items-center gap-2 h-10 px-3 rounded-lg border border-gray-200 bg-white cursor-pointer text-sm text-gray-600">
+            <input
+              type="checkbox"
+              checked={semPreco}
+              onChange={e => setSemPreco(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            Sem preço
+          </label>
 
           {podeExportar && (
             <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={handleExportCSV}>
