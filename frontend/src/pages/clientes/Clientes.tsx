@@ -135,7 +135,6 @@ export function Clientes() {
 
   // Filtros simplificados para busca reativa instantânea
   const [busca, setBusca] = useState("")
-  const [id_cliente, setId_cliente] = useState("")
   const [statusGenero, setStatusGenero] = useState("")
   const [estado, setEstado] = useState("")
   const [origem, setOrigem] = useState("")
@@ -145,7 +144,6 @@ export function Clientes() {
 
   const filtrosAtivos = [
     busca.trim(),
-    id_cliente.trim(),
     statusGenero,
     estado,
     origem,
@@ -156,7 +154,6 @@ export function Clientes() {
 
   const limparFiltros = () => {
     setBusca("")
-    setId_cliente("")
     setStatusGenero("")
     setEstado("")
     setOrigem("")
@@ -178,7 +175,6 @@ export function Clientes() {
   const buildParams = useCallback((extra: Record<string, string> = {}) => {
     const params = new URLSearchParams(extra)
     if (busca.trim()) params.set("busca", busca.trim())
-    if (id_cliente) params.set("id_cliente", id_cliente)
     if (statusGenero) params.set("genero", statusGenero)
     if (estado) params.set("estado", estado)
     if (origem) params.set("origem", origem)
@@ -186,7 +182,7 @@ export function Clientes() {
     if (idadeMax) params.set("idade_max", idadeMax)
     if (semRamal) params.set("sem_ramal", "true")
     return params
-  }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
+  }, [busca, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
 
   const fetchClientes = useCallback(async () => {
     setIsLoading(true)
@@ -221,7 +217,7 @@ export function Clientes() {
   useEffect(() => { fetchKpi() }, [fetchKpi])
   useEffect(() => { fetchClientes() }, [fetchClientes])
 
-  useEffect(() => { setPage(1) }, [busca, id_cliente, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
+  useEffect(() => { setPage(1) }, [busca, statusGenero, estado, origem, idadeMin, idadeMax, semRamal])
 
   const handleExportCSV = async () => {
     const id = toast.loading("Preparando exportação...")
@@ -285,17 +281,6 @@ export function Clientes() {
         {/* Filtros */}
         <div className="p-4 flex flex-wrap gap-3 border-b border-gray-100">
 
-          {/* Busca Por ID Filtrando Instantaneamente */}
-          <div className="relative flex-1 min-w-55">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Buscar por Id"
-              value={id_cliente}
-              onChange={e => setId_cliente(e.target.value)}
-              className="w-full h-10 pl-9 pr-4 rounded-lg border border-gray-200 text-body-2 text-dark bg-white outline-none focus:border-action focus:ring-2 focus:ring-action-100 transition-all"
-            />
-          </div>
 
           {/* Busca por Nome/E-mail Filtrando Instantaneamente */}
           <div className="relative flex-1 min-w-55">

@@ -11,6 +11,7 @@ def list_pedidos(
     estado=None, cidade=None,
     nome_cliente=None, nome_produto=None,
     busca=None,
+    sem_preco=None,
     order_by="data_pedido", order_dir="desc",
     skip=0, limite=50
 ):
@@ -35,6 +36,8 @@ def list_pedidos(
         query = query.filter(Pedidos.valor_pedido >= valor_min)
     if valor_max is not None:
         query = query.filter(Pedidos.valor_pedido <= valor_max)
+    if sem_preco:
+        query = query.filter((Pedidos.valor_pedido == None) | (Pedidos.valor_pedido == 0))
     if status:
         query = query.filter(Pedidos.status_pedido == status)
     if metodo_pagamento:
