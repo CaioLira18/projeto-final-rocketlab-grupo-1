@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from pydantic_ai.exceptions import ModelHTTPError
 
 from app.services.chat_service import agent, SUGGESTED_QUESTIONS
-from app.routes.auth import get_current_user
+from app.routes.dependencies import require_chat
 
 router = APIRouter(prefix="/chat", tags=["Agente IA"])
 
@@ -26,7 +26,7 @@ class SuggestionsResponse(BaseModel):
 
 
 @router.post("", response_model=ChatResponse, summary="Envia uma mensagem ao agente de IA")
-async def chat(req: ChatRequest, _=Depends(get_current_user)):
+async def chat(req: ChatRequest, _=Depends(require_chat)):
     """
     Envia uma pergunta em linguagem natural ao agente de IA e retorna a resposta.
 
@@ -78,7 +78,7 @@ async def chat(req: ChatRequest, _=Depends(get_current_user)):
 
 
 @router.get("/suggestions", response_model=SuggestionsResponse, summary="Lista perguntas sugeridas")
-def get_suggestions(_=Depends(get_current_user)):
+def get_suggestions(_=Depends(require_chat)):
     """
     Retorna a lista fixa de perguntas sugeridas exibidas na tela inicial do
     chat, usadas como atalhos clicáveis para o usuário começar a conversa.
@@ -87,7 +87,7 @@ def get_suggestions(_=Depends(get_current_user)):
 
 
 @router.delete("/session/{session_id}", status_code=204, summary="Apaga o histórico de uma sessão")
-def clear_session(session_id: str, _=Depends(get_current_user)):
+def clear_session(session_id: str, _=Depends(require_chat)):
     """
     Remove o histórico em memória de uma sessão do chat. As próximas
     mensagens com este `session_id` voltam a começar do zero, sem contexto.
