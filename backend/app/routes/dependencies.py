@@ -11,12 +11,13 @@ Esta matriz reflete a decisão de RBAC documentada no README, seção
 """
 from app.routes.auth import RoleChecker
 
-# Dashboard: visão estratégica e analítica. Operador de suporte foca em tickets, fora do escopo aqui.
+# Dashboard: agregados de Gold (VendasPeriodo + Cliente360). Restrito aos papéis
+# que também têm acesso ao detalhe das mesmas entidades (pedidos + cliente 360),
+# para evitar que o dashboard vire um canal lateral para dados que a role não
+# pode ver na página individual.
 require_dashboard = RoleChecker([
     "gerente_comercial",
     "analista_crm",
-    "analista_operacoes",
-    "gerente_produtos",
 ])
 
 # Leitura de clientes: todos os papéis operacionais precisam consultar o cadastro.
@@ -42,9 +43,10 @@ require_pedidos = RoleChecker([
     "operador_suporte",
 ])
 
-# Leitura do catálogo de produtos: todos exceto analista de CRM (foca em cliente, não em catálogo).
+# Leitura do catálogo de produtos: todos os papéis operacionais.
 require_produtos_read = RoleChecker([
     "gerente_comercial",
+    "analista_crm",
     "analista_operacoes",
     "gerente_produtos",
     "operador_suporte",
@@ -62,18 +64,20 @@ require_suporte = RoleChecker([
     "operador_suporte",
 ])
 
-# Exportação de dados em CSV: ação sensível, restrita a papéis de gestão.
+# Exportação de dados em CSV: ação sensível. Papéis de gestão + analista CRM
+# (que já enxerga todos os dados exportáveis pela matriz).
 require_export = RoleChecker([
     "gerente_comercial",
+    "analista_crm",
     "gerente_produtos",
 ])
 
-# Agente IA (chat): consulta o banco Gold (mesmas tabelas do dashboard), então
-# segue a mesma matriz do dashboard. Operador de suporte fica de fora pelo mesmo
-# motivo do dashboard: foco em tickets, não em visão analítica consolidada.
+# Agente IA (chat): consulta o banco Gold (dim_cliente, dim_produto,
+# dm_cliente_360, dm_produto_360, dm_vendas_periodo). Restrito aos papéis que
+# também têm acesso aos detalhes dessas mesmas entidades nas páginas (clientes,
+# 360, pedidos, produtos). Sem isso, o chat seria um canal lateral para dados
+# que a role não pode ver de forma direta.
 require_chat = RoleChecker([
     "gerente_comercial",
     "analista_crm",
-    "analista_operacoes",
-    "gerente_produtos",
 ])

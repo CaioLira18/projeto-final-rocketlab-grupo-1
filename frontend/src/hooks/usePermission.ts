@@ -30,20 +30,8 @@ const ROLE_CAPABILITIES: Record<string, Capability[]> = {
     "clientes.read",
     "clientes.view360",
     "pedidos.read",
+    "produtos.read",
     "suporte.read",
-    "chat.use",
-  ],
-  analista_operacoes: [
-    "dashboard.view",
-    "clientes.read",
-    "pedidos.read",
-    "produtos.read",
-    "chat.use",
-  ],
-  gerente_produtos: [
-    "dashboard.view",
-    "produtos.read",
-    "produtos.write",
     "export.run",
     "chat.use",
   ],
@@ -52,6 +40,16 @@ const ROLE_CAPABILITIES: Record<string, Capability[]> = {
     "pedidos.read",
     "produtos.read",
     "suporte.read",
+  ],
+  analista_operacoes: [
+    "clientes.read",
+    "pedidos.read",
+    "produtos.read",
+  ],
+  gerente_produtos: [
+    "produtos.read",
+    "produtos.write",
+    "export.run",
   ],
 }
 
