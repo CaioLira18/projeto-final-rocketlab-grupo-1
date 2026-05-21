@@ -3,7 +3,6 @@ import {
   Package,
   TrendingUp,
   Star,
-  Search,
   Plus,
   Pencil,
   Trash2,
@@ -16,7 +15,7 @@ import {
 } from "lucide-react"
 import { apiFetch } from "@/services"
 import type { ProdutoMetricas } from "@/types"
-import { Button } from "@/components/ui"
+import { Button, SearchInput } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
@@ -309,26 +308,19 @@ function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct, canExp
   return (
     <div className="space-y-2 w-full">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <div className="relative flex-1 max-w-md">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
-            <Search className="h-5 w-5" />
-          </span>
-          <input
-            type="text"
-            placeholder="Buscar produto..."
-            className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary transition-all duration-200"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <SearchInput
+          value={searchTerm}
+          onChange={setSearchTerm}
+          placeholder="Buscar produto..."
+          className="flex-1 max-w-md"
+        />
 
         <div className="flex items-center gap-3">
           {canExport && (
             <Button
-              size="lg"
               variant="outlined"
               intent="action"
-              leftIcon={<Download className="h-5 w-5" />}
+              leftIcon={<Download />}
               onClick={onExport}
             >
               Exportar CSV
@@ -337,9 +329,8 @@ function FiltersBar({ searchTerm, setSearchTerm, canCreate, onNewProduct, canExp
 
           {canCreate && (
             <Button
-              size="lg"
               intent="primary"
-              leftIcon={<Plus className="h-5 w-5" />}
+              leftIcon={<Plus />}
               onClick={onNewProduct}
             >
               Novo produto
