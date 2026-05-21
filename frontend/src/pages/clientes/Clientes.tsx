@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
-import { Users, Search, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
+import { Users, Download, ChevronLeft, ChevronRight, X, Eye } from "lucide-react"
 import { apiFetch } from "@/services"
-import { Button } from "@/components/ui"
+import { Button, SearchInput } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import Cliente360Modal from "./components/Cliente360Modal"
 import { ToastContainer, useToast } from "@/components/ui/UseToast"
@@ -282,17 +282,13 @@ export function Clientes() {
         <div className="p-4 flex flex-wrap gap-3 border-b border-gray-100">
 
 
-          {/* Busca por Nome/E-mail Filtrando Instantaneamente */}
-          <div className="relative flex-1 min-w-55">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Buscar por nome ou e-mail..."
-              value={busca}
-              onChange={e => setBusca(e.target.value)}
-              className="w-full h-10 pl-9 pr-4 rounded-lg border border-gray-200 text-body-2 text-dark bg-white outline-none focus:border-action focus:ring-2 focus:ring-action-100 transition-all"
-            />
-          </div>
+          {/* Busca por Nome/E-mail com debounce */}
+          <SearchInput
+            value={busca}
+            onChange={setBusca}
+            placeholder="Buscar por nome ou e-mail..."
+            className="flex-1 min-w-55"
+          />
 
           {/* Gênero */}
           <select
