@@ -52,7 +52,6 @@ const ROLE_CAPABILITIES: Record<string, Capability[]> = {
     "pedidos.read",
     "produtos.read",
     "suporte.read",
-    "chat.use",
   ],
 }
 

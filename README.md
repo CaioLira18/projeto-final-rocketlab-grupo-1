@@ -199,7 +199,7 @@ A matriz do frontend (capacidades) **deve permanecer em sincronia** com a matriz
 | `analista_crm` | Análise de comportamento do cliente. Foco em clientes (incluindo visão 360), suporte e pedidos. Não exporta dados sensíveis. |
 | `analista_operacoes` | Acompanhamento operacional de pedidos e catálogo. Vê dashboard, clientes (sem 360), pedidos e produtos. |
 | `gerente_produtos` | Dono do catálogo. Único papel (fora `admin`) que cria/edita/remove produtos. Pode exportar dados de produtos. |
-| `operador_suporte` | Atendimento de tickets. Acessa suporte, clientes, pedidos e produtos (leitura) para contextualizar atendimentos. Não vê dashboard. |
+| `operador_suporte` | Atendimento de tickets. Acessa suporte, clientes, pedidos e produtos (leitura) para contextualizar atendimentos. Não vê dashboard nem o agente de IA (ambos consultam dados consolidados do Gold). |
 
 ### 📊 Matriz de permissões
 
@@ -215,7 +215,7 @@ Legenda: ✅ acesso · - sem acesso
 | `POST` / `PUT` / `DELETE /produtos` | ✅ | - | - | - | ✅ | - |
 | `GET /suporte/*` | ✅ | ✅ | ✅ | - | - | ✅ |
 | `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | - | - | ✅ | - |
-| `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | ✅ | ✅ | - |
 | `POST /auth/register` (cadastro público de novo usuário) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 > `POST /auth/register` permanece **público** (qualquer pessoa pode se cadastrar) porque é a forma usada pela tela `/register` do frontend. A role criada é sempre `operador_suporte`; promoção para outras roles depende de intervenção manual de um `admin`.

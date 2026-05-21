@@ -67,3 +67,13 @@ require_export = RoleChecker([
     "gerente_comercial",
     "gerente_produtos",
 ])
+
+# Agente IA (chat): consulta o banco Gold (mesmas tabelas do dashboard), então
+# segue a mesma matriz do dashboard. Operador de suporte fica de fora pelo mesmo
+# motivo do dashboard: foco em tickets, não em visão analítica consolidada.
+require_chat = RoleChecker([
+    "gerente_comercial",
+    "analista_crm",
+    "analista_operacoes",
+    "gerente_produtos",
+])
