@@ -4,7 +4,6 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Search,
   ChevronLeft,
   ChevronRight,
   Loader2,
@@ -12,7 +11,7 @@ import {
   ChevronDown,
   Download,
 } from "lucide-react"
-import { Button } from "@/components/ui"
+import { Button, SearchInput } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import { ToastContainer, useToast } from "@/components/ui/UseToast"
 
@@ -169,26 +168,17 @@ export function Suporte() {
   const [erro, setErro] = useState<string | null>(null)
   const [pagina, setPagina] = useState(1)
 
-  // Filtros estruturados em objeto único
+  // Filtros simplificados (uma busca livre + dropdowns), no padrão das outras telas
+  const [busca, setBusca] = useState("")
   const [status, setStatus] = useState("")
   const [tipoProblema, setTipoProblema] = useState("")
-  const [inputs, setInputs] = useState({ busca: "", ticketId: "", agente: "" })
-  const [debounced, setDebounced] = useState({ busca: "", ticketId: "", agente: "" })
-  
+
   const [kpis, setKpis] = useState({ abertos: 0, resolvidos: 0, tempoMedio: null as number | null })
-
-  const modoIdExato = debounced.ticketId.trim().length > 0
-
-  // Centraliza o debounce dos inputs de texto
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(inputs), 400)
-    return () => clearTimeout(t)
-  }, [inputs])
 
   // Reseta página ao alterar qualquer filtro
   useEffect(() => {
     setPagina(1)
-  }, [debounced, status, tipoProblema])
+  }, [busca, status, tipoProblema])
 
   // Busca de KPIs Globais baseados nos filtros ativos
   useEffect(() => {
@@ -198,9 +188,7 @@ export function Suporte() {
         if (!token) return
 
         const params = new URLSearchParams()
-        if (debounced.busca) params.set("id_cliente", debounced.busca)
-        if (debounced.ticketId) params.set("ticket_id", debounced.ticketId)
-        if (debounced.agente) params.set("agente_suporte", debounced.agente)
+        if (busca.trim()) params.set("busca", busca.trim())
         if (status) params.set("status", status)
         if (tipoProblema) params.set("tipo_problema", tipoProblema)
 
@@ -209,7 +197,6 @@ export function Suporte() {
         })
         if (!res.ok) return
         const data = await res.json()
-        console.log(data)
         setKpis({
           abertos: data.abertos ?? 0,
           resolvidos: data.resolvidos ?? 0,
@@ -218,9 +205,8 @@ export function Suporte() {
       } catch { /* silencioso */ }
     }
     fetchKPIs()
-  }, [debounced.busca, debounced.ticketId, debounced.agente, status, tipoProblema])
+  }, [busca, status, tipoProblema])
 
-  // Chamada principal unificada para listagem e busca por ID parcial/completo
   const loadData = useCallback(async () => {
     setLoading(true)
     setErro(null)
@@ -229,43 +215,24 @@ export function Suporte() {
       if (!token) throw new Error("Token não encontrado. Faça login novamente.")
       const headers = { Authorization: `Bearer ${token}` }
 
-      if (modoIdExato) {
-        const params = new URLSearchParams({
-          ticket_id: debounced.ticketId.trim(),
-          skip: "0",
-          limit: String(PER_PAGE),
-        })
-        const res = await fetch(`${API_BASE}/suporte/tickets?${params.toString()}`, { headers })
-        if (res.status === 401) throw new Error("Sessão expirada. Faça login novamente.")
-        if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`)
-        
-        const data = await res.json()
-        const lista = Array.isArray(data) ? data : data.tickets ?? data.items ?? []
-        const totalHeader = res.headers.get("X-Total-Count")
-        setTickets(lista)
-        setTotal(totalHeader ? parseInt(totalHeader, 10) : lista.length)
-      } else {
-        const params = new URLSearchParams({
-          skip: String((pagina - 1) * PER_PAGE),
-          limit: String(PER_PAGE),
-        })
-        if (debounced.busca) params.set("id_cliente", debounced.busca)
-        if (debounced.agente) params.set("agente_suporte", debounced.agente)
-        if (status) params.set("status", status)
-        if (tipoProblema) params.set("tipo_problema", tipoProblema)
+      const params = new URLSearchParams({
+        skip: String((pagina - 1) * PER_PAGE),
+        limit: String(PER_PAGE),
+      })
+      if (busca.trim()) params.set("busca", busca.trim())
+      if (status) params.set("status", status)
+      if (tipoProblema) params.set("tipo_problema", tipoProblema)
 
-        const res = await fetch(`${API_BASE}/suporte/tickets?${params.toString()}`, { headers })
-        if (res.status === 401) throw new Error("Sessão expirada. Faça login novamente.")
-        if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`)
+      const res = await fetch(`${API_BASE}/suporte/tickets?${params.toString()}`, { headers })
+      if (res.status === 401) throw new Error("Sessão expirada. Faça login novamente.")
+      if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`)
 
-        const data = await res.json()
-        console.log(data)
-        const lista = Array.isArray(data) ? data : data.tickets ?? data.items ?? []
-        const totalHeader = res.headers.get("X-Total-Count")
-        
-        setTickets(lista)
-        setTotal(totalHeader ? parseInt(totalHeader, 10) : lista.length)
-      }
+      const data = await res.json()
+      const lista = Array.isArray(data) ? data : data.tickets ?? data.items ?? []
+      const totalHeader = res.headers.get("X-Total-Count")
+
+      setTickets(lista)
+      setTotal(totalHeader ? parseInt(totalHeader, 10) : lista.length)
     } catch (e: any) {
       setErro(e.message ?? "Erro ao buscar dados")
       setTickets([])
@@ -273,18 +240,14 @@ export function Suporte() {
     } finally {
       setLoading(false)
     }
-  }, [debounced, pagina, status, tipoProblema, modoIdExato])
+  }, [busca, pagina, status, tipoProblema])
 
   useEffect(() => {
     loadData()
   }, [loadData])
 
-  const handleInputChange = (field: keyof typeof inputs, val: string) => {
-    setInputs(prev => ({ ...prev, [field]: val }))
-  }
-
   const limparFiltros = () => {
-    setInputs({ busca: "", ticketId: "", agente: "" })
+    setBusca("")
     setStatus("")
     setTipoProblema("")
   }
@@ -313,7 +276,7 @@ export function Suporte() {
   }
 
   const totalPaginas = Math.max(1, Math.ceil(total / PER_PAGE))
-  const filtrosAtivos = Object.values(inputs).filter(Boolean).length + (status ? 1 : 0) + (tipoProblema ? 1 : 0)
+  const filtrosAtivos = (busca.trim() ? 1 : 0) + (status ? 1 : 0) + (tipoProblema ? 1 : 0)
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
@@ -349,89 +312,34 @@ export function Suporte() {
       </div>
 
       {/* ── Barra de filtros ── */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-3">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute inset-y-0 left-0 flex items-center pl-3.5 pt-3 pointer-events-none text-gray-400 h-5 w-5" />
-            <input
-              type="text"
-              placeholder="Buscar por ID do cliente..."
-              value={inputs.busca}
-              onChange={(e) => handleInputChange("busca", e.target.value)}
-              disabled={modoIdExato}
-              className="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-body-2 disabled:opacity-40"
-            />
-          </div>
-          {podeExportar && (
-            <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={exportCSV}>
-              Exportar CSV
-            </Button>
-          )}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-wrap items-center gap-3">
+        <SearchInput
+          value={busca}
+          onChange={setBusca}
+          placeholder="Buscar por ticket, cliente, nome ou agente..."
+          className="flex-1 min-w-55"
+        />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-caption font-medium text-gray-400">Status:</span>
+          {STATUS_OPCOES.map((s) => (
+            <FilterChip key={s} label={s === "aberto" ? "Aberto" : "Resolvido"} active={status === s} onClick={() => setStatus(prev => prev === s ? "" : s)} />
+          ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute inset-y-0 left-0 flex items-center pl-3.5 pt-3 pointer-events-none text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="Buscar por ID exato do ticket..."
-              value={inputs.ticketId}
-              onChange={(e) => handleInputChange("ticketId", e.target.value)}
-              className={`w-full pl-10 pr-8 py-2.5 rounded-lg border text-body-2 ${modoIdExato ? "border-primary bg-primary-50/20 font-medium text-primary" : "border-gray-200"}`}
-            />
-            {inputs.ticketId && (
-              <button onClick={() => handleInputChange("ticketId", "")} className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-gray-500">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="text-caption font-medium text-gray-400">Tipo:</span>
+          <SelectFiltro opcoes={TIPOS_PROBLEMA} valor={tipoProblema} onChange={setTipoProblema} placeholder="Todos os tipos" />
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-caption font-medium text-gray-400 w-14">Status:</span>
-            {STATUS_OPCOES.map((s) => (
-              <FilterChip key={s} label={s === "aberto" ? "Aberto" : "Resolvido"} active={status === s} onClick={() => setStatus(prev => prev === s ? "" : s)} />
-            ))}
-          </div>
-
-          <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1" />
-
-          <div className="flex items-center gap-2">
-            <span className="text-caption font-medium text-gray-400">Tipo:</span>
-            <SelectFiltro opcoes={TIPOS_PROBLEMA} valor={tipoProblema} onChange={setTipoProblema} placeholder="Todos os tipos" />
-          </div>
-
-          <div className="hidden sm:block w-px h-6 bg-gray-200 mx-1" />
-
-          <div className="flex items-center gap-2">
-            <span className="text-caption font-medium text-gray-400">Agente:</span>
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Ex: João Silva"
-                value={inputs.agente}
-                onChange={(e) => handleInputChange("agente", e.target.value)}
-                className={`pl-3 pr-7 py-2 rounded-lg border text-sm w-40 ${inputs.agente ? "border-primary-200 bg-primary-50/20 text-primary font-medium" : "border-gray-200"}`}
-              />
-              {inputs.agente && (
-                <button onClick={() => handleInputChange("agente", "")} className="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-300 hover:text-gray-500">
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {modoIdExato && (
-          <p className="text-xs text-primary bg-primary-50/50 border border-primary-100 rounded-lg px-3 py-1.5">
-            Buscando por ID exato do ticket - outros filtros desativados.{" "}
-            <button onClick={() => handleInputChange("ticketId", "")} className="underline font-medium">Limpar ID</button>
-          </p>
+        {podeExportar && (
+          <Button variant="outlined" intent="action" leftIcon={<Download />} onClick={exportCSV}>
+            Exportar CSV
+          </Button>
         )}
 
         {filtrosAtivos > 0 && (
-          <button onClick={limparFiltros} className="text-caption text-gray-400 hover:text-error underline underline-offset-2 cursor-pointer transition-colors">
+          <button onClick={limparFiltros} className="text-caption text-gray-400 hover:text-error underline underline-offset-2 self-center cursor-pointer transition-colors duration-150">
             Limpar todos os filtros ({filtrosAtivos})
           </button>
         )}
@@ -467,7 +375,7 @@ export function Suporte() {
             </div>
           ) : tickets.length === 0 ? (
             <div className="p-12 text-center text-gray-400 font-medium space-y-2">
-              <p>{modoIdExato ? "Nenhum ticket encontrado com este ID." : "Nenhum ticket encontrado para os filtros selecionados."}</p>
+              <p>Nenhum ticket encontrado para os filtros selecionados.</p>
               {filtrosAtivos > 0 && (
                 <button
                   onClick={limparFiltros}
@@ -517,8 +425,7 @@ export function Suporte() {
                 </table>
               </div>
 
-              {!modoIdExato && (
-                <div className="bg-white px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
+              <div className="bg-white px-6 py-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
                   <div className="text-caption text-gray-500 font-medium">
                     Mostrando <span className="font-semibold text-gray-700">{total === 0 ? 0 : (pagina - 1) * PER_PAGE + 1}</span> a{" "}
                     <span className="font-semibold text-gray-700">{Math.min(pagina * PER_PAGE, total)}</span> de{" "}
@@ -542,7 +449,6 @@ export function Suporte() {
                     </button>
                   </div>
                 </div>
-              )}
             </>
           )}
         </div>

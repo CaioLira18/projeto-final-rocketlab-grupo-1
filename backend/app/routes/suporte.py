@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from sqlalchemy import func, case
+from sqlalchemy import func, case, or_
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -22,6 +22,7 @@ router = APIRouter(
 
 @router.get("/resumo", summary="Resumo agregado dos tickets de suporte")
 def resumo_suporte(
+    busca: Optional[str] = Query(None, description="Busca livre por ticket, cliente, nome do cliente ou agente"),
     id_cliente: Optional[str] = Query(None),
     ticket_id: Optional[str] = Query(None),
     tipo_problema: Optional[str] = Query(None),
@@ -41,6 +42,15 @@ def resumo_suporte(
     """
     q = db.query(FatoSuporte)
 
+    if busca:
+        q = q.filter(
+            or_(
+                FatoSuporte.ticket_id.ilike(f"%{busca}%"),
+                FatoSuporte.id_cliente.ilike(f"%{busca}%"),
+                FatoSuporte.agente_suporte.ilike(f"%{busca}%"),
+                FatoSuporte.nome_cliente.ilike(f"%{busca}%"),
+            )
+        )
     if id_cliente:
         q = q.filter(FatoSuporte.id_cliente.ilike(f"%{id_cliente}%"))
     if ticket_id:
@@ -75,6 +85,7 @@ def resumo_suporte(
 @router.get("/tickets", response_model=List[SuporteTicketItem], summary="Lista tickets de suporte com filtros e paginação")
 def listar_tickets(
     response: Response,
+    busca: Optional[str] = Query(None, description="Busca livre por ticket, cliente, nome do cliente ou agente"),
     id_produto: Optional[str] = Query(None, description="Filtrar por ID do produto"),
     id_cliente: Optional[str] = Query(None, description="Filtrar por ID do cliente"),
     ticket_id: Optional[str] = Query(None, description="Filtrar por ID do ticket"),
@@ -91,6 +102,10 @@ def listar_tickets(
     """
     Lista os tickets de suporte com filtros opcionais e paginação por `skip`/`limit`.
 
+    O parâmetro `busca` aplica match parcial em `ticket_id`, `id_cliente`,
+    `nome_cliente` e `agente_suporte` simultaneamente, usado pelo campo de
+    busca livre do frontend.
+
     O total de registros (ignorando paginação, respeitando filtros) é exposto
     no header de resposta `X-Total-Count`, usado pelo frontend para renderizar
     o componente de paginação.
@@ -101,6 +116,15 @@ def listar_tickets(
     count_query = build_suporte_base_query(db)
 
     def aplicar_filtros(q):
+        if busca:
+            q = q.filter(
+                or_(
+                    FatoSuporte.ticket_id.ilike(f"%{busca}%"),
+                    FatoSuporte.id_cliente.ilike(f"%{busca}%"),
+                    FatoSuporte.agente_suporte.ilike(f"%{busca}%"),
+                    FatoSuporte.nome_cliente.ilike(f"%{busca}%"),
+                )
+            )
         if id_produto:
             q = q.filter(Pedidos.id_produto == id_produto)
         if id_cliente:
