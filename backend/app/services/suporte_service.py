@@ -27,6 +27,7 @@ def build_suporte_base_query(db: Session):
             Pedidos.id_produto,
             Pedidos.nome_produto,
             Pedidos.categoria_produto,
+            FatoSuporte.sobrenome_cliente,
             build_status_col(),
         )
         .outerjoin(Cliente, FatoSuporte.id_cliente == Cliente.id_cliente)
@@ -39,6 +40,7 @@ def map_row_to_ticket_schema(r) -> SuporteTicketItem:
         ticket_id=r.ticket_id,
         id_cliente=r.id_cliente,
         nome_cliente=r.nome_cliente,
+        sobrenome_cliente=r.sobrenome_cliente,
         id_pedido=r.id_pedido,
         id_produto=r.id_produto,
         nome_produto=r.nome_produto,

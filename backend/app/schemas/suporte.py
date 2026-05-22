@@ -6,6 +6,7 @@ class SuporteTicketItem(BaseModel):
     ticket_id: str # Obrigatório
     id_cliente: Optional[str] = None
     nome_cliente: Optional[str] = None
+    sobrenome_cliente: Optional[str] = None
     id_pedido: Optional[str] = None
     id_produto: Optional[str] = None
     nome_produto: Optional[str] = None

@@ -20,13 +20,21 @@ class FatoSuporte(Base):
     sentimento = Column(String, nullable=True)
     status_ticket = Column(String, nullable=True)
     ja_tratada = Column(Boolean, default=False)
-
-    nome_cliente = column_property(
-        select(Cliente.nome_cliente)
+    
+    sobrenome_cliente = column_property(
+        select(Cliente.sobrenome_cliente)
         .where(Cliente.id_cliente == id_cliente)
         .correlate_except(Cliente)
         .scalar_subquery()
     )
+
+    nome_cliente = column_property(
+        select(Cliente.nome_cliente + " " + Cliente.sobrenome_cliente)
+        .where(Cliente.id_cliente == id_cliente)
+        .correlate_except(Cliente)
+        .scalar_subquery()
+    )
+    
     data_pedido = column_property(
         select(Pedidos.data_pedido)
         .where(Pedidos.id_pedido == id_pedido)
