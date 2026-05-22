@@ -190,35 +190,38 @@ O sistema usa Role-Based Access Control aplicado em duas camadas:
 
 A matriz do frontend (capacidades) **deve permanecer em sincronia** com a matriz do backend (roles permitidas por dependência). Se mudar uma, atualize a outra.
 
+**Princípio de alinhamento:** dashboard e agente de IA consultam o banco Gold (`dm_vendas_periodo`, `dm_cliente_360`, `dim_cliente`, `dim_produto`, `dm_produto_360`). Esses dois são "atalhos" para os mesmos dados que aparecem nas páginas silver (clientes, pedidos, produtos, 360). Por isso, só recebe `dashboard.view` / `chat.use` quem já tem acesso às páginas correspondentes (`pedidos.read` + `clientes.view360` no mínimo). Caso contrário, dashboard/chat virariam canal lateral para informação que a role não pode ver no detalhe.
+
 ### 👥 Roles disponíveis
+
+Listadas em ordem decrescente de privilégio (escadinha):
 
 | Role | Responsabilidade |
 |------|------------------|
 | `admin` | Administrador do sistema. Acesso irrestrito (bypass interno do `RoleChecker`). Único papel autorizado a gerenciar usuários. |
-| `gerente_comercial` | Gestão de vendas e relacionamento. Acompanha dashboard, clientes (incluindo visão 360), pedidos e suporte. Pode exportar dados em CSV. |
-| `analista_crm` | Análise de comportamento do cliente. Foco em clientes (incluindo visão 360), suporte e pedidos. Não exporta dados sensíveis. |
-| `analista_operacoes` | Acompanhamento operacional de pedidos e catálogo. Vê dashboard, clientes (sem 360), pedidos e produtos. |
-| `gerente_produtos` | Dono do catálogo. Único papel (fora `admin`) que cria/edita/remove produtos. Pode exportar dados de produtos. |
+| `gerente_comercial` | Gestão de vendas e relacionamento. Vê dashboard, clientes (incluindo visão 360), pedidos, produtos, suporte e agente de IA. Pode exportar dados em CSV. |
+| `analista_crm` | Análise de comportamento do cliente. Mesma matriz do gerente comercial (vê dashboard, clientes + 360, pedidos, produtos, suporte e agente de IA; pode exportar). Não tem CRUD de produtos. |
 | `operador_suporte` | Atendimento de tickets. Acessa suporte, clientes, pedidos e produtos (leitura) para contextualizar atendimentos. Não vê dashboard nem o agente de IA (ambos consultam dados consolidados do Gold). |
+| `analista_operacoes` | Acompanhamento operacional de pedidos e catálogo. Vê clientes (sem 360), pedidos e produtos. Sem dashboard, sem agente de IA, sem suporte, sem exportação (alinhado por não ter acesso ao 360). |
+| `gerente_produtos` | Dono do catálogo. Único papel (fora `admin`) que cria/edita/remove produtos. Vê produtos e pode exportar dados de produtos. Sem dashboard, sem agente de IA, sem clientes/pedidos/suporte (não atua nessas frentes). |
 
 ### 📊 Matriz de permissões
 
 Legenda: ✅ acesso · - sem acesso
 
-| Recurso | `admin` | `gerente_comercial` | `analista_crm` | `analista_operacoes` | `gerente_produtos` | `operador_suporte` |
+| Recurso | `admin` | `gerente_comercial` | `analista_crm` | `operador_suporte` | `analista_operacoes` | `gerente_produtos` |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
-| `GET /dashboard/kpis` | ✅ | ✅ | ✅ | ✅ | ✅ | - |
-| `GET /clientes` (listar / buscar / histórico) | ✅ | ✅ | ✅ | ✅ | - | ✅ |
+| `GET /produtos` / `GET /produtos/metricas` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `GET /clientes` (listar / buscar / histórico) | ✅ | ✅ | ✅ | ✅ | ✅ | - |
+| `GET /pedidos` (listar / count) | ✅ | ✅ | ✅ | ✅ | ✅ | - |
+| `GET /suporte/*` | ✅ | ✅ | ✅ | ✅ | - | - |
 | `GET /clientes/360/{id}` | ✅ | ✅ | ✅ | - | - | - |
-| `GET /pedidos` (listar / count) | ✅ | ✅ | ✅ | ✅ | - | ✅ |
-| `GET /produtos` / `GET /produtos/metricas` | ✅ | ✅ | - | ✅ | ✅ | ✅ |
-| `POST` / `PUT` / `DELETE /produtos` | ✅ | - | - | - | ✅ | - |
-| `GET /suporte/*` | ✅ | ✅ | ✅ | - | - | ✅ |
-| `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | - | - | ✅ | - |
-| `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | ✅ | ✅ | - |
-| `POST /auth/register` (cadastro público de novo usuário) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `GET /dashboard/kpis` | ✅ | ✅ | ✅ | - | - | - |
+| `POST /chat` (agente de IA) | ✅ | ✅ | ✅ | - | - | - |
+| `GET /export/*` (CSV de qualquer entidade) | ✅ | ✅ | ✅ | - | - | ✅ |
+| `POST` / `PUT` / `DELETE /produtos` | ✅ | - | - | - | - | ✅ |
 
-> `POST /auth/register` permanece **público** (qualquer pessoa pode se cadastrar) porque é a forma usada pela tela `/register` do frontend. A role criada é sempre `operador_suporte`; promoção para outras roles depende de intervenção manual de um `admin`.
+> `POST /auth/register` fica fora da matriz: é **público (sem autenticação)** e sempre cria o usuário com role `operador_suporte`. Por ser pré-auth, não tem role associada - qualquer pessoa que abra a tela `/register` consegue se cadastrar. Promoção para outras roles depende de intervenção manual de um `admin`.
 
 ### 🌱 Usuários seed por role
 
@@ -229,9 +232,9 @@ Todos os usuários abaixo são criados automaticamente por `python bd/seed.py`. 
 | `admin` | `admin@stackovergol.com` |
 | `gerente_comercial` | `lucasbarros@stackovergol.com` |
 | `analista_crm` | `anajulia@stackovergol.com` |
+| `operador_suporte` | `arthurmendes@stackovergol.com` |
 | `analista_operacoes` | `gabrielsilva@stackovergol.com` |
 | `gerente_produtos` | `heloisacunha@stackovergol.com` |
-| `operador_suporte` | `arthurmendes@stackovergol.com` |
 
 ---
 

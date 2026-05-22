@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
-import { ShoppingCart, CheckCircle, XCircle, RefreshCw, Search, Download, ChevronLeft, ChevronRight } from "lucide-react"
+import { ShoppingCart, CheckCircle, XCircle, RefreshCw, Download, ChevronLeft, ChevronRight } from "lucide-react"
 import { apiFetch } from "@/services"
-import { Button } from "@/components/ui"
+import { Button, SearchInput } from "@/components/ui"
 import { usePermission } from "@/hooks"
 import { type Pedido } from "@/types"
 import { ToastContainer, useToast } from "@/components/ui/UseToast"
@@ -60,9 +60,8 @@ export function Pedidos() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  //Filtros
+  //Filtros (debounce do `busca` vive dentro do SearchInput)
   const [busca, setBusca] = useState("")
-  const [buscaInput, setBuscaInput] = useState("")
   const [statusFiltro, setStatusFiltro] = useState("")
   const [dataInicio, setDataInicio] = useState("")
   const [dataFim, setDataFim] = useState("")
@@ -79,7 +78,6 @@ export function Pedidos() {
   ].filter(Boolean).length
 
   const limparFiltros = () => {
-    setBuscaInput("")
     setBusca("")
     setStatusFiltro("")
     setDataInicio("")
@@ -131,17 +129,6 @@ export function Pedidos() {
       setIsLoading(false)
     }
   }, [page, busca, statusFiltro, dataInicio, dataFim, categoriaFiltro, semPreco])
-
-  // Debounce para buscaInput -> busca (filtro reativo instantâneo)
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setBusca(buscaInput)
-    }, 300)
-
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [buscaInput])
 
   useEffect(() => { fetchCounts() }, [fetchCounts])
   useEffect(() => { fetchPedidos() }, [fetchPedidos])
@@ -233,18 +220,12 @@ export function Pedidos() {
 
         {/*Filtros*/}
         <div className="p-4 flex flex-wrap gap-3 border-b border-gray-100">
-          <div className="relative flex-1 min-w-55">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Buscar por cliente ou produto..."
-              value={buscaInput}
-              onChange={e => setBuscaInput(e.target.value)}
-              onKeyDown={e => { if (e.key === "Enter") setBusca(buscaInput) }}
-              onBlur={() => setBusca(buscaInput)}
-              className="w-full h-10 pl-9 pr-4 rounded-lg border border-gray-200 text-body-2 text-dark bg-white outline-none focus:border-action focus:ring-2 focus:ring-action-100 transition-all"
-            />
-          </div>
+          <SearchInput
+            value={busca}
+            onChange={setBusca}
+            placeholder="Buscar por cliente ou produto..."
+            className="flex-1 min-w-55"
+          />
 
           <select
             value={statusFiltro}
