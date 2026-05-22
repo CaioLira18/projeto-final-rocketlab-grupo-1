@@ -22,6 +22,7 @@ interface SuporteTicket {
   ticket_id: string
   id_cliente: string | null
   nome_cliente: string | null
+  sobrenome_cliente: string | null
   id_pedido: string | null
   id_produto: string | null
   nome_produto: string | null
@@ -29,6 +30,7 @@ interface SuporteTicket {
   data_pedido: string | null
   tipo_problema: string | null
   data_abertura: string | null
+  
   data_resolucao: string | null
   tempo_resolucao_horas: number | null
   agente_suporte: string | null
@@ -403,10 +405,10 @@ export function Suporte() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {tickets.map((t) => (
-                      <tr key={t.ticket_id} className="hover:bg-gray-50/50 text-body-2 text-gray-700 cursor-pointer">
+                      <tr key={t.ticket_id} className="hover:bg-gray-50/50 text-body-2 text-gray-700">
                         <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.ticket_id}</td>
                         <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.id_cliente}</td>
-                        <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.nome_cliente}</td>
+                        <td className="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">{t.nome_cliente} {t.sobrenome_cliente}</td>
                         <td className="px-6 py-4 text-gray-600 whitespace-nowrap">{t.nome_produto ?? <span className="text-gray-300">-</span>}</td>
                         <td className="px-6 py-4">
                           {t.categoria_produto ? <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-gray-100 text-gray-600">{t.categoria_produto}</span> : <span className="text-gray-300">-</span>}
