@@ -2,6 +2,7 @@ from .produto_service import build_product_metric_subqueries, map_row_to_product
 from .cliente_service import list_clientes, get_cliente_by_id, get_cliente_historico
 from .pedido_service import list_pedidos
 from .dashboard_service import calculate_dashboard_kpis
+from .suporte_service import build_suporte_base_query, map_row_to_ticket_schema, get_metricas_by_produto
 from .auth_service import (
     get_password_hash,
     verify_password,
